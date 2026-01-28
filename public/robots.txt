@@ -1,0 +1,24 @@
+# robots.txt for PPDB Lemdiklat Taruna Nusantara Indonesia
+# https://www.robotstxt.org/
+
+# Allow all crawlers
+User-agent: *
+# Disallow admin, student, and teacher dashboards
+Disallow: /admin
+Disallow: /siswa
+Disallow: /guru
+# Disallow authentication pages
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /forgot-password
+Disallow: /reset-password
+# Disallow API endpoints (if any)
+Disallow: /api
+# Disallow Livewire internal endpoints
+Disallow: /livewire
+# Allow public pages (explicitly allow after disallow)
+Allow: /
+
+# Sitemap location (update with your production URL)
+Sitemap: ${APP_URL}/sitemap.xml

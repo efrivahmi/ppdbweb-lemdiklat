@@ -1,0 +1,57 @@
+Landing Profil sekarang kasih 3 card untuk ngarah ke halaman profil yg lain diatas sambutan kepala sekolah tapi ukurannya jangan gede gede Buat akses ke halaman profil lain nya dibawah, mirip sama link poto yg di landing beranda dan dropdownnya pun tetap ada jadi di dropdown ada 4 halaman landing profil, profil Lemdiklat, profil sma taruna nusantara indonesia, profil smk taruna nusantara jaya. (navbar profil itu diklik ke halaman landing profil, jadi kalo mau ke halaman profil yg lain pencetnya tanda panah dropdownnya)
+
+Profil Lemdiklat taruna
+1. sejarah dengan tonggak penting hilangkan
+2. visi misi hilangkan
+
+profil sma
+1. stats hilangkan
+2. sejarah sekolah hilangkan
+3. visi misi sekolah hilangkan
+4. prestasi sekolah hilangkan 
+5. Kegiatan siswa hilangkan sama yg dibawahnya jejeran ekstrakurikuler dan organisasi hilangkan
+6. ekstrakurikuler hilangkan 
+7. pembinaan karakter dan kedisiplinan hilangkan 
+8. kemitraan hilangkan
+9. fasilitas pendukung hilangkan
+
+profil smk
+1. stats hilangkan
+2. sejarah sekolah hilangkan
+3. visi misi sekolah hilangkan
+4. kepala sekolah hilangkan
+4. ekstrakurikuler hilangkan
+5. pembinaan karakter dan kedisiplinan hilangkan 
+6. kemitraan hilangkan
+7. fasilitas pendukung hilangkanLanding Profil sekarang kasih 3 card untuk ngarah ke halaman profil yg lain diatas sambutan kepala sekolah tapi ukurannya jangan gede gede Buat akses ke halaman profil lain nya dibawah, mirip sama link poto yg di landing beranda dan dropdownnya pun tetap ada jadi di dropdown ada 4 halaman landing profil, profil Lemdiklat, profil sma taruna nusantara indonesia, profil smk taruna nusantara jaya. (navbar profil itu diklik ke halaman landing profil, jadi kalo mau ke halaman profil yg lain pencetnya tanda panah dropdownnya)
+
+Profil Lemdiklat taruna
+1. sejarah dengan tonggak penting hilangkan
+2. visi misi hilangkan
+
+profil sma
+1. stats hilangkan
+2. sejarah sekolah hilangkan
+3. visi misi sekolah hilangkan
+4. prestasi sekolah hilangkan 
+5. Kegiatan siswa hilangkan sama yg dibawahnya jejeran ekstrakurikuler dan organisasi hilangkan
+6. ekstrakurikuler hilangkan 
+7. pembinaan karakter dan kedisiplinan hilangkan 
+8. kemitraan hilangkan
+9. fasilitas pendukung hilangkan
+
+profil smk
+1. stats hilangkan
+2. sejarah sekolah hilangkan
+3. visi misi sekolah hilangkan
+4. kepala sekolah hilangkan
+4. ekstrakurikuler hilangkan
+5. pembinaan karakter dan kedisiplinan hilangkan 
+6. kemitraan hilangkan
+7. fasilitas pendukung hilangkan
+
+oiya sama di dashboard admin itu grafik pendaftaran datanya ga sesuai
+
+coba cek di website pake akun kita
+
+data siswa 5 tapi di bulan nov cuma 2 yg daftar
