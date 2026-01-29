@@ -20,6 +20,7 @@ use Livewire\WithFileUploads;
 
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 
 #[Layout("layouts.siswa")]
 #[Title("Dashboard")]
@@ -387,7 +388,18 @@ class Dashboard extends Component
         ];
     }
 
+    public function getListeners()
+    {
+        $userId = Auth::id();
+        return [
+            "echo-private:user.{$userId},.pendaftaran.status.updated" => 'refreshData',
+            "echo-private:user.{$userId},.payment.verified" => 'refreshData',
+            "refresh-dashboard" => 'refreshData'
+        ];
+    }
+
     // Method untuk refresh semua data (dipanggil setelah ada perubahan status)
+    #[On('refresh-dashboard')]
     public function refreshData()
     {
         $this->calculateProgress();
@@ -395,8 +407,7 @@ class Dashboard extends Component
         $this->calculateRegistrationStats();
         $this->checkPDFDownloadAvailability();
         $this->checkCanUploadPayment();
-
-        $this->dispatch("alert", message: "Data di perbarui", type: "info");
+        $this->calculateTestsStats();
     }
 
     public function render()

@@ -99,6 +99,8 @@ class NotificationBell extends Component
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);
+        
+        $this->dispatch('refresh-dashboard');
     }
 
     #[On('echo-private:admin-dashboard,.payment.verified')]
@@ -119,6 +121,8 @@ class NotificationBell extends Component
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);
+        
+        $this->dispatch('refresh-dashboard');
     }
 
     #[On('echo-private:admin-dashboard,.pendaftaran.status.updated')]
@@ -133,6 +137,8 @@ class NotificationBell extends Component
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);
+        
+        $this->dispatch('refresh-dashboard');
     }
 
     #[On('echo-private:admin-dashboard,.dashboard.updated')]

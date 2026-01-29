@@ -21,42 +21,64 @@
     {{-- Current Profile Display --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         @if($profileSekolah)
-            <div class="relative">
-                {{-- Desktop Image --}}
-                <div class="hidden md:block">
+            {{-- Image Previews Grid --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+                {{-- Desktop Image Preview --}}
+                <div class="relative">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="ri-computer-line text-gray-500"></i>
+                        <span class="text-sm font-medium text-gray-700">Desktop View</span>
+                    </div>
                     @if($profileSekolah->image)
-                        <img src="{{ asset('storage/' . $profileSekolah->image) }}" alt="Hero Image" class="w-full h-64 object-cover">
-                    @else
-                        <div class="w-full h-64 bg-gradient-to-r from-lime-100 to-lime-200 flex items-center justify-center">
-                            <i class="ri-image-line text-5xl text-lime-400"></i>
+                        <div class="relative group">
+                            <img src="{{ asset('storage/' . $profileSekolah->image) }}" alt="Hero Desktop" class="w-full h-48 object-cover rounded-lg border border-gray-200">
+                            {{-- Badge overlay --}}
+                            @if($profileSekolah->badge)
+                                <div class="absolute top-3 left-3">
+                                    <span class="px-3 py-1 bg-lime-500 text-white text-xs font-medium rounded-full">
+                                        {{ $profileSekolah->badge }}
+                                    </span>
+                                </div>
+                            @endif
                         </div>
-                    @endif
-                </div>
-                
-                {{-- Mobile Image --}}
-                <div class="md:hidden">
-                    @if($profileSekolah->mobile_image)
-                        <img src="{{ asset('storage/' . $profileSekolah->mobile_image) }}" alt="Hero Mobile Image" class="w-full h-48 object-cover">
-                    @elseif($profileSekolah->image)
-                        <img src="{{ asset('storage/' . $profileSekolah->image) }}" alt="Hero Image" class="w-full h-48 object-cover">
                     @else
-                        <div class="w-full h-48 bg-gradient-to-r from-lime-100 to-lime-200 flex items-center justify-center">
-                            <i class="ri-image-line text-4xl text-lime-400"></i>
+                        <div class="w-full h-48 bg-gray-100 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+                            <i class="ri-image-line text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-sm text-gray-500">Belum ada gambar desktop</span>
                         </div>
                     @endif
                 </div>
 
-                {{-- Badge --}}
-                @if($profileSekolah->badge)
-                    <div class="absolute top-4 left-4">
-                        <span class="px-3 py-1 bg-lime-500 text-white text-sm font-medium rounded-full">
-                            {{ $profileSekolah->badge }}
-                        </span>
+                {{-- Mobile Image Preview --}}
+                <div class="relative">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="ri-smartphone-line text-gray-500"></i>
+                        <span class="text-sm font-medium text-gray-700">Mobile View</span>
                     </div>
-                @endif
+                    @if($profileSekolah->mobile_image)
+                        <div class="relative group">
+                            <img src="{{ asset('storage/' . $profileSekolah->mobile_image) }}" alt="Hero Mobile" class="w-full h-48 object-cover rounded-lg border border-gray-200">
+                            {{-- Badge overlay --}}
+                            @if($profileSekolah->badge)
+                                <div class="absolute top-3 left-3">
+                                    <span class="px-3 py-1 bg-lime-500 text-white text-xs font-medium rounded-full">
+                                        {{ $profileSekolah->badge }}
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <div class="w-full h-48 bg-gray-100 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+                            <i class="ri-smartphone-line text-3xl text-gray-400 mb-2"></i>
+                            <span class="text-sm text-gray-500">Belum ada gambar mobile</span>
+                            <span class="text-xs text-gray-400 mt-1">(Akan menggunakan gambar desktop)</span>
+                        </div>
+                    @endif
+                </div>
             </div>
 
-            <div class="p-6">
+            {{-- Content Section --}}
+            <div class="p-6 border-t border-gray-100">
                 <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $profileSekolah->title }}</h2>
                 <div class="text-gray-600 prose max-w-none">
                     {!! nl2br(e($profileSekolah->content)) !!}

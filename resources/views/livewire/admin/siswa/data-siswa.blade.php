@@ -115,10 +115,60 @@
                         </td>
                         <td class="px-6 py-4">
                             @php
-                                $dataMuridComplete = optional($siswa->dataMurid)->proses == '1';
-                                $dataOrangTuaComplete = $siswa->dataOrangTua && $siswa->dataOrangTua->nama_ayah && $siswa->dataOrangTua->nama_ibu;
-                                $berkasMuridComplete = optional($siswa->berkasMurid)->proses == '1';
-                                $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete;
+                                // Calculate Data Murid progress (same as dashboard)
+                                $dataMuridProgress = 0;
+                                if ($siswa->dataMurid) {
+                                    $dataMuridFields = ['tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'agama', 'whatsapp', 'alamat', 'asal_sekolah'];
+                                    $dataMuridFilled = 0;
+                                    foreach ($dataMuridFields as $field) {
+                                        if (!empty($siswa->dataMurid->$field)) $dataMuridFilled++;
+                                    }
+                                    $dataMuridProgress = ($dataMuridFilled / count($dataMuridFields)) * 100;
+                                }
+                                $dataMuridComplete = $dataMuridProgress >= 100;
+
+                                // Calculate Data Orang Tua progress (same as dashboard)
+                                $dataOrangTuaProgress = 0;
+                                if ($siswa->dataOrangTua) {
+                                    $grupData = [
+                                        'ayah' => ['nama_ayah', 'pendidikan_ayah', 'telp_ayah', 'pekerjaan_ayah', 'alamat_ayah'],
+                                        'ibu' => ['nama_ibu', 'pendidikan_ibu', 'telp_ibu', 'pekerjaan_ibu', 'alamat_ibu'],
+                                        'wali' => ['nama_wali', 'pendidikan_wali', 'telp_wali', 'pekerjaan_wali', 'alamat_wali'],
+                                    ];
+                                    foreach ($grupData as $grup) {
+                                        $lengkap = true;
+                                        foreach ($grup as $field) {
+                                            if (empty($siswa->dataOrangTua->$field)) {
+                                                $lengkap = false;
+                                                break;
+                                            }
+                                        }
+                                        if ($lengkap) {
+                                            $dataOrangTuaProgress = 100;
+                                            break;
+                                        }
+                                    }
+                                }
+                                $dataOrangTuaComplete = $dataOrangTuaProgress >= 100;
+
+                                // Calculate Berkas Murid progress (same as dashboard)
+                                $berkasMuridProgress = 0;
+                                if ($siswa->berkasMurid) {
+                                    $berkasFields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+                                    $berkasFilled = 0;
+                                    foreach ($berkasFields as $field) {
+                                        if (!empty($siswa->berkasMurid->$field)) $berkasFilled++;
+                                    }
+                                    $berkasMuridProgress = ($berkasFilled / count($berkasFields)) * 100;
+                                }
+                                $berkasMuridComplete = $berkasMuridProgress >= 100;
+
+                                // Calculate Pendaftaran progress
+                                $pendaftaranCount = $siswa->pendaftaranMurids->count();
+                                $pendaftaranComplete = $pendaftaranCount > 0;
+
+                                // All complete check
+                                $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete && $pendaftaranComplete;
                                 $pendaftaranDiterima = $siswa->pendaftaranMurids->where('status', 'diterima')->count();
                             @endphp
                             <div class="flex flex-col gap-2">
@@ -246,10 +296,60 @@
 
                     <!-- Status Badges -->
                     @php
-                        $dataMuridComplete = optional($siswa->dataMurid)->proses == '1';
-                        $dataOrangTuaComplete = $siswa->dataOrangTua && $siswa->dataOrangTua->nama_ayah && $siswa->dataOrangTua->nama_ibu;
-                        $berkasMuridComplete = optional($siswa->berkasMurid)->proses == '1';
-                        $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete;
+                        // Calculate Data Murid progress (same as dashboard)
+                        $dataMuridProgress = 0;
+                        if ($siswa->dataMurid) {
+                            $dataMuridFields = ['tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'agama', 'whatsapp', 'alamat', 'asal_sekolah'];
+                            $dataMuridFilled = 0;
+                            foreach ($dataMuridFields as $field) {
+                                if (!empty($siswa->dataMurid->$field)) $dataMuridFilled++;
+                            }
+                            $dataMuridProgress = ($dataMuridFilled / count($dataMuridFields)) * 100;
+                        }
+                        $dataMuridComplete = $dataMuridProgress >= 100;
+
+                        // Calculate Data Orang Tua progress (same as dashboard)
+                        $dataOrangTuaProgress = 0;
+                        if ($siswa->dataOrangTua) {
+                            $grupData = [
+                                'ayah' => ['nama_ayah', 'pendidikan_ayah', 'telp_ayah', 'pekerjaan_ayah', 'alamat_ayah'],
+                                'ibu' => ['nama_ibu', 'pendidikan_ibu', 'telp_ibu', 'pekerjaan_ibu', 'alamat_ibu'],
+                                'wali' => ['nama_wali', 'pendidikan_wali', 'telp_wali', 'pekerjaan_wali', 'alamat_wali'],
+                            ];
+                            foreach ($grupData as $grup) {
+                                $lengkap = true;
+                                foreach ($grup as $field) {
+                                    if (empty($siswa->dataOrangTua->$field)) {
+                                        $lengkap = false;
+                                        break;
+                                    }
+                                }
+                                if ($lengkap) {
+                                    $dataOrangTuaProgress = 100;
+                                    break;
+                                }
+                            }
+                        }
+                        $dataOrangTuaComplete = $dataOrangTuaProgress >= 100;
+
+                        // Calculate Berkas Murid progress (same as dashboard)
+                        $berkasMuridProgress = 0;
+                        if ($siswa->berkasMurid) {
+                            $berkasFields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+                            $berkasFilled = 0;
+                            foreach ($berkasFields as $field) {
+                                if (!empty($siswa->berkasMurid->$field)) $berkasFilled++;
+                            }
+                            $berkasMuridProgress = ($berkasFilled / count($berkasFields)) * 100;
+                        }
+                        $berkasMuridComplete = $berkasMuridProgress >= 100;
+
+                        // Calculate Pendaftaran progress
+                        $pendaftaranCount = $siswa->pendaftaranMurids->count();
+                        $pendaftaranComplete = $pendaftaranCount > 0;
+
+                        // All complete check
+                        $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete && $pendaftaranComplete;
                         $pendaftaranDiterima = $siswa->pendaftaranMurids->where('status', 'diterima')->count();
                     @endphp
                     <div class="flex flex-wrap gap-2 mb-4">

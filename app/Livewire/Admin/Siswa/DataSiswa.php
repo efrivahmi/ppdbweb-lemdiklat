@@ -163,20 +163,80 @@ class DataSiswa extends Component
             ->when($this->statusFilter, function ($query) {
                 switch ($this->statusFilter) {
                     case 'lengkap':
-                        // All data complete: dataMurid.proses='1', dataOrangTua exists with nama_ayah & nama_ibu, berkasMurid.proses='1'
-                        $query->whereHas('dataMurid', fn($q) => $q->where('proses', '1'))
-                              ->whereHas('dataOrangTua', fn($q) => $q->whereNotNull('nama_ayah')->whereNotNull('nama_ibu'))
-                              ->whereHas('berkasMurid', fn($q) => $q->where('proses', '1'));
+                        // All data complete: all 7 dataMurid fields, any parent group complete, all 5 berkas, has pendaftaran
+                        $query->whereHas('dataMurid', fn($q) => $q
+                            ->whereNotNull('tempat_lahir')
+                            ->whereNotNull('tgl_lahir')
+                            ->whereNotNull('jenis_kelamin')
+                            ->whereNotNull('agama')
+                            ->whereNotNull('whatsapp')
+                            ->whereNotNull('alamat')
+                            ->whereNotNull('asal_sekolah')
+                        )
+                        ->where(function($q) {
+                            // Any parent group complete (ayah OR ibu OR wali)
+                            $q->whereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_ayah')
+                                ->whereNotNull('pendidikan_ayah')
+                                ->whereNotNull('telp_ayah')
+                                ->whereNotNull('pekerjaan_ayah')
+                                ->whereNotNull('alamat_ayah')
+                            )
+                            ->orWhereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_ibu')
+                                ->whereNotNull('pendidikan_ibu')
+                                ->whereNotNull('telp_ibu')
+                                ->whereNotNull('pekerjaan_ibu')
+                                ->whereNotNull('alamat_ibu')
+                            )
+                            ->orWhereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_wali')
+                                ->whereNotNull('pendidikan_wali')
+                                ->whereNotNull('telp_wali')
+                                ->whereNotNull('pekerjaan_wali')
+                                ->whereNotNull('alamat_wali')
+                            );
+                        })
+                        ->whereHas('berkasMurid', fn($q) => $q
+                            ->whereNotNull('kk')
+                            ->whereNotNull('ktp_ortu')
+                            ->whereNotNull('akte')
+                            ->whereNotNull('surat_sehat')
+                            ->whereNotNull('pas_foto')
+                        )
+                        ->whereHas('pendaftaranMurids');
                         break;
                     case 'belum_lengkap':
-                        // Any data incomplete
+                        // Any data incomplete - inverse of lengkap
                         $query->where(function($q) {
+                            // Missing or incomplete dataMurid
                             $q->whereDoesntHave('dataMurid')
-                              ->orWhereHas('dataMurid', fn($sub) => $sub->where('proses', '!=', '1'))
-                              ->orWhereDoesntHave('dataOrangTua')
-                              ->orWhereHas('dataOrangTua', fn($sub) => $sub->whereNull('nama_ayah')->orWhereNull('nama_ibu'))
-                              ->orWhereDoesntHave('berkasMurid')
-                              ->orWhereHas('berkasMurid', fn($sub) => $sub->where('proses', '!=', '1'));
+                            ->orWhereHas('dataMurid', fn($sub) => $sub
+                                ->where(function($s) {
+                                    $s->whereNull('tempat_lahir')
+                                      ->orWhereNull('tgl_lahir')
+                                      ->orWhereNull('jenis_kelamin')
+                                      ->orWhereNull('agama')
+                                      ->orWhereNull('whatsapp')
+                                      ->orWhereNull('alamat')
+                                      ->orWhereNull('asal_sekolah');
+                                })
+                            )
+                            // Missing dataOrangTua or no complete parent group
+                            ->orWhereDoesntHave('dataOrangTua')
+                            // Missing or incomplete berkasMurid
+                            ->orWhereDoesntHave('berkasMurid')
+                            ->orWhereHas('berkasMurid', fn($sub) => $sub
+                                ->where(function($s) {
+                                    $s->whereNull('kk')
+                                      ->orWhereNull('ktp_ortu')
+                                      ->orWhereNull('akte')
+                                      ->orWhereNull('surat_sehat')
+                                      ->orWhereNull('pas_foto');
+                                })
+                            )
+                            // No pendaftaran
+                            ->orWhereDoesntHave('pendaftaranMurids');
                         });
                         break;
                     case 'pendaftaran_diterima':

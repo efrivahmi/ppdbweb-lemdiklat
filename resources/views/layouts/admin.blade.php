@@ -11,22 +11,22 @@
     @livewireStyles
 </head>
 
-<body class="bg-gray-50 font-sans antialiased h-full">
+<body class="bg-stone-100 font-sans antialiased h-full" x-data="{ sidebarOpen: false }">
     <x-molecules.alert />
     
-    <div class="flex h-screen overflow-hidden bg-gray-50">
-        {{-- Sidebar (Fixed Left) --}}
-        <div class="shrink-0">
-            @livewire('components.admin.sidebar')
-        </div>
+    <div class="flex flex-col h-screen overflow-hidden bg-stone-100">
+        {{-- Full-width Navbar --}}
+        @livewire('components.admin.navbar')
+        
+        {{-- Content Area with Sidebar --}}
+        <div class="flex flex-1 overflow-hidden">
+            {{-- Sidebar (Fixed Left) --}}
+            <div class="shrink-0">
+                @livewire('components.admin.sidebar')
+            </div>
 
-        {{-- Main Content Area (Fluid Right) --}}
-        <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
-            {{-- Topbar --}}
-            @livewire('components.admin.navbar')
-            
-            {{-- Scrollable Content --}}
-            <main class="flex-1 overflow-y-auto bg-gray-50/50 p-6">
+            {{-- Main Content Area (Fluid Right) --}}
+            <main class="flex-1 overflow-y-auto bg-gradient-to-br from-stone-50 via-stone-100 to-emerald-50/30 p-6">
                 {{ $slot }}
             </main>
         </div>

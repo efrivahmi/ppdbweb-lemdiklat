@@ -32,14 +32,14 @@ $isExpanded = in_array($itemKey, $expandedItems);
 
 $baseClasses = "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 group relative";
 
-// Filament-like Active State: Substance over decoration
-// Active: Subtle background, colored text, no border
+// White sidebar theme with emerald accents
+// Active: Emerald background tint, emerald text
 // Inactive: Gray text, hover background
 $activeClasses = $isActive 
-    ? 'bg-lime-500/10 text-lime-600' 
-    : ($isParentActive ? 'bg-gray-50 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900');
+    ? 'bg-emerald-50 text-emerald-600' 
+    : ($isParentActive ? 'bg-gray-50 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900');
 
-$iconClasses = $isActive ? 'text-lime-600' : ($isParentActive ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500');
+$iconClasses = $isActive ? 'text-emerald-600' : ($isParentActive ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500');
 @endphp
 
 @if(isset($item['type']) && $item['type'] === 'folder')
@@ -114,7 +114,7 @@ $iconClasses = $isActive ? 'text-lime-600' : ($isParentActive ? 'text-gray-500' 
         
         @if(isset($item['external']) && $item['external'])
             <div class="flex-shrink-0">
-                <x-heroicon-o-link class="w-3 h-3 text-gray-400 group-hover:text-lime-500 transition-colors duration-200"/>
+                <x-heroicon-o-link class="w-3 h-3 text-gray-400 group-hover:text-emerald-500 transition-colors duration-200"/>
             </div>
         @endif
     </a>

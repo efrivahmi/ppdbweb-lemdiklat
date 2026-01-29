@@ -70,6 +70,13 @@ Route::get('/ekstrakurikuler', App\Livewire\Landing\Pages\Ekstrakurikuler::class
 Route::get('/register', RegisterPage::class)->name('register');
 Route::get('/login', LoginPage::class)->name('login');
 
+Route::post('/logout', function () {
+    \Illuminate\Support\Facades\Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout')->middleware('auth');
+
 Route::prefix('siswa')
     ->middleware(['auth', 'isSiswa'])
     ->group(function () {

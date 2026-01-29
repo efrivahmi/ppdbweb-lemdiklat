@@ -16,6 +16,7 @@ use Carbon\Carbon;
 
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 #[Layout("layouts.admin")]
 #[Title("Dashboard")]
 class Dashboard extends Component
@@ -323,6 +324,18 @@ class Dashboard extends Component
             'reviewed' => 'Direview',
             default => 'Unknown'
         };
+    }
+
+    #[On('refresh-dashboard')]
+    public function refreshData()
+    {
+        $this->loadTotalStats();
+        $this->loadPendaftaranStats();
+        $this->loadBuktiTransferStats();
+        $this->loadCompletionStats();
+        $this->loadJalurPendaftaranData();
+        $this->loadRecentActivities();
+        $this->loadMonthlyRegistrations();
     }
 
     public function render()
