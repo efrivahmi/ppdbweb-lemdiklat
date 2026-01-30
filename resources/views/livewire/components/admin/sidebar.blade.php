@@ -7,13 +7,14 @@
         x-transition.opacity
     ></div>
 
-    {{-- Sidebar --}}
+    {{-- Sidebar Container --}}
     <div 
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-        class="fixed lg:static inset-y-0 left-0 z-30 w-[16rem] bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out flex flex-col h-full overflow-x-hidden"
+        class="fixed lg:sticky lg:top-0 inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out flex flex-col"
+        style="height: calc(100vh - 64px); max-height: calc(100vh - 64px);"
     >
         {{-- Scrollable Navigation Area --}}
-        <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+        <nav class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 py-6 space-y-1">
             @foreach ($menuItems as $item)
                 @if(isset($item['header']))
                      <div class="px-3 mb-2 mt-6 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -30,7 +31,7 @@
         </nav>
 
         {{-- Profile & Actions Footer --}}
-        <div class="p-4 border-t border-gray-100 shrink-0 space-y-2">
+        <div class="flex-shrink-0 p-4 border-t border-gray-100 space-y-2 bg-white">
             {{-- Profile Link --}}
             <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-emerald-50 transition-colors group">
                 <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
