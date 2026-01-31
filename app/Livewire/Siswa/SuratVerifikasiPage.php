@@ -7,6 +7,8 @@ use App\Models\Siswa\DataMurid;
 use App\Models\Siswa\DataOrangTua;
 use App\Models\Siswa\BerkasMurid;
 use App\Models\Pendaftaran\PendaftaranMurid;
+use App\Models\Pendaftaran\TesJalur;
+use App\Models\Pendaftaran\CustomTestAnswer;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -20,6 +22,13 @@ class SuratVerifikasiPage extends Component
     public $verifikasiPDFSettings = null;
     public $missingItems = [];
 
+    // Progress properties
+    public $dataMuridProgress = 0;
+    public $dataOrangTuaProgress = 0;
+    public $berkasMuridProgress = 0;
+    public $pendaftaranProgress = 0;
+    public $availableTests = [];
+
     public function mount()
     {
         $this->checkAvailability();
@@ -27,86 +36,145 @@ class SuratVerifikasiPage extends Component
 
     public function checkAvailability()
     {
-        $userId = Auth::id();
+        $this->calculateProgress();
+        $this->loadAvailableTests();
 
-        // 1. Check Data Completeness
-        $dataMurid = DataMurid::where('user_id', $userId)->first();
-        $dataOrangTua = DataOrangTua::where('user_id', $userId)->first();
-        $berkasMurid = BerkasMurid::where('user_id', $userId)->first();
-        $pendaftaran = PendaftaranMurid::where('user_id', $userId)->exists();
-
-        $dataMuridComplete = $dataMurid && $dataMurid->proses == '100'; // Assuming '100' or similar based on Dashboard
-        // Or re-implement calculateProgress logic properly if 'proses' is not reliable standalone without calculation
-        // Let's rely on 'proses' column which seemed to be used in Dashboard progress calculation actually calculated in PHP.
-        // Wait, Dashboard calculates it manually. I should probably do same or check simpler condition.
-        // Let's check required fields lightly or better yet, reuse specific checks.
-        
-        // Actually, simplest way is to check the same way Dashboard does.
-        // But for "Surat Verifikasi", the requirement usually is: Data Lengkap + Test Selesai.
-        
-        // Let's calculate progress briefly
-        $dataMuridProgress = $this->calculateDataMuridProgress($dataMurid);
-        $dataOrangTuaProgress = $this->calculateDataOrangTuaProgress($dataOrangTua);
-        $berkasMuridProgress = $this->calculateBerkasMuridProgress($berkasMurid);
-        
-        // 2. Check Tests
-        // Need to fetch available tests and check if completed
-        // This logic is complex in Dashboard. simplified here:
-        // Assume if any test is assigned, it must be completed.
-        // For now, let's stick to Data Completeness as primary gate for Verification Letter?
-        // Dashboard said: "Lengkapi semua data dan test jalur untuk mengunduh"
-        
+        // 1. Check Completeness
         $this->missingItems = [];
-        if ($dataMuridProgress < 100) $this->missingItems[] = 'Data Siswa belum lengkap';
-        if ($dataOrangTuaProgress < 100) $this->missingItems[] = 'Data Orang Tua belum lengkap';
-        if ($berkasMuridProgress < 100) $this->missingItems[] = 'Berkas belum diupload semua';
-        if (!$pendaftaran) $this->missingItems[] = 'Belum mendaftar jalur/jurusan';
+        
+        if ($this->dataMuridProgress < 100) $this->missingItems[] = 'Data Siswa belum lengkap';
+        if ($this->dataOrangTuaProgress < 100) $this->missingItems[] = 'Data Orang Tua belum lengkap';
+        if ($this->berkasMuridProgress < 100) $this->missingItems[] = 'Berkas belum diupload semua';
+        if ($this->pendaftaranProgress < 100) $this->missingItems[] = 'Belum mendaftar jalur/jurusan';
 
-        // Check Tests (simplified)
-        // We can check if user has taken tests. 
-        // Let's skip deep test check to avoid code duplication unless necessary.
-        // But user said "skip the download stage" -> implies "shortcut page". 
-        // Dashboard logic was: $allTestsCompleted.
-        
-        // Let's assume for this page we primarily check documents. 
-        // If strict, I should replicate test check. I will replicate it.
-        
-        $pendaftaranList = PendaftaranMurid::where('user_id', $userId)->get();
-        foreach ($pendaftaranList as $p) {
-             $tests = \App\Models\Pendaftaran\TesJalur::where('jalur_pendaftaran_id', $p->jalur_pendaftaran_id)->get();
-             foreach ($tests as $test) {
-                 // Check if result exists
-                 // This is getting complicated.
-                 // Let's trust $dataMurid->proses if updated? No.
+        // 2. Check Tests
+        $allTestsCompleted = true;
+        if (count($this->availableTests) > 0) {
+            $allTestsCompleted = collect($this->availableTests)->every(fn($test) => $test['has_completed']);
+            if (!$allTestsCompleted) {
+                $this->missingItems[] = 'Tes seleksi belum dikerjakan semua';
+            }
+        } elseif ($this->pendaftaranProgress >= 100 && count($this->availableTests) == 0) {
+             // Logic edge case: Registered but no tests available?
+             // Dashboard logic says: count($this->availableTests) > 0 && every...
+             // So if count is 0, $allTestsCompleted is FALSE in dashboard:
+             // $allTestsCompleted = count($this->availableTests) > 0 && ...
+             // This implies tests ARE REQUIRED. 
+             // Let's stick to Dashboard logic.
+             $allTestsCompleted = false;
+             // But wait, what if there are NO tests for a jalur?
+             // If $tesJalurs is empty in loadAvailableTests, then availableTests is empty.
+             // Then allTestsCompleted is false.
+             // This might be a blocker if a jalur has no tests.
+             // But user says "students who have finished...". Usually implies they finished WHAT WAS THERE.
+             // However, duplicating dashboard logic is safer for consistency.
+             // Dashboard: $allTestsCompleted = count > 0 && every...
+             // So yes, tests are mandatory.
+             if (count($this->availableTests) == 0) {
+                 // But wait, if they haven't registered, tests are 0.
+                 // If they registered, and no tests assigned to jalur? 
+                 // Let's assume tests exist.
              }
         }
-        
-        // Re-using Dashboard logic implies duplicating code.
-        // Let's use a simpler proxy:
-        $this->canDownloadVerifikasiPDF = empty($this->missingItems);
+
+        $this->canDownloadVerifikasiPDF = empty($this->missingItems) && $allTestsCompleted;
         
         $this->verifikasiPDFSettings = PDF::getSettingsByJenis('verifikasi');
     }
 
-    private function calculateDataMuridProgress($data) {
-        if (!$data) return 0;
-        $filled = 0;
-        $total = 5; // name, gender, tempat_lahir, tanggal_lahir, agama (example)
-        // To be safe, just check if crucial fields are filled
-        if ($data->nisn && $data->nik && $data->jenis_kelamin && $data->tempat_lahir) return 100;
-        return 0;
+    public function calculateProgress()
+    {
+        $userId = Auth::id();
+
+        // Progress Data Murid
+        $dataMurid = DataMurid::where('user_id', $userId)->first();
+        if ($dataMurid) {
+            $fields = ['tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'agama', 'whatsapp', 'alamat', 'asal_sekolah'];
+            $filled = 0;
+            foreach ($fields as $field) {
+                if (!empty($dataMurid->$field)) $filled++;
+            }
+            $this->dataMuridProgress = ($filled / count($fields)) * 100;
+        }
+
+        // Progress Data Orang Tua
+        $dataOrangTua = DataOrangTua::where('user_id', $userId)->first();
+
+        if ($dataOrangTua) {
+            // Grup field untuk masing-masing pihak
+            $grupData = [
+                'ayah' => ['nama_ayah', 'pendidikan_ayah', 'telp_ayah', 'pekerjaan_ayah', 'alamat_ayah'],
+                'ibu' => ['nama_ibu', 'pendidikan_ibu', 'telp_ibu', 'pekerjaan_ibu', 'alamat_ibu'],
+                'wali' => ['nama_wali', 'pendidikan_wali', 'telp_wali', 'pekerjaan_wali', 'alamat_wali'],
+            ];
+
+            $progress = 0;
+
+            foreach ($grupData as $grup) {
+                $lengkap = true;
+                foreach ($grup as $field) {
+                    if (empty($dataOrangTua->$field)) {
+                        $lengkap = false;
+                        break;
+                    }
+                }
+
+                if ($lengkap) {
+                    $progress = 100;
+                    break; // Keluar dari loop karena salah satu grup sudah lengkap
+                }
+            }
+
+            $this->dataOrangTuaProgress = $progress;
+        }
+
+        // Progress Berkas Murid
+        $berkasMurid = BerkasMurid::where('user_id', $userId)->first();
+        if ($berkasMurid) {
+            $fields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+            $filled = 0;
+            foreach ($fields as $field) {
+                if (!empty($berkasMurid->$field)) $filled++;
+            }
+            $this->berkasMuridProgress = ($filled / count($fields)) * 100;
+        }
+
+        // Progress Pendaftaran
+        $pendaftaranCount = PendaftaranMurid::where('user_id', $userId)->count();
+        $this->pendaftaranProgress = $pendaftaranCount > 0 ? min(($pendaftaranCount / 1) * 100, 100) : 0;
     }
-    
-    private function calculateDataOrangTuaProgress($data) {
-         if (!$data) return 0;
-         if ($data->nama_ayah && $data->nama_ibu) return 100;
-         return 0;
-    }
-    
-    private function calculateBerkasMuridProgress($data) {
-        if (!$data) return 0;
-        if ($data->kk_file && $data->akta_file && $data->foto_file) return 100;
-        return 0;
+
+    public function loadAvailableTests()
+    {
+        $userRegistration = PendaftaranMurid::with('jalurPendaftaran')
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$userRegistration) {
+            $this->availableTests = [];
+            return;
+        }
+
+        $tesJalurs = TesJalur::with(['customTests'])
+            ->where('jalur_pendaftaran_id', $userRegistration->jalur_pendaftaran_id)
+            ->get();
+
+        $this->availableTests = [];
+
+        foreach ($tesJalurs as $tesJalur) {
+            foreach ($tesJalur->customTests as $customTest) {
+                if ($customTest->is_active) {
+                    $hasCompleted = CustomTestAnswer::where('user_id', Auth::id())
+                        ->where('custom_test_id', $customTest->id)
+                        ->exists();
+
+                    $this->availableTests[] = [
+                        'test' => $customTest,
+                        'has_completed' => $hasCompleted
+                    ];
+                }
+            }
+        }
     }
 
     public function render()
