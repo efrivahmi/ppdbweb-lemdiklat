@@ -12,6 +12,7 @@
         
         {{-- Location Section --}}
         <x-landing.location-section />
+        
         <!-- gallery dan ke jalur pendaftaran -->
         <livewire:components.landing.link-photo-section />
         <livewire:components.landing.link-youtube />

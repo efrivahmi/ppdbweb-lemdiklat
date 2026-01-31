@@ -115,49 +115,11 @@
                 @endif
             </div>
 
-            {{-- Logos --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Kiri</label>
-                    <div class="flex items-center gap-4">
-                        @if($logo_kiri_preview)
-                            <img src="{{ $logo_kiri_preview }}" alt="Logo Kiri" class="w-16 h-16 object-contain rounded-lg border">
-                        @endif
-                        <input type="file" wire:model="logo_kiri" accept="image/*"
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors">
-                    </div>
-                    @error('logo_kiri') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Kanan</label>
-                    <div class="flex items-center gap-4">
-                        @if($logo_kanan_preview)
-                            <img src="{{ $logo_kanan_preview }}" alt="Logo Kanan" class="w-16 h-16 object-contain rounded-lg border">
-                        @endif
-                        <input type="file" wire:model="logo_kanan" accept="image/*"
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors">
-                    </div>
-                    @error('logo_kanan') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-                </div>
-            </div>
 
-            {{-- Payment Message --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Pesan Pembayaran</label>
-                <textarea wire:model="pesan_pembayaran" rows="3"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors"
-                    placeholder="Pesan yang ditampilkan pada halaman pembayaran"></textarea>
-                @error('pesan_pembayaran') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-            </div>
 
-            {{-- Important Notes --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Penting</label>
-                <textarea wire:model="catatan_penting" rows="3"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors"
-                    placeholder="Catatan penting untuk calon siswa"></textarea>
-                @error('catatan_penting') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-            </div>
+
+
+
 
             {{-- Separator --}}
             <div class="border-t border-gray-200 pt-6">
@@ -210,111 +172,7 @@
         </form>
     </div>
 
-    {{-- Operators Section --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-lime-50 to-emerald-50 flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                <x-lucide-users class="w-5 h-5 text-lime-600" />
-                Operator Sekolah
-            </h2>
-            <button wire:click="createOperator" 
-                class="inline-flex items-center gap-2 px-4 py-2 bg-lime-600 text-white text-sm font-medium rounded-lg hover:bg-lime-700 transition-colors">
-                <x-lucide-plus class="w-4 h-4" />
-                Tambah Operator
-            </button>
-        </div>
-        <div class="p-6">
-            @if($operators->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Nama</th>
-                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Jabatan</th>
-                                <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
-                                <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($operators as $operator)
-                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                    <td class="py-3 px-4 text-sm text-gray-800">{{ $operator->nama }}</td>
-                                    <td class="py-3 px-4 text-sm text-gray-600">{{ $operator->jabatan }}</td>
-                                    <td class="py-3 px-4 text-center">
-                                        <button wire:click="toggleOperatorStatus({{ $operator->id }})"
-                                            class="px-3 py-1 text-xs font-medium rounded-full transition-colors {{ $operator->is_active ? 'bg-lime-100 text-lime-700' : 'bg-gray-100 text-gray-600' }}">
-                                            {{ $operator->is_active ? 'Aktif' : 'Nonaktif' }}
-                                        </button>
-                                    </td>
-                                    <td class="py-3 px-4 text-center">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <button wire:click="editOperator({{ $operator->id }})" 
-                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <x-lucide-pencil class="w-4 h-4" />
-                                            </button>
-                                            <button wire:click="deleteOperator({{ $operator->id }})" 
-                                                wire:confirm="Apakah Anda yakin ingin menghapus operator ini?"
-                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <x-lucide-trash-2 class="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="text-center py-8 text-gray-500">
-                    <x-lucide-users class="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                    <p>Belum ada operator. Klik tombol "Tambah Operator" untuk menambahkan.</p>
-                </div>
-            @endif
-        </div>
-    </div>
 
-    {{-- Operator Modal --}}
-    <x-atoms.modal name="operator" maxWidth="md">
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    {{ $editOperatorMode ? 'Edit Operator' : 'Tambah Operator' }}
-                </h3>
-                <button type="button" x-on:click="close()" class="text-gray-400 hover:text-gray-600">
-                    <x-lucide-x class="w-5 h-5" />
-                </button>
-            </div>
-            <form wire:submit="saveOperator" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Operator *</label>
-                    <input type="text" wire:model="operator_nama" 
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors"
-                        placeholder="Masukkan nama operator">
-                    @error('operator_nama') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan *</label>
-                    <input type="text" wire:model="operator_jabatan" 
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors"
-                        placeholder="Masukkan jabatan">
-                    @error('operator_jabatan') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" wire:model="operator_is_active" id="operator_is_active" 
-                        class="w-4 h-4 text-lime-600 border-gray-300 rounded focus:ring-lime-500">
-                    <label for="operator_is_active" class="text-sm text-gray-700">Aktifkan operator ini</label>
-                </div>
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                    <button type="button" wire:click="closeOperatorModal"
-                        class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors">
-                        {{ $editOperatorMode ? 'Perbarui' : 'Simpan' }}
-                    </button>
-                </div>
-            </form>
-        </div>
-    </x-atoms.modal>
+
+
 </div>
