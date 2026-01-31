@@ -652,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nextBtnText: 'Selanjutnya →',
             prevBtnText: '← Sebelumnya',
             doneBtnText: 'Selesai ✓',
-            progressText: 'Langkah {{current}} dari {{total}}',
+            progressText: 'Langkah @{{current}} dari @{{total}}',
             onDestroyStarted: function() {
                 // Mark tour as complete when closed
                 @this.call('markTourComplete');
