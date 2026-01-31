@@ -34,10 +34,17 @@ class NotificationService
         // 1. Broadcast to admin dashboard (real-time)
         NewRegistration::dispatch($user);
 
-        // 2. Send WhatsApp welcome message to student
-        if ($user->telp) {
-            $this->whatsApp->sendWelcome($user->telp, $user->name);
-        }
+        // 2. Save welcome notification to database (for bell icon)
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\WelcomeNotification',
+            'data' => [
+                'type' => 'welcome',
+                'icon' => 'graduation-cap',
+                'message' => 'Selamat datang di SPMB Lemdiklat TNI! Silakan lengkapi data pendaftaran Anda.',
+                'action_url' => route('siswa.dashboard'),
+            ],
+        ]);
 
         Log::info('New registration notification sent', ['user_id' => $user->id]);
     }
@@ -50,10 +57,20 @@ class NotificationService
         // 1. Broadcast to student (private channel) and admin
         PaymentVerified::dispatch($user, $status);
 
-        // 2. Send WhatsApp notification
-        if ($user->telp) {
-            $this->whatsApp->sendPaymentVerified($user->telp, $user->name, $status);
-        }
+        // 2. Save notification to database (for bell icon)
+        $statusText = $status === 'approved' ? 'disetujui' : 'ditolak';
+        $icon = $status === 'approved' ? 'check-circle' : 'x-circle';
+        
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\PaymentNotification',
+            'data' => [
+                'type' => 'payment',
+                'icon' => $icon,
+                'message' => "Pembayaran Anda telah {$statusText}.",
+                'action_url' => route('siswa.dashboard'),
+            ],
+        ]);
 
         Log::info('Payment verification notification sent', [
             'user_id' => $user->id,
@@ -69,10 +86,17 @@ class NotificationService
         // 1. Broadcast real-time
         PendaftaranStatusUpdated::dispatch($user, $status, $message);
 
-        // 2. Send WhatsApp
-        if ($user->telp) {
-            $this->whatsApp->sendStatusUpdate($user->telp, $user->name, $status, $message);
-        }
+        // 2. Save notification to database (for bell icon)
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\StatusNotification',
+            'data' => [
+                'type' => 'status',
+                'icon' => 'information-circle',
+                'message' => $message ?: "Status pendaftaran Anda: {$status}",
+                'action_url' => route('siswa.dashboard'),
+            ],
+        ]);
 
         Log::info('Status update notification sent', [
             'user_id' => $user->id,
@@ -115,10 +139,17 @@ class NotificationService
         // 1. Broadcast real-time
         PendaftaranStatusUpdated::dispatch($user, 'diterima', 'Selamat! Kamu diterima!');
 
-        // 2. Send WhatsApp
-        if ($user->telp) {
-            $this->whatsApp->sendAccepted($user->telp, $user->name, $sekolah, $instruksi);
-        }
+        // 2. Save notification to database (for bell icon)
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\AcceptanceNotification',
+            'data' => [
+                'type' => 'accepted',
+                'icon' => 'academic-cap',
+                'message' => "Selamat! Anda diterima di {$sekolah}. Silakan download Surat Penerimaan.",
+                'action_url' => route('siswa.dashboard'),
+            ],
+        ]);
 
         Log::info('Acceptance notification sent', ['user_id' => $user->id]);
     }
@@ -131,10 +162,17 @@ class NotificationService
         // 1. Broadcast real-time
         PendaftaranStatusUpdated::dispatch($user, 'ditolak', 'Mohon maaf, kamu tidak diterima.');
 
-        // 2. Send WhatsApp
-        if ($user->telp) {
-            $this->whatsApp->sendRejected($user->telp, $user->name);
-        }
+        // 2. Save notification to database (for bell icon)
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\RejectionNotification',
+            'data' => [
+                'type' => 'rejected',
+                'icon' => 'x-circle',
+                'message' => 'Mohon maaf, Anda belum dapat diterima. Tetap semangat untuk kesempatan lainnya!',
+                'action_url' => route('siswa.dashboard'),
+            ],
+        ]);
 
         Log::info('Rejection notification sent', ['user_id' => $user->id]);
     }

@@ -161,6 +161,9 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/landing/gallery', GallerySection::class)->name('admin.landing.gallery');
     Route::get('/landing/link-youtube', LinkYoutubeSection::class)->name('admin.landing.link-youtube');
     
+    // WhatsApp Message
+    Route::get('/whatsapp-message', App\Livewire\Admin\WhatsAppMessagePage::class)->name('admin.whatsapp-message');
+    
     // Settings
     Route::get('/settings/school', App\Livewire\Admin\Settings\SchoolSettingsPage::class)->name('admin.settings.school');
     

@@ -67,46 +67,54 @@
     </div>
 
     <!-- Progress Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        <x-molecules.progress-card
-            title="Data Siswa"
-            :progress="$dataMuridProgress"
-            icon="ri-user-line"
-            color="lime"
-            url="{{ route('siswa.formulir.data-murid') }}"
-            completeText="Lihat Data"
-            incompleteText="Lengkapi Data"
-        />
+    <div id="tour-progress-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <div id="tour-data-siswa">
+            <x-molecules.progress-card
+                title="Data Siswa"
+                :progress="$dataMuridProgress"
+                icon="ri-user-line"
+                color="lime"
+                url="{{ route('siswa.formulir.data-murid') }}"
+                completeText="Lihat Data"
+                incompleteText="Lengkapi Data"
+            />
+        </div>
 
-        <x-molecules.progress-card
-            title="Data Orang Tua"
-            :progress="$dataOrangTuaProgress"
-            icon="ri-parent-line"
-            color="green"
-            url="{{ route('siswa.formulir.data-orang-tua') }}"
-            completeText="Lihat Data"
-            incompleteText="Lengkapi Data"
-        />
+        <div id="tour-data-ortu">
+            <x-molecules.progress-card
+                title="Data Orang Tua"
+                :progress="$dataOrangTuaProgress"
+                icon="ri-parent-line"
+                color="green"
+                url="{{ route('siswa.formulir.data-orang-tua') }}"
+                completeText="Lihat Data"
+                incompleteText="Lengkapi Data"
+            />
+        </div>
 
-        <x-molecules.progress-card
-            title="Berkas Siswa"
-            :progress="$berkasMuridProgress"
-            icon="ri-folder-line"
-            color="blue"
-            url="{{ route('siswa.formulir.berkas-murid') }}"
-            completeText="Lihat Berkas"
-            incompleteText="Upload Berkas"
-        />
+        <div id="tour-berkas">
+            <x-molecules.progress-card
+                title="Berkas Siswa"
+                :progress="$berkasMuridProgress"
+                icon="ri-folder-line"
+                color="blue"
+                url="{{ route('siswa.formulir.berkas-murid') }}"
+                completeText="Lihat Berkas"
+                incompleteText="Upload Berkas"
+            />
+        </div>
 
-        <x-molecules.progress-card
-            title="Pendaftaran"
-            :progress="$pendaftaranProgress"
-            icon="ri-file-list-line"
-            color="purple"
-            url="{{ route('siswa.pendaftaran') }}"
-            completeText="Lihat Pendaftaran"
-            incompleteText="Pilih Jurusan"
-        />
+        <div id="tour-pendaftaran">
+            <x-molecules.progress-card
+                title="Pendaftaran"
+                :progress="$pendaftaranProgress"
+                icon="ri-file-list-line"
+                color="purple"
+                url="{{ route('siswa.pendaftaran') }}"
+                completeText="Lihat Pendaftaran"
+                incompleteText="Pilih Jurusan"
+            />
+        </div>
     </div>
 
     <!-- Overall Progress -->
@@ -491,4 +499,170 @@
 
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+{{-- Driver.js CSS --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<style>
+    /* Custom Driver.js styling */
+    .driver-popover {
+        background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        max-width: 400px;
+    }
+    .driver-popover-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+    .driver-popover-description {
+        color: #4b5563;
+        line-height: 1.6;
+    }
+    .driver-popover-progress-text {
+        color: #6b7280;
+        font-size: 0.75rem;
+    }
+    .driver-popover-navigation-btns button {
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .driver-popover-next-btn {
+        background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+        color: white;
+    }
+    .driver-popover-next-btn:hover {
+        background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
+    }
+    .driver-popover-prev-btn {
+        background: #f3f4f6;
+        color: #374151;
+    }
+    .driver-popover-prev-btn:hover {
+        background: #e5e7eb;
+    }
+    .driver-popover-close-btn {
+        color: #6b7280;
+    }
+</style>
+@endpush
+
+@push('scripts')
+{{-- Driver.js Library --}}
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+
+@if(!$hasSeenTour)
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for page to fully render
+    setTimeout(function() {
+        const driver = window.driver.js.driver;
+        
+        const driverObj = driver({
+            showProgress: true,
+            showButtons: ['next', 'previous', 'close'],
+            steps: [
+                {
+                    popover: {
+                        title: '🎉 Selamat Datang di SPMB!',
+                        description: 'Hai! Selamat datang di Sistem Penerimaan Murid Baru Lemdiklat TNI. Mari kita pelajari cara menggunakan sistem ini. Klik "Selanjutnya" untuk memulai tour.',
+                        side: 'center',
+                        align: 'center'
+                    }
+                },
+                {
+                    element: '#tour-progress-cards',
+                    popover: {
+                        title: '📊 Progress Pendaftaran',
+                        description: 'Di sini kamu bisa melihat progress pengisian data pendaftaran. Setiap kartu menunjukkan persentase kelengkapan data.',
+                        side: 'bottom',
+                        align: 'center'
+                    }
+                },
+                {
+                    element: '#tour-data-siswa',
+                    popover: {
+                        title: '1️⃣ Data Siswa',
+                        description: '<strong>LANGKAH PERTAMA:</strong> Isi data pribadi kamu seperti nama lengkap, tempat tanggal lahir, alamat, dan nomor WhatsApp. Klik kartu ini untuk mulai mengisi.',
+                        side: 'bottom',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-data-ortu',
+                    popover: {
+                        title: '2️⃣ Data Orang Tua',
+                        description: '<strong>LANGKAH KEDUA:</strong> Isi data orang tua/wali kamu. Data ini penting untuk keperluan administrasi sekolah.',
+                        side: 'bottom',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-berkas',
+                    popover: {
+                        title: '3️⃣ Upload Berkas',
+                        description: '<strong>LANGKAH KETIGA:</strong> Upload dokumen yang diperlukan seperti KK, Akta Kelahiran, foto, dan ijazah. Pastikan file berformat gambar atau PDF.',
+                        side: 'bottom',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-pendaftaran',
+                    popover: {
+                        title: '4️⃣ Pilih Jalur & Jurusan',
+                        description: '<strong>LANGKAH KEEMPAT:</strong> Pilih jalur pendaftaran, jenis sekolah (SMA/SMK), dan jurusan yang kamu inginkan.',
+                        side: 'bottom',
+                        align: 'end'
+                    }
+                },
+                {
+                    popover: {
+                        title: '💰 Upload Bukti Pembayaran',
+                        description: 'Setelah semua data terisi, upload bukti pembayaran pendaftaran di bagian bawah halaman ini. Admin akan memverifikasi pembayaran kamu.',
+                        side: 'center',
+                        align: 'center'
+                    }
+                },
+                {
+                    popover: {
+                        title: '📝 Ikuti Ujian Seleksi',
+                        description: 'Setelah pembayaran diverifikasi, kamu bisa mengikuti ujian seleksi sesuai jadwal. Klik menu "Ujian Seleksi" di sidebar untuk mulai mengerjakan.',
+                        side: 'center',
+                        align: 'center'
+                    }
+                },
+                {
+                    popover: {
+                        title: '📄 Download Surat Verifikasi',
+                        description: 'Setelah semua ujian selesai, kamu bisa download Surat Verifikasi sebagai bukti pendaftaran yang sah.',
+                        side: 'center',
+                        align: 'center'
+                    }
+                },
+                {
+                    popover: {
+                        title: '🎓 Tunggu Pengumuman',
+                        description: 'Hasil seleksi akan diumumkan sesuai jadwal. Jika diterima, kamu bisa download Surat Penerimaan dari dashboard ini. Semoga sukses! 🙏',
+                        side: 'center',
+                        align: 'center'
+                    }
+                }
+            ],
+            nextBtnText: 'Selanjutnya →',
+            prevBtnText: '← Sebelumnya',
+            doneBtnText: 'Selesai ✓',
+            progressText: 'Langkah {{current}} dari {{total}}',
+            onDestroyStarted: function() {
+                // Mark tour as complete when closed
+                @this.call('markTourComplete');
+                driverObj.destroy();
+            }
+        });
+
+        driverObj.drive();
+    }, 500);
+});
+</script>
+@endif
 @endpush

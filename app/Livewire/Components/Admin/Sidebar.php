@@ -20,6 +20,16 @@ class Sidebar extends Component
             'type' => 'link'
         ],
 
+        // WhatsApp Message
+        [
+            'key' => 'whatsapp-message',
+            'name' => 'WhatsApp Message',
+            'url' => 'admin.whatsapp-message',
+            'icon' => 'ri-whatsapp-line',
+            'type' => 'link',
+            'badge' => 'WA'
+        ],
+
         // 2. Pengguna
         [
             'key' => 'pengguna',

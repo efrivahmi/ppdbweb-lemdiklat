@@ -66,6 +66,9 @@ class Dashboard extends Component
         'pending' => 0
     ];
 
+    // Onboarding Tour
+    public $hasSeenTour = true;
+
     public function mount()
     {
         $this->calculateProgress();
@@ -78,6 +81,20 @@ class Dashboard extends Component
         $this->loadBankAccounts();
         $this->loadAdminContacts();
         $this->checkPDFDownloadAvailability();
+        
+        // Check if user has seen the tour
+        $this->hasSeenTour = Auth::user()->has_seen_tour ?? false;
+    }
+
+    /**
+     * Mark tour as complete
+     */
+    public function markTourComplete()
+    {
+        $user = Auth::user();
+        $user->has_seen_tour = true;
+        $user->save();
+        $this->hasSeenTour = true;
     }
 
     public function loadBankAccounts()
