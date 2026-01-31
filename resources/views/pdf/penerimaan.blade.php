@@ -41,13 +41,14 @@
         .logo-left,
         .logo-right {
             display: table-cell;
-            width: 60px;
+            width: 80px;
             vertical-align: middle;
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 65px;
+            height: auto;
+            max-height: 65px;
             object-fit: contain;
         }
 
@@ -311,7 +312,7 @@
     </div>
 
     <div class="main-content">
-        Berdasarkan hasil seleksi PPDB {{ $pdfSetting->nama_sekolah }} Tahun Pelajaran {{ $tahunPelajaran }}, dengan ini kami sampaikan bahwa Anda telah <strong>DI TERIMA</strong> sebagai siswa baru.
+        Berdasarkan hasil seleksi SPMB {{ $pdfSetting->nama_sekolah }} Tahun Pelajaran {{ $tahunPelajaran }}, dengan ini kami sampaikan bahwa {{ $user->name }} telah&nbsp;<strong>DITERIMA</strong> sebagai siswa baru.
     </div>
 
     <!-- Student Information -->

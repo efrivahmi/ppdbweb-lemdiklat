@@ -46,7 +46,7 @@ class PDFController extends Controller
                 'user' => $user,
                 'pendaftaran' => $pendaftaran,
                 'pdfSetting' => $pdfSetting,
-                'tahunPelajaran' => $this->getTahunPelajaran(),
+                'tahunPelajaran' => $this->getTahunPelajaran($pendaftaran),
                 'tanggalCetak' => Carbon::now()->locale('id')->isoFormat('D MMMM Y'),
             ];
 
@@ -98,7 +98,7 @@ class PDFController extends Controller
                 'user' => $user,
                 'pendaftaran' => $pendaftaran,
                 'pdfSetting' => $pdfSetting,
-                'tahunPelajaran' => $this->getTahunPelajaran(),
+                'tahunPelajaran' => $this->getTahunPelajaran($pendaftaran),
                 'tanggalCetak' => Carbon::now()->locale('id')->isoFormat('D MMMM Y'),
             ];
 
@@ -141,7 +141,7 @@ class PDFController extends Controller
                 'user' => $user,
                 'pendaftaran' => $pendaftaran,
                 'pdfSetting' => $pdfSetting,
-                'tahunPelajaran' => $this->getTahunPelajaran(),
+                'tahunPelajaran' => $this->getTahunPelajaran($pendaftaran),
                 'tanggalCetak' => Carbon::now()->locale('id')->isoFormat('D MMMM Y'),
             ];
 
@@ -180,7 +180,7 @@ class PDFController extends Controller
                 'user' => $user,
                 'pendaftaran' => $pendaftaran,
                 'pdfSetting' => $pdfSetting,
-                'tahunPelajaran' => $this->getTahunPelajaran(),
+                'tahunPelajaran' => $this->getTahunPelajaran($pendaftaran),
                 'tanggalCetak' => Carbon::now()->locale('id')->isoFormat('D MMMM Y'),
             ];
 
@@ -208,19 +208,24 @@ class PDFController extends Controller
     }
 
     /**
-     * Get tahun pelajaran berdasarkan tanggal sekarang
+     * Get tahun pelajaran berdasarkan tahun siswa mendaftar
+     * Contoh: Jika siswa mendaftar tahun 2025 -> Tahun Pelajaran 2026/2027
+     * Jika siswa mendaftar tahun 2027 -> Tahun Pelajaran 2028/2029
+     * 
+     * Ini memastikan setiap siswa mendapat tahun pelajaran berdasarkan 
+     * kapan mereka mendaftar, bukan berdasarkan gelombang terbaru
      */
-    private function getTahunPelajaran()
+    private function getTahunPelajaran($pendaftaran = null)
     {
-        $year = Carbon::now()->year;
-        $month = Carbon::now()->month;
-        
-        // Jika bulan Juli-Desember, tahun pelajaran dimulai dari tahun ini
-        // Jika bulan Januari-Juni, tahun pelajaran dimulai dari tahun lalu
-        if ($month >= 7) {
-            return $year . '/' . ($year + 1);
+        // Gunakan tahun dari tanggal pendaftaran siswa
+        if ($pendaftaran && $pendaftaran->created_at) {
+            $registrationYear = Carbon::parse($pendaftaran->created_at)->year;
         } else {
-            return ($year - 1) . '/' . $year;
+            // Fallback ke tahun sekarang jika tidak ada pendaftaran
+            $registrationYear = Carbon::now()->year;
         }
+        
+        // Tahun pelajaran = tahun pendaftaran + 1 / tahun pendaftaran + 2
+        return ($registrationYear + 1) . '/' . ($registrationYear + 2);
     }
 }

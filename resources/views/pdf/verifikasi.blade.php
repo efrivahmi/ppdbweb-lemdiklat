@@ -41,13 +41,14 @@
         .logo-left,
         .logo-right {
             display: table-cell;
-            width: 60px;
+            width: 80px;
             vertical-align: middle;
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 65px;
+            height: auto;
+            max-height: 65px;
             object-fit: contain;
         }
 
