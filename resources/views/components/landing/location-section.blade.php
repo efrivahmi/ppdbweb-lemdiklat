@@ -121,10 +121,12 @@
 
                 {{-- CTA Button --}}
                 <div class="mt-8 pt-6 border-t border-gray-200">
-                    <a href="{{ route('spmb') }}" 
+                    <a href="https://maps.app.goo.gl/9nfCJS4RFEp6FJCk8" 
+                       target="_blank"
+                       rel="noopener noreferrer"
                        class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-lime-600 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:from-lime-700 hover:to-emerald-700 transition-all hover:shadow-xl">
-                        <x-lucide-user-plus class="w-5 h-5" />
-                        Daftar Sekarang
+                        <x-lucide-navigation class="w-5 h-5" />
+                        Buka Google Maps
                     </a>
                 </div>
             </div>

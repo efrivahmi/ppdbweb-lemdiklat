@@ -30,7 +30,7 @@ class Navbar extends Component
             'children' => [
                 [
                     'id' => 'about',
-                    'name' => 'Profil Yayasan',
+                    'name' => 'Profil Lembaga',
                     'url' => '/profile',
                 ],
                 [
