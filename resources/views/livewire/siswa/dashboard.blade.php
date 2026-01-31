@@ -493,27 +493,72 @@
         font-size: 0.75rem;
     }
     .driver-popover-navigation-btns button {
-        border-radius: 8px;
-        padding: 8px 16px;
+        padding: 0 20px 20px 20px;
+        margin: 0;
+    }
+    
+    .driver-popover.driverjs-theme .driver-popover-footer {
+        background-color: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+        padding: 12px 20px;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .driver-popover.driverjs-theme button {
+        flex: 1;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 0.875rem;
         font-weight: 500;
+        cursor: pointer;
         transition: all 0.2s;
+        border: 1px solid transparent;
+        justify-content: center;
     }
-    .driver-popover-next-btn {
-        background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+    
+    .driver-popover.driverjs-theme .driver-popover-next-btn {
+        background-color: #166534; /* Green-700 */
         color: white;
+        text-shadow: none;
+        order: 2;
     }
-    .driver-popover-next-btn:hover {
-        background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
+    .driver-popover.driverjs-theme .driver-popover-next-btn:hover {
+        background-color: #14532d; /* Green-800 */
     }
-    .driver-popover-prev-btn {
-        background: #f3f4f6;
+    
+    .driver-popover.driverjs-theme .driver-popover-prev-btn {
+        background-color: white;
         color: #374151;
+        border: 1px solid #d1d5db;
+        text-shadow: none;
+        order: 1;
     }
-    .driver-popover-prev-btn:hover {
-        background: #e5e7eb;
+    .driver-popover.driverjs-theme .driver-popover-prev-btn:hover {
+        background-color: #f3f4f6;
+        color: #111827;
     }
-    .driver-popover-close-btn {
-        color: #6b7280;
+    
+    .driver-popover.driverjs-theme .driver-popover-close-btn {
+        display: none; /* Hide X button, use buttons instead */
+    }
+    
+    /* Progress text styling */
+    .driver-popover.driverjs-theme .driver-popover-progress-text {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    /* Fix z-index issues */
+    .driver-active-element {
+        z-index: 100003 !important;
     }
 </style>
 @endpush
@@ -529,109 +574,124 @@ document.addEventListener('livewire:initialized', () => {
     setTimeout(function() {
         const driver = window.driver.js.driver;
         
+        // Define steps dynamically to check for element existence
+        const steps = [
+            {
+                popover: {
+                    title: '🎉 Selamat Datang di SPMB!',
+                    description: 'Hai! Selamat datang di Sistem Penerimaan Murid Baru Lemdiklat TNI. Mari kita pelajari cara menggunakan sistem ini dalam beberapa langkah mudah.',
+                    side: 'center',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#tour-progress-cards',
+                popover: {
+                    title: '📊 Progress Pendaftaran',
+                    description: 'Kartu-kartu ini menunjukkan status kelengkapan data kamu. Warna hijau berarti selesai, kuning berarti belum.',
+                    side: 'bottom',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#tour-data-siswa',
+                popover: {
+                    title: '1️⃣ Data Siswa',
+                    description: 'Langkah pertama: Lengkapi biodata diri kamu di sini. Pastikan data sesuai dengan dokumen resmi.',
+                    side: 'bottom',
+                    align: 'start'
+                }
+            },
+            {
+                element: '#tour-data-ortu',
+                popover: {
+                    title: '2️⃣ Data Orang Tua',
+                    description: 'Langkah kedua: Isi data orang tua atau wali. Data ini dibutuhkan untuk keperluan administrasi.',
+                    side: 'bottom',
+                    align: 'start'
+                }
+            },
+            {
+                element: '#tour-berkas',
+                popover: {
+                    title: '3️⃣ Upload Berkas',
+                    description: 'Langkah ketiga: Upload KK, Akta, dan Ijazah. Pastikan hasil scan jelas dan terbaca.',
+                    side: 'bottom',
+                    align: 'start'
+                }
+            },
+            {
+                element: '#tour-pendaftaran',
+                popover: {
+                    title: '4️⃣ Pilih Jalur & Jurusan',
+                    description: 'Langkah keempat: Tentukan jalur pendaftaran dan jurusan peminatan kamu (SMA/SMK).',
+                    side: 'bottom',
+                    align: 'end'
+                }
+            },
+            // Fallback steps for general information (no element highlight)
+            {
+                 popover: {
+                    title: '💰 Pembayaran',
+                    description: 'Setelah mengisi data, menu Upload Bukti Pembayaran akan muncul di bawah. Verifikasi dilakukan oleh admin 1x24 jam.',
+                    side: 'center',
+                    align: 'center'
+                }
+            },
+            {
+                 popover: {
+                    title: '📝 Navbar / Menu',
+                    description: 'Gunakan navigasi di atas (atau menu sidebar di HP) untuk mengakses halaman lain seperti Informasi Tes.',
+                    side: 'top', /* Try to point to navbar if possible, else center */
+                    align: 'center'
+                }
+            },
+            {
+                popover: {
+                    title: '✅ Selesai!',
+                    description: 'Itu saja! Jika butuh bantuan, hubungi admin melalui WhatsApp di menu kontak. Selamat mendaftar!',
+                    side: 'center',
+                    align: 'center'
+                }
+            }
+        ];
+
+        // Filter steps to remove those targeting missing elements
+        // BUT for a guide, we might want to keep them as modals if element is missing?
+        // User asked: "if the page is not available, explain that the steps must be completed first"
+        
+        const finalSteps = steps.map(step => {
+            if (step.element && !document.querySelector(step.element)) {
+                // Transform to modal if element missing
+                return {
+                    popover: {
+                        ...step.popover,
+                        description: step.popover.description + '<br><br><em>(Menu ini akan aktif setelah langkah sebelumnya selesai)</em>',
+                        side: 'center',
+                        align: 'center'
+                    }
+                };
+            }
+            return step;
+        });
+        
         const driverObj = driver({
             showProgress: true,
-            showButtons: ['next', 'previous', 'close'],
-            steps: [
-                {
-                    popover: {
-                        title: '🎉 Selamat Datang di SPMB!',
-                        description: 'Hai! Selamat datang di Sistem Penerimaan Murid Baru Lemdiklat TNI. Mari kita pelajari cara menggunakan sistem ini. Klik "Selanjutnya" untuk memulai tour.',
-                        side: 'center',
-                        align: 'center'
-                    }
-                },
-                {
-                    element: '#tour-progress-cards',
-                    popover: {
-                        title: '📊 Progress Pendaftaran',
-                        description: 'Di sini kamu bisa melihat progress pengisian data pendaftaran. Setiap kartu menunjukkan persentase kelengkapan data.',
-                        side: 'bottom',
-                        align: 'center'
-                    }
-                },
-                {
-                    element: '#tour-data-siswa',
-                    popover: {
-                        title: '1️⃣ Data Siswa',
-                        description: '<strong>LANGKAH PERTAMA:</strong> Isi data pribadi kamu seperti nama lengkap, tempat tanggal lahir, alamat, dan nomor WhatsApp. Klik kartu ini untuk mulai mengisi.',
-                        side: 'bottom',
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#tour-data-ortu',
-                    popover: {
-                        title: '2️⃣ Data Orang Tua',
-                        description: '<strong>LANGKAH KEDUA:</strong> Isi data orang tua/wali kamu. Data ini penting untuk keperluan administrasi sekolah.',
-                        side: 'bottom',
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#tour-berkas',
-                    popover: {
-                        title: '3️⃣ Upload Berkas',
-                        description: '<strong>LANGKAH KETIGA:</strong> Upload dokumen yang diperlukan seperti KK, Akta Kelahiran, foto, dan ijazah. Pastikan file berformat gambar atau PDF.',
-                        side: 'bottom',
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#tour-pendaftaran',
-                    popover: {
-                        title: '4️⃣ Pilih Jalur & Jurusan',
-                        description: '<strong>LANGKAH KEEMPAT:</strong> Pilih jalur pendaftaran, jenis sekolah (SMA/SMK), dan jurusan yang kamu inginkan.',
-                        side: 'bottom',
-                        align: 'end'
-                    }
-                },
-                {
-                    popover: {
-                        title: '💰 Upload Bukti Pembayaran',
-                        description: 'Setelah semua data terisi, upload bukti pembayaran pendaftaran di bagian bawah halaman ini. Admin akan memverifikasi pembayaran kamu.',
-                        side: 'center',
-                        align: 'center'
-                    }
-                },
-                {
-                    popover: {
-                        title: '📝 Ikuti Ujian Seleksi',
-                        description: 'Setelah pembayaran diverifikasi, kamu bisa mengikuti ujian seleksi sesuai jadwal. Klik menu "Ujian Seleksi" di sidebar untuk mulai mengerjakan.',
-                        side: 'center',
-                        align: 'center'
-                    }
-                },
-                {
-                    popover: {
-                        title: '📄 Download Surat Verifikasi',
-                        description: 'Setelah semua ujian selesai, kamu bisa download Surat Verifikasi sebagai bukti pendaftaran yang sah.',
-                        side: 'center',
-                        align: 'center'
-                    }
-                },
-                {
-                    popover: {
-                        title: '🎓 Tunggu Pengumuman',
-                        description: 'Hasil seleksi akan diumumkan sesuai jadwal. Jika diterima, kamu bisa download Surat Penerimaan dari dashboard ini. Semoga sukses! 🙏',
-                        side: 'center',
-                        align: 'center'
-                    }
-                }
-            ],
-            nextBtnText: 'Selanjutnya →',
-            prevBtnText: '← Sebelumnya',
-            doneBtnText: 'Selesai ✓',
-            progressText: 'Langkah @{{current}} dari @{{total}}',
+            animate: true,
+            steps: finalSteps,
+            nextBtnText: 'Lanjut',
+            prevBtnText: 'Kembali',
+            doneBtnText: 'Selesai',
+            progressText: '{{current}} / {{total}}',
+            popoverClass: 'driverjs-theme', // Use our custom class
             onDestroyStarted: function() {
-                // Mark tour as complete when closed
                 @this.call('markTourComplete');
                 driverObj.destroy();
             }
         });
 
         driverObj.drive();
-    }, 500);
+    }, 800); // Slightly longer delay to ensure DOM is ready
 });
 </script>
 @endif
