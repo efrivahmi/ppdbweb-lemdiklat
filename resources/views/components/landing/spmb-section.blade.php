@@ -19,7 +19,16 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-lime-500"></span>
                     </span>
-                    <span class="text-sm font-bold text-zinc-800 tracking-wide uppercase">Tahun Ajaran {{ date('Y') }}/{{ date('Y') + 1 }}</span>
+                    @php
+                        $currentMonth = date('n');
+                        $currentYear = date('Y');
+                        // Logic: If July (7) or later, target next year + 1. Else target current year.
+                        // Example: July 2025 -> Start 2026. (2026/2027)
+                        //          Feb 2026  -> Start 2026. (2026/2027)
+                        $startYear = ($currentMonth >= 7) ? $currentYear + 1 : $currentYear;
+                        $endYear = $startYear + 1;
+                    @endphp
+                    <span class="text-sm font-bold text-zinc-800 tracking-wide uppercase">Tahun Ajaran {{ $startYear }}/{{ $endYear }}</span>
                 </div>
 
                 <h2 class="text-4xl lg:text-5xl font-black text-zinc-900 mb-6 leading-tight tracking-tight transition-all duration-700 delay-100 transform"
@@ -33,9 +42,9 @@
                     Kami mengundang putra-putri terbaik bangsa untuk bergabung. Sebelum melakukan pendaftaran, mohon persiapkan dokumen dan kelengkapan administrasi berikut ini.
                 </p>
 
-                {{-- Action Button --}}
-                <div class="transition-all duration-700 delay-300 transform"
-                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                {{-- Action Button (Visibility Fixed) --}}
+                {{-- Removed the :class binding for opacity to ensure it's always visible --}}
+                <div class="transition-all duration-700 delay-300 transform opacity-100 translate-y-0">
                     <a href="/spmb" 
                        class="inline-flex items-center gap-3 px-8 py-4 bg-zinc-900 text-white font-bold rounded-2xl hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 group">
                         <span>Lanjut ke Formulir SPMB</span>
@@ -61,17 +70,17 @@
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-zinc-900">Berkas Persyaratan</h3>
-                            <p class="text-sm text-zinc-500">Wajib M dibawa/diupload</p>
+                            <p class="text-sm text-zinc-500">Wajib dibawa/diupload</p>
                         </div>
                     </div>
 
                     {{-- Checklist Items --}}
                     @php
                         $requirements = [
-                            ['icon' => 'user', 'text' => 'Kartu Keluarga (KK) Asli & Fotocopy', 'desc' => 'Terbaru & sudah dilegalisir'],
+                            ['icon' => 'users', 'text' => 'Kartu Keluarga (KK)', 'desc' => 'Asli & Fotocopy untuk validasi data NIK'],
                             ['icon' => 'file-text', 'text' => 'Akte Kelahiran', 'desc' => 'Pastikan nama sesuai ijazah'],
-                            ['icon' => 'graduation-cap', 'text' => 'Ijazah / SKL Terakhir', 'desc' => 'Dari jenjang pendidikan sebelumnya'],
-                            ['icon' => 'image', 'text' => 'Pas Foto 3x4 (Warna)', 'desc' => 'Background Merah/Biru (4 Lembar)'],
+                            ['icon' => 'graduation-cap', 'text' => 'Ijazah / SKL Terakhir', 'desc' => 'Dari jenjang pendidikan sebelumnya & sudah dilegalisir'],
+                            ['icon' => 'image', 'text' => 'Pas Foto 3x4 (Warna)', 'desc' => 'Background Merah/Biru (5 Lembar)'],
                             ['icon' => 'activity', 'text' => 'Surat Keterangan Sehat', 'desc' => 'Dari Dokter / Puskesmas'],
                         ];
                     @endphp
@@ -98,7 +107,7 @@
                     {{-- Bottom Note --}}
                     <div class="mt-8 pt-6 border-t border-dashed border-zinc-200 text-center">
                         <p class="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-                            Lemdiklat TNI AD
+                            Lemdiklat Taruna Nusantara Indonesia
                         </p>
                     </div>
                 </div>
