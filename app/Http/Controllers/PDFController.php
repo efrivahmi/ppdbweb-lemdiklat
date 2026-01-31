@@ -208,24 +208,45 @@ class PDFController extends Controller
     }
 
     /**
-     * Get tahun pelajaran berdasarkan tahun siswa mendaftar
-     * Contoh: Jika siswa mendaftar tahun 2025 -> Tahun Pelajaran 2026/2027
-     * Jika siswa mendaftar tahun 2027 -> Tahun Pelajaran 2028/2029
+     * Get tahun pelajaran berdasarkan gelombang pendaftaran yang aktif saat siswa mendaftar
      * 
-     * Ini memastikan setiap siswa mendapat tahun pelajaran berdasarkan 
-     * kapan mereka mendaftar, bukan berdasarkan gelombang terbaru
+     * Contoh: Gelombang dibuka Juli 2025 s/d Juli 2026
+     * - Siswa mendaftar Desember 2025 -> Tahun Pelajaran 2026/2027
+     * - Siswa mendaftar Januari 2026 -> Tahun Pelajaran 2026/2027 (sama, sesuai gelombang)
+     * 
+     * Tahun pelajaran = tahun gelombang dibuka + 1 / tahun gelombang dibuka + 2
      */
     private function getTahunPelajaran($pendaftaran = null)
     {
-        // Gunakan tahun dari tanggal pendaftaran siswa
+        $registrationYear = Carbon::now()->year; // default fallback
+        
         if ($pendaftaran && $pendaftaran->created_at) {
-            $registrationYear = Carbon::parse($pendaftaran->created_at)->year;
-        } else {
-            // Fallback ke tahun sekarang jika tidak ada pendaftaran
-            $registrationYear = Carbon::now()->year;
+            $registrationDate = Carbon::parse($pendaftaran->created_at);
+            
+            // Cari gelombang yang aktif saat siswa mendaftar
+            $gelombang = \App\Models\GelombangPendaftaran::where('pendaftaran_mulai', '<=', $registrationDate)
+                ->where('pendaftaran_selesai', '>=', $registrationDate)
+                ->first();
+            
+            if ($gelombang) {
+                // Gunakan tahun dari tanggal mulai gelombang
+                $registrationYear = Carbon::parse($gelombang->pendaftaran_mulai)->year;
+            } else {
+                // Fallback: cari gelombang terdekat sebelum tanggal pendaftaran
+                $gelombang = \App\Models\GelombangPendaftaran::where('pendaftaran_mulai', '<=', $registrationDate)
+                    ->orderBy('pendaftaran_mulai', 'desc')
+                    ->first();
+                
+                if ($gelombang) {
+                    $registrationYear = Carbon::parse($gelombang->pendaftaran_mulai)->year;
+                } else {
+                    // Jika tidak ada gelombang, gunakan tahun pendaftaran siswa
+                    $registrationYear = $registrationDate->year;
+                }
+            }
         }
         
-        // Tahun pelajaran = tahun pendaftaran + 1 / tahun pendaftaran + 2
+        // Tahun pelajaran = tahun gelombang dibuka + 1 / tahun gelombang dibuka + 2
         return ($registrationYear + 1) . '/' . ($registrationYear + 2);
     }
 }
