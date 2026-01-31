@@ -1,17 +1,18 @@
-<div>
+{{-- Sidebar Wrapper - takes space in flex layout on desktop --}}
+<div class="shrink-0 lg:w-64">
     {{-- Mobile Overlay --}}
     <div 
         x-show="sidebarOpen" 
         @click="sidebarOpen = false"
         class="fixed inset-0 z-20 bg-gray-900/50 lg:hidden" 
+        style="top: 64px;"
         x-transition.opacity
     ></div>
 
     {{-- Sidebar Container --}}
     <div 
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-        class="fixed lg:sticky lg:top-0 inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out flex flex-col"
-        style="height: calc(100vh - 64px); max-height: calc(100vh - 64px);"
+        class="fixed lg:sticky top-16 lg:top-0 left-0 bottom-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out flex flex-col lg:h-[calc(100vh-64px)]"
     >
         {{-- Scrollable Navigation Area --}}
         <nav class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 py-6 space-y-1">

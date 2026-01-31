@@ -15,18 +15,18 @@
     <x-molecules.alert />
     
     <div class="flex flex-col h-screen overflow-hidden bg-stone-100">
-        {{-- Full-width Navbar --}}
-        @livewire('components.admin.navbar')
+        {{-- Full-width Navbar (Fixed at top with z-40 to stay above sidebar) --}}
+        <div class="sticky top-0 z-40 shrink-0">
+            @livewire('components.admin.navbar')
+        </div>
         
         {{-- Content Area with Sidebar --}}
         <div class="flex flex-1 overflow-hidden">
-            {{-- Sidebar (Fixed Left) --}}
-            <div class="shrink-0">
-                @livewire('components.admin.sidebar')
-            </div>
+            {{-- Sidebar --}}
+            @livewire('components.admin.sidebar')
 
             {{-- Main Content Area (Fluid Right) --}}
-            <main class="flex-1 overflow-y-auto bg-gradient-to-br from-stone-50 via-stone-100 to-emerald-50/30 p-6">
+            <main class="flex-1 overflow-y-auto bg-gradient-to-br from-stone-50 via-stone-100 to-emerald-50/30 p-6 lg:ml-0">
                 {{ $slot }}
             </main>
         </div>

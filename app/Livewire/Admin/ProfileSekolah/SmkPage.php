@@ -266,16 +266,21 @@ class SmkPage extends Component
         
         // Save or create profile
         ProfileSekolah::updateOrCreate(
-            ['school_type' => 'smk'],
-            [
-                'hero_data' => $heroData,
-                'identity_data' => $identityData,
-                'academic_data' => $academicData,
-                'activity_data' => $activityData,
-                'uniform_data' => $uniformData,
-                'cta_data' => $ctaData,
-            ]
-        );
+        ['school_type' => 'smk'],
+        [
+        // TAMBAHKAN DUA BARIS INI:
+        'title' => 'Profile SMK',    // Wajib diisi agar tidak error
+        'content' => '-',            // Wajib diisi agar tidak error
+        
+        // Data yang sudah ada:
+        'hero_data' => $heroData,
+        'identity_data' => $identityData,
+        'academic_data' => $academicData,
+        'activity_data' => $activityData,
+        'uniform_data' => $uniformData,
+        'cta_data' => $ctaData,
+        ]
+    );
         
         session()->flash('message', 'Profile SMK berhasil disimpan!');
     }
