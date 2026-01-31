@@ -38,7 +38,7 @@ class NotificationBell extends Component
                     'title' => $this->getTitleForType($notification->data['type'] ?? 'info'),
                     'message' => $notification->data['message'] ?? 'Notifikasi baru',
                     'timestamp' => $notification->created_at->toIso8601String(),
-                    'read_at' => $notification->read_at,
+                    'read_at' => $notification->read_at?->toIso8601String(),
                 ];
             })
             ->toArray();
@@ -71,7 +71,7 @@ class NotificationBell extends Component
         
         // Mark loaded notifications as read locally
         $this->notifications = array_map(function($n) {
-            $n['read_at'] = now();
+            $n['read_at'] = now()->toIso8601String();
             return $n;
         }, $this->notifications);
     }
@@ -91,7 +91,7 @@ class NotificationBell extends Component
         // \Illuminate\Support\Facades\Log::info('Bell received new registration', $data);
         
         $this->addNotification([
-            'id' => \Illuminate\Support\Str::uuid(),
+            'id' => (string) \Illuminate\Support\Str::uuid(),
             'type' => 'registration',
             'icon' => 'user-plus',
             'title' => 'Pendaftar Baru',
@@ -113,7 +113,7 @@ class NotificationBell extends Component
         ];
 
         $this->addNotification([
-            'id' => \Illuminate\Support\Str::uuid(),
+            'id' => (string) \Illuminate\Support\Str::uuid(),
             'type' => 'payment',
             'icon' => $statusIcons[$data['status']] ?? 'credit-card',
             'title' => 'Pembayaran',
@@ -129,7 +129,7 @@ class NotificationBell extends Component
     public function handleStatusUpdated($data)
     {
         $this->addNotification([
-            'id' => \Illuminate\Support\Str::uuid(),
+            'id' => (string) \Illuminate\Support\Str::uuid(),
             'type' => 'status',
             'icon' => 'bell',
             'title' => 'Status Diperbarui',
