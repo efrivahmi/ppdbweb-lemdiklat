@@ -7,6 +7,9 @@
         {{-- New Explore School Section --}}
         <livewire:components.landing.explore-school-section />
 
+        {{-- SPMB Promo Section --}}
+        <x-landing.spmb-section />
+
         <livewire:components.landing.encourage-section />
         <livewire:components.landing.achivement-section />
         

@@ -17,16 +17,16 @@ class ExploreSchoolSection extends Component
         ],
         [
             'id' => 'sma',
-            'title' => 'SMA Taruna Nusantara',
-            'desc' => 'Pendidikan menengah atas dengan kurikulum khusus berbasis kenusantaraan.',
+            'title' => 'SMA Taruna Nusantara Indonesia',
+            'desc' => 'Pendidikan menengah atas dengan kurikulum khusus mencakup ketarunaan, kepesantrenan, dan pendidikan formal.',
             'icon' => 'ri-school-line',
             'url' => '/profile/sma',
             'color' => 'emerald'
         ],
         [
             'id' => 'smk',
-            'title' => 'SMK Taruna Nusantara',
-            'desc' => 'Pendidikan kejuruan unggulan siap kerja dengan fasilitas modern.',
+            'title' => 'SMK Taruna Nusantara Indonesia',
+            'desc' => 'Pendidikan kejuruan unggulan siap kerja dengan kurikulum khusus mencakup ketarunaan, kepesantrenan, dan pendidikan formal.',
             'icon' => 'ri-hammer-line',
             'url' => '/profile/smk',
             'color' => 'amber'
@@ -34,14 +34,14 @@ class ExploreSchoolSection extends Component
         [
             'id' => 'achievement',
             'title' => 'Prestasi Sekolah',
-            'desc' => 'Jejak langkah keberhasilan para siswa di kancah nasional dan internasional.',
+            'desc' => 'Jejak langkah keberhasilan para siswa di kancah nasional.',
             'icon' => 'ri-trophy-line',
             'url' => '/achievement',
             'color' => 'yellow'
         ],
         [
             'id' => 'facility',
-            'title' => 'Fasilitas Kampus',
+            'title' => 'Fasilitas Sekolah',
             'desc' => 'Sarana prasarana lengkap mendukung kegiatan akademik dan non-akademik.',
             'icon' => 'ri-community-line',
             'url' => '/facility',
