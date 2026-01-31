@@ -19,6 +19,7 @@ class SchoolSettingsPage extends Component
     public $alamat = '';
     public $kode_pos = '';
     public $telp = '';
+    public $jam_operasional = '';
     public $email = '';
     public $website = '';
     public $tahun_ajaran = '';
@@ -62,6 +63,7 @@ class SchoolSettingsPage extends Component
             'alamat' => 'required|string',
             'kode_pos' => 'nullable|string|max:10',
             'telp' => 'nullable|string|max:20',
+            'jam_operasional' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'tahun_ajaran' => 'required|string|max:20',
@@ -99,6 +101,7 @@ class SchoolSettingsPage extends Component
             $this->alamat = $settings->alamat;
             $this->kode_pos = $settings->kode_pos;
             $this->telp = $settings->telp;
+            $this->jam_operasional = $settings->jam_operasional;
             $this->email = $settings->email;
             $this->website = $settings->website;
             $this->tahun_ajaran = $settings->tahun_ajaran;
@@ -127,6 +130,7 @@ class SchoolSettingsPage extends Component
             'alamat' => $this->rules()['alamat'],
             'kode_pos' => $this->rules()['kode_pos'],
             'telp' => $this->rules()['telp'],
+            'jam_operasional' => $this->rules()['jam_operasional'],
             'email' => $this->rules()['email'],
             'website' => $this->rules()['website'],
             'tahun_ajaran' => $this->rules()['tahun_ajaran'],
@@ -144,6 +148,7 @@ class SchoolSettingsPage extends Component
                 'alamat' => $this->alamat,
                 'kode_pos' => $this->kode_pos,
                 'telp' => $this->telp,
+                'jam_operasional' => $this->jam_operasional,
                 'email' => $this->email,
                 'website' => $this->website,
                 'tahun_ajaran' => $this->tahun_ajaran,

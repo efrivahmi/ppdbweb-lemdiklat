@@ -9,8 +9,8 @@ class ExploreSchoolSection extends Component
     public $exploreItems = [
         [
             'id' => 'about',
-            'title' => 'Profil Yayasan',
-            'desc' => 'Mengenal lebih dekat sejarah, visi, dan misi yayasan penghasil pemimpin bangsa.',
+            'title' => 'Profil Lembaga',
+            'desc' => 'Mengenal lebih dekat sejarah, visi, dan misi lembaga penghasil pemimpin bangsa.',
             'icon' => 'ri-building-4-line',
             'url' => '/profile',
             'color' => 'blue'
