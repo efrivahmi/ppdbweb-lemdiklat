@@ -275,6 +275,28 @@
                                    class="block w-full text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm">
                                     <i class="ri-eye-line mr-1"></i> Lihat Jawaban
                                 </a>
+                            @elseif(!$paymentApproved)
+                                {{-- Unpaid - Disabled button --}}
+                                <div class="space-y-2">
+                                    <button disabled
+                                            class="block w-full text-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
+                                        <i class="ri-lock-line mr-1"></i> Isi Kuesioner
+                                    </button>
+                                    <p class="text-xs text-red-500 text-center">
+                                        <i class="ri-error-warning-line mr-1"></i> Silakan selesaikan pembayaran terlebih dahulu
+                                    </p>
+                                </div>
+                            @elseif(!$canAccessTest)
+                                {{-- Schedule not active - Disabled button --}}
+                                <div class="space-y-2">
+                                    <button disabled
+                                            class="block w-full text-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
+                                        <i class="ri-calendar-line mr-1"></i> Isi Kuesioner
+                                    </button>
+                                    <p class="text-xs text-orange-500 text-center">
+                                        <i class="ri-calendar-line mr-1"></i> Menunggu jadwal ujian
+                                    </p>
+                                </div>
                             @else
                                 <a href="{{ route('siswa.test.take', $testData['test']->id) }}"
                                    class="block w-full text-center px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors text-sm">
