@@ -472,53 +472,61 @@
 {{-- Driver.js CSS --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
 <style>
-    /* Custom Driver.js styling */
-    .driver-popover {
-        background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
-        border-radius: 16px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        max-width: 400px;
-    }
-    .driver-popover-title {
-        font-size: 1.125rem;
-        font-weight: 700;
+    /* Driver.js Custom Theme */
+    .driver-popover.driverjs-theme {
+        background-color: #ffffff;
         color: #1f2937;
+        border-radius: 16px;
+        padding: 0;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        min-width: 300px;
+        max-width: 400px;
+        border: 1px solid #e5e7eb;
+        font-family: 'Inter', sans-serif;
+        z-index: 100000;
     }
-    .driver-popover-description {
+    
+    .driver-popover.driverjs-theme .driver-popover-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        padding: 20px 24px 0 24px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+    
+    .driver-popover.driverjs-theme .driver-popover-description {
+        font-size: 0.95rem;
         color: #4b5563;
         line-height: 1.6;
-    }
-    .driver-popover-progress-text {
-        color: #6b7280;
-        font-size: 0.75rem;
-    }
-    .driver-popover-navigation-btns button {
-        padding: 0 20px 20px 20px;
+        padding: 0 24px 24px 24px;
         margin: 0;
     }
     
     .driver-popover.driverjs-theme .driver-popover-footer {
         background-color: #f9fafb;
-        border-top: 1px solid #e5e7eb;
-        padding: 12px 20px;
-        border-bottom-left-radius: 12px;
-        border-bottom-right-radius: 12px;
+        border-top: 1px solid #f3f4f6;
+        padding: 16px 24px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
         display: flex;
         justify-content: space-between;
-        gap: 8px;
+        align-items: center;
+        gap: 12px;
     }
     
     .driver-popover.driverjs-theme button {
         flex: 1;
         text-align: center;
-        border-radius: 6px;
-        padding: 8px 12px;
+        border-radius: 8px;
+        padding: 10px 16px;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         border: 1px solid transparent;
         justify-content: center;
+        outline: none;
     }
     
     .driver-popover.driverjs-theme .driver-popover-next-btn {
@@ -526,9 +534,11 @@
         color: white;
         text-shadow: none;
         order: 2;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
     .driver-popover.driverjs-theme .driver-popover-next-btn:hover {
         background-color: #14532d; /* Green-800 */
+        transform: translateY(-1px);
     }
     
     .driver-popover.driverjs-theme .driver-popover-prev-btn {
@@ -541,10 +551,11 @@
     .driver-popover.driverjs-theme .driver-popover-prev-btn:hover {
         background-color: #f3f4f6;
         color: #111827;
+        border-color: #9ca3af;
     }
     
     .driver-popover.driverjs-theme .driver-popover-close-btn {
-        display: none; /* Hide X button, use buttons instead */
+        display: none;
     }
     
     /* Progress text styling */
@@ -552,19 +563,27 @@
         font-size: 0.75rem;
         color: #9ca3af;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 24px;
+        right: 24px;
+        font-weight: 500;
     }
 
-    /* Fix z-index issues */
+    /* Fix z-index and overlay issues */
     .driver-active-element {
         z-index: 100003 !important;
+        position: relative !important;
+    }
+    
+    /* Ensure overlay is below popover (Driver JS default is usually fine but let's be safe) */
+    .driver-overlay {
+        z-index: 100002 !important;
     }
 </style>
 @endpush
 
 @push('scripts')
 {{-- Driver.js Library --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
 @if(!$hasSeenTour)
@@ -572,6 +591,7 @@
 document.addEventListener('livewire:initialized', () => {
     // Wait a bit for page to fully render
     setTimeout(function() {
+        if (!window.driver?.js?.driver) return; // Safety check
         const driver = window.driver.js.driver;
         
         // Define steps dynamically to check for element existence

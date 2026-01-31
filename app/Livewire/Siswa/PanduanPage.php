@@ -27,31 +27,33 @@ class PanduanPage extends Component
     {
         $userId = Auth::id();
 
+        // 4. Pilih Jalur (Pendaftaran) - Check this first for waterfall logic
+        $pendaftaran = PendaftaranMurid::where('user_id', $userId)->latest()->first();
+        $isRegistered = $pendaftaran != null;
+
+        // 7. Pengumuman
+        $isAnnounced = $pendaftaran && ($pendaftaran->status == 'diterima' || $pendaftaran->status == 'ditolak');
+
+        // 6. Tes Seleksi
+        $hasTests = CustomTestAnswer::where('user_id', $userId)->exists();
+        $isTested = $hasTests || $isAnnounced; // If announced, tests are considered done/passed
+
         // 1. Data Siswa
         $dataMurid = DataMurid::where('user_id', $userId)->first();
-        $step1 = $dataMurid && !empty($dataMurid->tempat_lahir);
+        $step1 = ($dataMurid && !empty($dataMurid->tempat_lahir)) || $isRegistered;
 
         // 2. Data Orang Tua
         $dataOrangTua = DataOrangTua::where('user_id', $userId)->first();
-        $step2 = $dataOrangTua && !empty($dataOrangTua->nama_ayah);
+        $step2 = ($dataOrangTua && !empty($dataOrangTua->nama_ayah)) || $isRegistered;
 
         // 3. Berkas
         $berkas = BerkasMurid::where('user_id', $userId)->first();
-        $step3 = $berkas && strpos($berkas->file_kk, 'berkas/') !== false; // Basic check
+        // Check 'kk' field, not 'file_kk'. 
+        $step3 = ($berkas && !empty($berkas->kk)) || $isRegistered;
 
-        // 4. Pilih Jalur (Pendaftaran)
-        $pendaftaran = PendaftaranMurid::where('user_id', $userId)->latest()->first();
-        $step4 = $pendaftaran != null;
-
-        // 5. Pembayaran (If applicable, skipped for now or integrated into Pendaftaran)
-        // Assuming workflow: Data -> Pendaftaran -> Tes -> Hasil
-        
-        // 6. Tes Seleksi
-        $hasTests = CustomTestAnswer::where('user_id', $userId)->exists();
-        $step5 = $hasTests;
-
-        // 7. Pengumuman
-        $step6 = $pendaftaran && ($pendaftaran->status == 'diterima' || $pendaftaran->status == 'ditolak');
+        $step4 = $isRegistered;
+        $step5 = $isTested;
+        $step6 = $isAnnounced;
 
         $this->steps = [
             [
@@ -59,7 +61,7 @@ class PanduanPage extends Component
                 'desc' => 'Mendaftar akun siswa baru',
                 'icon' => 'ri-user-add-line',
                 'route' => null, 
-                'status' => 'completed', // Always true if they are here
+                'status' => 'completed',
                 'button' => 'Selesai'
             ],
             [
