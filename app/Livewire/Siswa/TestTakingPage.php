@@ -37,27 +37,24 @@ class TestTakingPage extends Component
         $this->customTest = CustomTest::with(['questions' => fn($q) => $q->orderBy('urutan')])
             ->findOrFail($testId);
         
-        // Skip payment/schedule check for kuesioner_ortu (can be accessed anytime)
-        if ($this->customTest->category !== 'kuesioner_ortu') {
-            // Check payment status
-            $paymentApproved = BuktiTransfer::where('user_id', $user->id)
-                ->where('status', 'success')
-                ->exists();
+        // Check payment status - applies to ALL tests
+        $paymentApproved = BuktiTransfer::where('user_id', $user->id)
+            ->where('status', 'success')
+            ->exists();
 
-            if (!$paymentApproved) {
-                session()->flash('error', 'Silakan selesaikan pembayaran terlebih dahulu untuk mengakses ujian.');
-                return redirect()->route('siswa.tests.index');
-            }
+        if (!$paymentApproved) {
+            session()->flash('error', 'Silakan selesaikan pembayaran terlebih dahulu untuk mengakses ujian.');
+            return redirect()->route('siswa.tests.index');
+        }
 
-            // Check schedule access
-            $hasUrgentSchedule = $user->hasActiveUrgentSchedule();
-            $gelombangActive = GelombangPendaftaran::aktif()->first();
-            $regularScheduleActive = $gelombangActive?->isUjianAktif() ?? false;
+        // Check schedule access - applies to ALL tests
+        $hasUrgentSchedule = $user->hasActiveUrgentSchedule();
+        $gelombangActive = GelombangPendaftaran::aktif()->first();
+        $regularScheduleActive = $gelombangActive?->isUjianAktif() ?? false;
 
-            if (!$regularScheduleActive && !$hasUrgentSchedule) {
-                session()->flash('error', 'Waktu ujian belum dimulai. Silakan tunggu jadwal ujian atau hubungi admin.');
-                return redirect()->route('siswa.tests.index');
-            }
+        if (!$regularScheduleActive && !$hasUrgentSchedule) {
+            session()->flash('error', 'Waktu ujian belum dimulai. Silakan tunggu jadwal ujian atau hubungi admin.');
+            return redirect()->route('siswa.tests.index');
         }
         
         $this->questions = $this->customTest->questions->toArray();

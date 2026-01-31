@@ -8,6 +8,7 @@ use App\Models\Pendaftaran\CustomTestAnswer;
 use App\Models\Pendaftaran\TesJalur;
 use App\Models\Pendaftaran\PendaftaranMurid;
 use App\Models\Siswa\BuktiTransfer;
+use App\Models\Siswa\DataMurid;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,14 +82,38 @@ class AvailableTestsPage extends Component
             }
 
             /**
-             * 🔹 2. Ambil semua kuesioner ortu (category = kuesioner_ortu)
-             *     - tidak dibatasi jalur
-             *     - tidak perlu relasi TesJalur
+             * 🔹 2. Ambil kuesioner ortu (category = kuesioner_ortu)
+             *     - Filter berdasarkan agama siswa
+             *     - Islam -> Kuesioner Muslim
+             *     - Lainnya (Kristen, dll) -> Kuesioner Non Muslim
              */
+            $dataMurid = DataMurid::where('user_id', $user->id)->first();
+            $studentReligion = strtolower($dataMurid->agama ?? '');
+            
+            // Determine which kuesioner type to show based on religion
+            $isMuslim = str_contains($studentReligion, 'islam');
+            
             $kuesioners = CustomTest::with('questions')
                 ->where('category', 'kuesioner_ortu')
                 ->where('is_active', true)
-                ->get();
+                ->get()
+                ->filter(function ($kuesioner) use ($isMuslim) {
+                    $namaLower = strtolower($kuesioner->nama_test);
+                    
+                    // Check if kuesioner name contains "non muslim" or "muslim"
+                    $isNonMuslimKuesioner = str_contains($namaLower, 'non muslim') || str_contains($namaLower, 'non-muslim');
+                    $isMuslimKuesioner = !$isNonMuslimKuesioner && str_contains($namaLower, 'muslim');
+                    
+                    // If it's a religion-specific kuesioner, filter accordingly
+                    if ($isNonMuslimKuesioner) {
+                        return !$isMuslim; // Show to non-Muslim students
+                    } elseif ($isMuslimKuesioner) {
+                        return $isMuslim; // Show to Muslim students
+                    }
+                    
+                    // If not religion-specific, show to everyone
+                    return true;
+                });
 
             foreach ($kuesioners as $customTest) {
                 $this->availableTests[] = $this->formatTestData($customTest, null);
