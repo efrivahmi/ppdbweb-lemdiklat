@@ -1,132 +1,149 @@
-<div class="min-h-screen -m-6 flex items-center justify-center p-4 relative overflow-hidden"
-     style="background: radial-gradient(circle at center, #f0fdf4 0%, #dcfce7 40%, #bbf7d0 100%);">
+<div class="min-h-screen -m-6 flex items-center justify-center p-6 relative overflow-hidden bg-gray-50 font-sans">
     
-    {{-- Background Pattern --}}
-    <div class="absolute inset-0 opacity-5" 
-         style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23000000\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
-    </div>
+    <!-- Sophisticated Background -->
+    <div class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50"></div>
+    <div class="absolute inset-0 bg-gradient-to-tr from-blue-50/40 via-purple-50/40 to-pink-50/40"></div>
 
-    <!-- Envelope Container -->
-    <div x-data="{ open: @entangle('isOpen') }" class="relative z-10 w-full max-w-lg" style="perspective: 1000px;">
+    <!-- Main Container -->
+    <div x-data="{ open: @entangle('isOpen') }" class="relative z-10 w-full max-w-lg perspective-[2000px]">
         
-        <!-- Closed Envelope -->
+        <!-- ENVELOPE (Closed) -->
         <div x-show="!open" 
              @click="$wire.toggleOpen()"
-             class="cursor-pointer transform transition-all duration-500 hover:scale-105"
+             class="cursor-pointer group relative transform transition-all duration-700 hover:scale-[1.02] hover:-translate-y-2"
              x-transition:leave="transition ease-in duration-500"
-             x-transition:leave-start="opacity-100 rotate-0 scale-100"
-             x-transition:leave-end="opacity-0 rotate-180 scale-50">
+             x-transition:leave-start="opacity-100 rotate-x-0 translate-y-0"
+             x-transition:leave-end="opacity-0 rotate-x-90 translate-y-20">
             
-            <div class="bg-gradient-to-br from-yellow-50 to-amber-100 rounded-xl shadow-2xl p-8 relative border-2 border-amber-200">
-                <!-- Envelope Flap Design -->
-                <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-amber-200/50 to-transparent rounded-t-xl pointer-events-none"></div>
+            <!-- Envelope Body -->
+            <div class="relative bg-gradient-to-b from-amber-100 to-amber-200 rounded-xl shadow-2xl border border-amber-200/50 overflow-hidden">
+                <!-- Texture -->
+                <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%239C92AC\' fill-opacity=\'0.1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');"></div>
                 
-                <div class="text-center space-y-6 py-12 border-4 border-double border-amber-300 rounded-lg m-2">
-                    <div class="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center shadow-md border-2 border-amber-400">
-                        <img src="{{ asset('assets/logo.png') }}" class="w-16 h-16 object-contain">
+                <!-- Flap (Visual) -->
+                <div class="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-amber-300 via-amber-200 to-transparent clip-path-polygon-[0%_0%,50%_100%,100%_0%] shadow-lg z-20" style="clip-path: polygon(0 0, 50% 100%, 100% 0);"></div>
+
+                <div class="relative z-10 p-12 text-center space-y-8 mt-20">
+                    <!-- Premium Badge -->
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-xl ring-4 ring-amber-100/50 mx-auto">
+                        <img src="{{ asset('assets/logo.png') }}" class="w-12 h-12 object-contain">
                     </div>
-                    <div class="space-y-2">
-                        <h2 class="text-2xl font-serif font-bold text-amber-900 tracking-wide">PENGUMUMAN SELEKSI</h2>
-                        <h3 class="text-amber-800 font-medium tracking-widest text-sm uppercase">Penerimaan Peserta Didik Baru</h3>
+
+                    <div class="space-y-3">
+                        <h2 class="text-3xl font-serif font-bold text-amber-950 tracking-tight">Hasil Seleksi</h2>
+                        <p class="text-amber-800/80 font-medium tracking-wide text-xs uppercase letter-spacing-2">Penerimaan Peserta Didik Baru</p>
                     </div>
                     
-                    <div class="animate-bounce mt-8">
-                        <span class="inline-block px-4 py-2 bg-amber-600 text-white rounded-full text-sm font-semibold shadow-lg">
-                            <i class="ri-mail-open-line mr-2"></i>Klik untuk membuka
-                        </span>
+                    <div class="pt-8 pb-4">
+                        <button class="px-8 py-3 bg-amber-950 text-amber-50 rounded-full text-sm font-medium shadow-lg hover:bg-amber-900 transition-colors flex items-center gap-2 mx-auto ring-2 ring-white/20">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                            </span>
+                            Ketuk untuk Membuka
+                        </button>
                     </div>
                 </div>
 
-                <!-- Wax Seal -->
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-red-700 rounded-full shadow-lg border-4 border-red-800 flex items-center justify-center z-10">
-                    <div class="w-16 h-16 border-2 border-red-400 rounded-full flex items-center justify-center border-dashed opacity-50 absolute"></div>
-                    <span class="text-white font-serif font-bold text-2xl drop-shadow-md">TN</span>
+                <!-- Seal -->
+                <div class="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div class="w-24 h-24 bg-red-800 rounded-full shadow-2xl flex items-center justify-center border-4 border-red-700/50 relative group-hover:scale-110 transition-transform duration-300">
+                        <div class="absolute inset-0 border border-white/20 rounded-full m-1 dashed"></div>
+                        <span class="font-serif text-3xl font-bold text-white/90 tracking-tighter drop-shadow-md">TN</span>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Shadow Depth -->
+            <div class="absolute -bottom-10 left-10 right-10 h-10 bg-black/20 blur-2xl rounded-full"></div>
         </div>
 
-        <!-- Opened Letter -->
+
+        <!-- LETTER (Opened) -->
         <div x-show="open" 
              style="display: none;"
-             x-transition:enter="transition ease-out duration-700 delay-300"
-             x-transition:enter-start="opacity-0 translate-y-20 scale-90"
-             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-             class="bg-white rounded-xl shadow-2xl overflow-hidden relative border border-gray-200">
+             x-transition:enter="transition ease-out duration-1000 delay-300"
+             x-transition:enter-start="opacity-0 translate-y-20 scale-95 rotate-x-10"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100 rotate-x-0"
+             class="bg-white rounded-2xl shadow-2xl overflow-hidden relative border border-gray-100 max-w-lg mx-auto">
             
             <!-- Confetti Canvas -->
             @if($status === 'diterima')
             <canvas id="confetti" class="absolute inset-0 pointer-events-none z-0"></canvas>
             @endif
 
-            <div class="relative z-10 p-8 text-center space-y-6">
-                <!-- Header -->
-                <div class="border-b border-gray-100 pb-6 relative">
-                    <div class="absolute top-0 right-0">
-                         <button wire:click="toggleOpen" class="text-gray-400 hover:text-gray-600 transition">
-                            <i class="ri-close-circle-line text-2xl"></i>
-                         </button>
-                    </div>
-                    <img src="{{ asset('assets/logo.png') }}" class="w-20 h-20 mx-auto mb-4">
-                    <h3 class="text-xl font-bold text-gray-900">LEMDIKLAT TARUNA NUSANTARA</h3>
-                    <p class="text-sm text-gray-500 uppercase tracking-widest mt-1">Surat Keputusan Hasil Seleksi</p>
+            <!-- Letterhead -->
+            <div class="bg-gray-50/50 border-b border-gray-100 p-8 text-center relative z-10">
+                <div class="absolute top-4 right-4">
+                     <button wire:click="toggleOpen" class="text-gray-400 hover:text-gray-600 transition p-2 hover:bg-gray-100 rounded-full">
+                        <i class="ri-close-line text-xl"></i>
+                     </button>
                 </div>
+                <img src="{{ asset('assets/logo.png') }}" class="w-16 h-16 mx-auto mb-4 drop-shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 tracking-tight">LEMDIKLAT TARUNA NUSANTARA</h3>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-2">Surat Keputusan Resmi</p>
+            </div>
 
-                <!-- Content -->
-                <div class="py-2">
-                    <p class="text-gray-600">Halo <span class="font-bold text-gray-800">{{ $user->name }}</span>,</p>
-                    <p class="text-gray-600 mt-2">Berdasarkan hasil seleksi administrasi dan akademik, kami sampaikan bahwa status pendaftaran Anda adalah:</p>
-                    
-                    <div class="text-3xl font-bold font-serif my-8 py-6 px-4 rounded-xl shadow-inner border
-                        {{ $status === 'diterima' ? 'bg-green-50 text-green-700 border-green-200' : 
-                           ($status === 'ditolak' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-gray-50 text-gray-700 border-gray-200') }}">
-                        @if($status === 'diterima')
-                            <div class="flex flex-col items-center gap-2">
-                                <i class="ri-checkbox-circle-fill text-4xl mb-2"></i>
-                                <span>LULUS SELEKSI</span>
-                            </div>
-                        @elseif($status === 'ditolak')
-                            <div class="flex flex-col items-center gap-2">
-                                <i class="ri-close-circle-fill text-4xl mb-2"></i>
-                                <span>TIDAK LULUS</span>
-                            </div>
-                        @else
-                            <div class="flex flex-col items-center gap-2">
-                                <i class="ri-time-fill text-4xl mb-2"></i>
-                                <span>DALAM PROSES</span>
-                            </div>
-                        @endif
-                    </div>
-
+            <!-- Content -->
+            <div class="p-8 space-y-8 relative z-10">
+                <div class="text-center space-y-2">
+                    <p class="text-gray-500 text-sm font-medium">Kepada Yth. Calon Siswa</p>
+                    <h4 class="text-xl font-bold text-gray-900">{{ $user->name }}</h4>
+                </div>
+                
+                <!-- Status Display -->
+                <div class="flex justify-center">
                     @if($status === 'diterima')
-                    <div class="bg-green-50 p-4 rounded-lg text-sm text-green-800 mb-6">
-                         <p class="font-semibold mb-1">Selamat bergabung!</p>
-                         <p>Silakan unduh Surat Penerimaan Resmi di bawah ini sebagai dokumen daftar ulang.</p>
-                    </div>
+                        <div class="bg-gradient-to-b from-green-50 to-white border border-green-100 rounded-2xl p-6 text-center w-full relative overflow-hidden shadow-sm">
+                            <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-100 rounded-full opacity-50 blur-2xl"></div>
+                             <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-green-100 rounded-full opacity-50 blur-2xl"></div>
+                            
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-green-100">
+                                <i class="ri-checkbox-circle-fill text-4xl text-green-500"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-green-700 tracking-tight">LULUS SELEKSI</h2>
+                            <p class="text-green-600/90 text-sm mt-2 font-medium">Selamat! Anda dinyatakan diterima.</p>
+                        </div>
                     @elseif($status === 'ditolak')
-                        <p class="text-gray-600 text-sm">Terima kasih telah mengikuti proses seleksi. Tetap semangat dan jangan menyerah untuk menggapai cita-cita.</p>
+                         <div class="bg-red-50 border border-red-100 rounded-2xl p-6 text-center w-full">
+                            <i class="ri-close-circle-fill text-5xl text-red-500 mb-3 inline-block shadow-sm rounded-full bg-white"></i>
+                            <h2 class="text-2xl font-bold text-red-700 tracking-tight">TIDAK LULUS</h2>
+                            <p class="text-red-600/90 text-sm mt-1 font-medium">Mohon maaf, Anda belum berhasil.</p>
+                        </div>
                     @else
-                        <p class="text-gray-600 text-sm">Hasil seleksi Anda sedang dalam proses verifikasi akhir. Mohon cek kembali secara berkala.</p>
+                        <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center w-full">
+                            <i class="ri-time-fill text-5xl text-gray-400 mb-3 inline-block"></i>
+                            <h2 class="text-2xl font-bold text-gray-700 tracking-tight">MENUNGGU HASIL</h2>
+                            <p class="text-gray-500 text-sm mt-1 font-medium">Pengumuman akan segera hadir.</p>
+                        </div>
                     @endif
                 </div>
 
-                <!-- Footer / Actions -->
-                <div class="pt-6 border-t border-gray-100">
+                <!-- Primary Action -->
+                <div class="space-y-4 pt-2">
                     @if($status === 'diterima')
                         <a href="{{ route('siswa.pdf.penerimaan') }}" target="_blank"
-                           class="flex items-center justify-center w-full py-4 px-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-green-700 hover:to-emerald-700 transition transform hover:-translate-y-1">
-                           <i class="ri-download-cloud-2-line mr-2 text-xl"></i> Download Surat Penerimaan
+                           class="group relative w-full flex items-center justify-center gap-3 px-6 py-4 bg-gray-900 text-white rounded-xl font-medium shadow-lg shadow-gray-200 hover:bg-gray-800 transition-all transform hover:-translate-y-0.5 overflow-hidden">
+                           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                           <i class="ri-download-cloud-2-fill text-xl"></i> 
+                           <span>Unduh Surat Penerimaan</span>
                         </a>
-                    @else
-                        <a href="{{ route('siswa.dashboard') }}" 
-                           class="inline-block py-2 px-4 text-gray-500 hover:text-gray-700 transition">
-                           Kembali ke Dashboard
+                        <p class="text-xs text-center text-gray-400 font-medium">Dokumen ini wajib dibawa saat daftar ulang</p>
+                    @elseif($status === 'ditolak')
+                        <a href="{{ route('siswa.dashboard') }}" class="block w-full text-center py-3 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors font-medium text-sm">
+                            Kembali ke Dashboard
                         </a>
                     @endif
                 </div>
             </div>
             
-            <!-- Secure Pattern Bottom -->
-            <div class="h-3 bg-gradient-to-r from-blue-600 via-yellow-500 to-red-600"></div>
+            <!-- Security Footer -->
+            <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
+                <div class="flex items-center justify-center gap-2 opacity-60">
+                    <i class="ri-shield-keyhole-line text-gray-400"></i>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Digitally Signed & Verified</span>
+                </div>
+            </div>
         </div>
 
     </div>

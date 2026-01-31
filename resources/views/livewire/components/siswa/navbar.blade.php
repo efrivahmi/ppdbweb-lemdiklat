@@ -17,6 +17,8 @@
                 @livewire('components.notification-bell')
             </div>
 
+            <div class="h-8 w-px bg-gray-300 mx-2 hidden md:block"></div>
+
              <div class="">
                 <x-atoms.description class="font-medium text-gray-800" size="sm" align="right">
                     {{ Auth::user()->name }}

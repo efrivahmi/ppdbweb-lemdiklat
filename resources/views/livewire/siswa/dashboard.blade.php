@@ -47,7 +47,7 @@
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                             </span>
-                            <span class="text-sm font-medium">PPDB Online</span>
+                            <span class="text-sm font-medium">SPMB Online</span>
                         </div>
                     </div>
                 </div>
