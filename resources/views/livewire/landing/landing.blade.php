@@ -3,8 +3,16 @@
     <livewire:components.landing.stat-section />
     <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <livewire:components.landing.news-section />
+        
+        {{-- New Explore School Section --}}
+        <livewire:components.landing.explore-school-section />
+
         <livewire:components.landing.encourage-section />
         <livewire:components.landing.achivement-section />
+        
+        {{-- Location Section --}}
+        <livewire:components.landing.location-section />
+
         <!-- gallery dan ke jalur pendaftaran -->
         <livewire:components.landing.link-photo-section />
         <livewire:components.landing.link-youtube />
@@ -84,7 +92,4 @@
         </section>
 
     </div>
-
-    {{-- Location Section - placed before footer --}}
-    <x-landing.location-section />
 </div>
