@@ -63,6 +63,21 @@ class Sidebar extends Component
             'icon' => 'ri-test-tube-line',
             'type' => 'link'
         ],
+        // New Pages
+        [
+            'key' => 'hasil-seleksi',
+            'name' => 'Hasil Seleksi',
+            'url' => 'siswa.hasil-seleksi',
+            'icon' => 'ri-award-line',
+            'type' => 'link'
+        ],
+        [
+            'key' => 'surat-verifikasi',
+            'name' => 'Surat Verifikasi',
+            'url' => 'siswa.surat-verifikasi',
+            'icon' => 'ri-file-text-line',
+            'type' => 'link'
+        ],
     ];
 
     public function mount()

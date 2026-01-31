@@ -180,189 +180,79 @@
     </x-atoms.card>
     @endif
 
-    <!-- PDF Download Card -->
-    @if(count($pendaftaranList) > 0 && ($canDownloadVerifikasiPDF || $canDownloadPenerimaanPDF))
-    {{-- PDF Download Card --}}
+    <!-- Status & Dokumen (New Navigation) -->
+    @if(count($pendaftaranList) > 0)
     <x-atoms.card className="mt-6 border border-gray-200">
         <div class="flex items-center gap-3 mb-6">
-            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                <i class="ri-file-pdf-line text-red-600 text-xl"></i>
+            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                <i class="ri-folder-open-line text-indigo-600 text-xl"></i>
             </div>
             <div>
-                <x-atoms.title text="Download Dokumen PDF" size="lg" />
+                <x-atoms.title text="Status & Dokumen" size="lg" />
                 <x-atoms.description size="sm" color="gray-600">
-                    Download formulir verifikasi dan surat penerimaan
+                    Akses surat verifikasi dan cek hasil seleksi penerimaan
                 </x-atoms.description>
             </div>
         </div>
 
-        <!-- PDF Download Options -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Formulir Verifikasi -->
-            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow">
-                <div class="flex items-start gap-4">
-                    <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="ri-file-text-line text-blue-600 text-2xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <x-atoms.title text="Formulir Verifikasi" size="md" className="mb-2" />
-                        <x-atoms.description size="sm" color="gray-600" className="mb-3">
-                            Dokumen berisi data lengkap pendaftaran Anda untuk keperluan verifikasi dan administrasi.
-                        </x-atoms.description>
-                        
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Data Pribadi & Orang Tua</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Pilihan Jalur & Jurusan</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Checklist Berkas</span>
-                            </div>
-                        </div>
+            
+            <!-- 1. Surat Verifikasi -->
+            <div class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ri-file-text-line text-6xl text-blue-500"></i>
+                </div>
+                
+                <div class="relative z-10">
+                   <h3 class="text-lg font-bold text-gray-900 mb-2">Surat Verifikasi</h3>
+                   <p class="text-sm text-gray-500 mb-6 h-12">Unduh bukti verifikasi pendaftaran setelah data lengkap.</p>
+                   
+                   <div class="flex items-center justify-between">
+                       @if($canDownloadVerifikasiPDF)
+                           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                               <i class="ri-check-line mr-1"></i> Siap Diunduh
+                           </span>
+                       @else
+                           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                               <i class="ri-loader-4-line mr-1"></i> Belum Lengkap
+                           </span>
+                       @endif
 
-                        @if($canDownloadVerifikasiPDF && $verifikasiPDFSettings)
-                        <div class="space-y-2">
-                            <a href="{{ route('siswa.pdf.verifikasi') }}" 
-                               target="_blank"
-                               class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                                <i class="ri-download-line"></i>
-                                <span>Download PDF</span>
-                            </a>
-                            <div class="flex items-center gap-1 text-xs text-green-600">
-                                <i class="ri-check-circle-line"></i>
-                                <span>Siap untuk diunduh</span>
-                            </div>
-                        </div>
+                       <a href="{{ route('siswa.surat-verifikasi') }}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 hover:underline">
+                           Buka Halaman <i class="ri-arrow-right-line ml-1"></i>
+                       </a>
+                   </div>
+                </div>
+            </div>
+
+            <!-- 2. Hasil Seleksi -->
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6 hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ri-award-line text-6xl text-orange-500"></i>
+                </div>
+                
+                <div class="relative z-10">
+                   <h3 class="text-lg font-bold text-gray-900 mb-2">Hasil Seleksi</h3>
+                   <p class="text-sm text-gray-500 mb-6 h-12">Cek pengumuman kelulusan dan unduh surat keputusan resmi.</p>
+                   
+                   <div class="flex items-center justify-between">
+                        @if($hasAcceptedRegistration)
+                           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 animate-pulse">
+                               <i class="ri-star-fill mr-1"></i> Pengumuman Ada
+                           </span>
                         @else
-                        <div class="space-y-2">
-                            <button disabled 
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
-                                <i class="ri-lock-line"></i>
-                                <span>Belum Tersedia</span>
-                            </button>
-                            <div class="text-xs text-gray-500">
-                                @if(!$verifikasiPDFSettings)
-                                    <div class="flex items-center gap-1 text-red-500">
-                                        <i class="ri-error-warning-line"></i>
-                                        <span>Pengaturan PDF belum dikonfigurasi</span>
-                                    </div>
-                                @else
-                                    <div class="flex items-center gap-1">
-                                        <i class="ri-information-line"></i>
-                                        <span>Lengkapi semua data dan test jalur untuk mengunduh</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+                           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                               <i class="ri-time-line mr-1"></i> Cek Status
+                           </span>
                         @endif
-                    </div>
+
+                       <a href="{{ route('siswa.hasil-seleksi') }}" class="inline-flex items-center text-orange-600 font-semibold hover:text-orange-700 hover:underline">
+                           Buka Amplop <i class="ri-mail-open-line ml-1"></i>
+                       </a>
+                   </div>
                 </div>
             </div>
 
-            <!-- Surat Penerimaan -->
-            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow">
-                <div class="flex items-start gap-4">
-                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="ri-award-line text-green-600 text-2xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <x-atoms.title text="Surat Penerimaan" size="md" className="mb-2" />
-                        <x-atoms.description size="sm" color="gray-600" className="mb-3">
-                            Surat keputusan resmi penerimaan siswa baru. Hanya tersedia jika Anda dinyatakan diterima.
-                        </x-atoms.description>
-                        
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Hasil Seleksi Final</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Status Diterima</span>
-                            </div>
-                            <div class="flex items-center gap-2 text-sm">
-                                <i class="ri-check-line text-green-500"></i>
-                                <span class="text-gray-600">Tanda Tangan Kepala Sekolah</span>
-                            </div>
-                        </div>
-
-                        @if($canDownloadPenerimaanPDF && $penerimaanPDFSettings)
-                        <div class="space-y-2">
-                            <a href="{{ route('siswa.pdf.penerimaan') }}" 
-                               target="_blank"
-                               class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                <i class="ri-download-line"></i>
-                                <span>Download PDF</span>
-                            </a>
-                            <div class="flex items-center gap-1 text-xs text-green-600">
-                                <i class="ri-check-circle-line"></i>
-                                <span>Siap untuk diunduh</span>
-                            </div>
-                        </div>
-                        @else
-                        <div class="space-y-2">
-                            <button disabled 
-                                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
-                                <i class="ri-lock-line"></i>
-                                <span>Belum Tersedia</span>
-                            </button>
-                            <div class="text-xs text-gray-500">
-                                @if(!$penerimaanPDFSettings)
-                                    <div class="flex items-center gap-1 text-red-500">
-                                        <i class="ri-error-warning-line"></i>
-                                        <span>Pengaturan PDF belum dikonfigurasi</span>
-                                    </div>
-                                @elseif(!$hasAcceptedRegistration)
-                                    <div class="flex items-center gap-1 text-orange-500">
-                                        <i class="ri-time-line"></i>
-                                        <span>Menunggu hasil seleksi / Tidak diterima</span>
-                                    </div>
-                                @else
-                                    <div class="flex items-center gap-1">
-                                        <i class="ri-information-line"></i>
-                                        <span>Dokumen belum siap</span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-        <!-- Info Section -->
-        <div class="mt-6 pt-6 border-t border-gray-200">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div class="flex items-start gap-3">
-                    <i class="ri-information-line text-blue-600 text-xl mt-0.5 flex-shrink-0"></i>
-                    <div>
-                        <x-atoms.title text="Informasi Penting" size="sm" className="text-blue-900 mb-2" />
-                        <div class="text-sm text-blue-800 space-y-1">
-                            <x-atoms.description size="sm" color="blue-800" className="flex items-start">
-                                <span class="mr-2">•</span>
-                                <span>Formulir verifikasi dapat diunduh setelah semua data lengkap dan pendaftaran selesai</span>
-                            </x-atoms.description>
-                            <x-atoms.description size="sm" color="blue-800" className="flex items-start">
-                                <span class="mr-2">•</span>
-                                <span>Surat penerimaan hanya tersedia bagi siswa yang diterima</span>
-                            </x-atoms.description>
-                            <x-atoms.description size="sm" color="blue-800" className="flex items-start">
-                                <span class="mr-2">•</span>
-                                <span>Dokumen PDF menggunakan format resmi sekolah</span>
-                            </x-atoms.description>
-                            <x-atoms.description size="sm" color="blue-800" className="flex items-start">
-                                <span class="mr-2">•</span>
-                                <span>Simpan dokumen dengan baik untuk keperluan administratif</span>
-                            </x-atoms.description>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </x-atoms.card>
     @endif

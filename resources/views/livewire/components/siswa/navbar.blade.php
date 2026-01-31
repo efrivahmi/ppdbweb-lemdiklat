@@ -12,6 +12,11 @@
         </div>
 
         <div class="flex items-center space-x-1">
+            {{-- Notification Bell --}}
+            <div class="mr-2">
+                @livewire('components.notification-bell')
+            </div>
+
              <div class="">
                 <x-atoms.description class="font-medium text-gray-800" size="sm" align="right">
                     {{ Auth::user()->name }}
@@ -19,11 +24,6 @@
                 <x-atoms.description size="sm" color="gray-500" align="right">
                     {{ Auth::user()->email }}
                 </x-atoms.description>
-            </div>
-            
-            {{-- Notification Bell --}}
-            <div class="mr-2">
-                @livewire('components.notification-bell')
             </div>
 
             <x-atoms.dropdown>
