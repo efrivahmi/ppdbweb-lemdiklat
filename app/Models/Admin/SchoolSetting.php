@@ -15,14 +15,9 @@ class SchoolSetting extends Model
         'alamat',
         'kode_pos',
         'telp',
-        'jam_operasional',
         'email',
         'website',
         'tahun_ajaran',
-        'logo_kiri',
-        'logo_kanan',
-        'pesan_pembayaran',
-        'catatan_penting',
         'maps_embed_link',
         'maps_image_path',
         'social_links',
@@ -48,7 +43,6 @@ class SchoolSetting extends Model
                     'alamat' => 'Alamat belum diatur',
                     'kode_pos' => '-',
                     'telp' => '-',
-                    'jam_operasional' => 'Senin - Jumat: 07.00 - 15.00 WIB',
                     'email' => 'info@sekolah.sch.id',
                     'website' => '#',
                     'tahun_ajaran' => date('Y') . '/' . (date('Y') + 1),
@@ -68,28 +62,6 @@ class SchoolSetting extends Model
     public static function clearCache(): void
     {
         Cache::forget('school_settings');
-    }
-
-    /**
-     * Get logo kiri URL
-     */
-    public function getLogoKiriUrlAttribute(): ?string
-    {
-        if ($this->logo_kiri && Storage::disk('public')->exists($this->logo_kiri)) {
-            return asset('storage/' . $this->logo_kiri);
-        }
-        return null;
-    }
-
-    /**
-     * Get logo kanan URL
-     */
-    public function getLogoKananUrlAttribute(): ?string
-    {
-        if ($this->logo_kanan && Storage::disk('public')->exists($this->logo_kanan)) {
-            return asset('storage/' . $this->logo_kanan);
-        }
-        return null;
     }
 
     /**

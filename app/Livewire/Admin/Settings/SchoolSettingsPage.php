@@ -19,17 +19,10 @@ class SchoolSettingsPage extends Component
     public $alamat = '';
     public $kode_pos = '';
     public $telp = '';
-    public $jam_operasional = '';
     public $email = '';
     public $website = '';
     public $tahun_ajaran = '';
-    public $logo_kiri = null;
-    public $logo_kanan = null;
-    public $pesan_pembayaran = '';
-    public $catatan_penting = '';
-    public $logo_kiri_preview = null;
-    public $logo_kanan_preview = null;
-    
+
     // Maps Settings
     public $maps_embed_link = '';
     public $maps_image = null;
@@ -48,14 +41,6 @@ class SchoolSettingsPage extends Component
         'linkedin' => ['name' => 'LinkedIn', 'icon' => 'ri-linkedin-fill', 'placeholder' => 'https://linkedin.com/company/yourcompany'],
     ];
     
-    // Operators
-    public $operators = [];
-    public $editOperatorMode = false;
-    public $selectedOperatorId = null;
-    public $operator_nama = '';
-    public $operator_jabatan = '';
-    public $operator_is_active = true;
-
     protected function rules()
     {
         return [
@@ -63,18 +48,11 @@ class SchoolSettingsPage extends Component
             'alamat' => 'required|string',
             'kode_pos' => 'nullable|string|max:10',
             'telp' => 'nullable|string|max:20',
-            'jam_operasional' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'tahun_ajaran' => 'required|string|max:20',
-            'logo_kiri' => 'nullable|image|max:2048',
-            'logo_kanan' => 'nullable|image|max:2048',
-            'pesan_pembayaran' => 'nullable|string',
-            'catatan_penting' => 'nullable|string',
             'maps_embed_link' => 'nullable|string',
             'maps_image' => 'nullable|image|max:2048',
-            'operator_nama' => 'required|string|max:255',
-            'operator_jabatan' => 'required|string|max:255',
         ];
     }
 
@@ -82,14 +60,11 @@ class SchoolSettingsPage extends Component
         'nama_sekolah.required' => 'Nama sekolah wajib diisi',
         'alamat.required' => 'Alamat sekolah wajib diisi',
         'tahun_ajaran.required' => 'Tahun ajaran wajib diisi',
-        'operator_nama.required' => 'Nama operator wajib diisi',
-        'operator_jabatan.required' => 'Jabatan operator wajib diisi',
     ];
 
     public function mount()
     {
         $this->loadSchoolSettings();
-        $this->loadOperators();
     }
 
     public function loadSchoolSettings()
@@ -101,14 +76,9 @@ class SchoolSettingsPage extends Component
             $this->alamat = $settings->alamat;
             $this->kode_pos = $settings->kode_pos;
             $this->telp = $settings->telp;
-            $this->jam_operasional = $settings->jam_operasional;
             $this->email = $settings->email;
             $this->website = $settings->website;
             $this->tahun_ajaran = $settings->tahun_ajaran;
-            $this->pesan_pembayaran = $settings->pesan_pembayaran;
-            $this->catatan_penting = $settings->catatan_penting;
-            $this->logo_kiri_preview = $settings->logo_kiri_url;
-            $this->logo_kanan_preview = $settings->logo_kanan_url;
             $this->maps_embed_link = $settings->maps_embed_link ?? '';
             $this->maps_image_preview = $settings->maps_image_url;
             $this->social_links = $settings->social_links ?? [];
@@ -118,11 +88,6 @@ class SchoolSettingsPage extends Component
         }
     }
 
-    public function loadOperators()
-    {
-        $this->operators = Operator::latest()->get();
-    }
-
     public function saveSchoolSettings()
     {
         $this->validate([
@@ -130,14 +95,9 @@ class SchoolSettingsPage extends Component
             'alamat' => $this->rules()['alamat'],
             'kode_pos' => $this->rules()['kode_pos'],
             'telp' => $this->rules()['telp'],
-            'jam_operasional' => $this->rules()['jam_operasional'],
             'email' => $this->rules()['email'],
             'website' => $this->rules()['website'],
             'tahun_ajaran' => $this->rules()['tahun_ajaran'],
-            'logo_kiri' => $this->rules()['logo_kiri'],
-            'logo_kanan' => $this->rules()['logo_kanan'],
-            'pesan_pembayaran' => $this->rules()['pesan_pembayaran'],
-            'catatan_penting' => $this->rules()['catatan_penting'],
             'maps_embed_link' => $this->rules()['maps_embed_link'],
             'maps_image' => $this->rules()['maps_image'],
         ]);
@@ -148,36 +108,12 @@ class SchoolSettingsPage extends Component
                 'alamat' => $this->alamat,
                 'kode_pos' => $this->kode_pos,
                 'telp' => $this->telp,
-                'jam_operasional' => $this->jam_operasional,
                 'email' => $this->email,
                 'website' => $this->website,
                 'tahun_ajaran' => $this->tahun_ajaran,
-                'pesan_pembayaran' => $this->pesan_pembayaran,
-                'catatan_penting' => $this->catatan_penting,
                 'maps_embed_link' => $this->maps_embed_link,
                 'social_links' => $this->social_links,
             ];
-
-            // Handle logo uploads
-            if ($this->logo_kiri) {
-                if ($this->schoolId) {
-                    $oldSettings = SchoolSetting::find($this->schoolId);
-                    if ($oldSettings && $oldSettings->logo_kiri) {
-                        Storage::disk('public')->delete($oldSettings->logo_kiri);
-                    }
-                }
-                $data['logo_kiri'] = $this->logo_kiri->store('school/logos', 'public');
-            }
-
-            if ($this->logo_kanan) {
-                if ($this->schoolId) {
-                    $oldSettings = SchoolSetting::find($this->schoolId);
-                    if ($oldSettings && $oldSettings->logo_kanan) {
-                        Storage::disk('public')->delete($oldSettings->logo_kanan);
-                    }
-                }
-                $data['logo_kanan'] = $this->logo_kanan->store('school/logos', 'public');
-            }
 
             // Handle maps image upload
             if ($this->maps_image) {
@@ -206,111 +142,6 @@ class SchoolSettingsPage extends Component
             $this->loadSchoolSettings();
         } catch (\Exception $e) {
             $this->dispatch('error', message: 'Terjadi kesalahan saat menyimpan pengaturan');
-        }
-    }
-
-    // Operator Methods
-    public function openOperatorModal()
-    {
-        $this->dispatch('open-modal', name: 'operator');
-    }
-    
-    public function closeOperatorModal()
-    {
-        $this->dispatch('close-modal', name: 'operator');
-        $this->resetOperatorForm();
-    }
-
-    public function resetOperatorForm()
-    {
-        $this->reset(['operator_nama', 'operator_jabatan', 'operator_is_active', 'editOperatorMode', 'selectedOperatorId']);
-        $this->operator_is_active = true;
-        $this->resetErrorBag();
-    }
-
-    public function createOperator()
-    {
-        $this->resetOperatorForm();
-        $this->editOperatorMode = false;
-        $this->openOperatorModal();
-    }
-
-    public function editOperator($id)
-    {
-        $operator = Operator::findOrFail($id);
-        $this->selectedOperatorId = $id;
-        $this->operator_nama = $operator->nama;
-        $this->operator_jabatan = $operator->jabatan;
-        $this->operator_is_active = $operator->is_active;
-        $this->editOperatorMode = true;
-        $this->openOperatorModal();
-    }
-
-    public function saveOperator()
-    {
-        $this->validate([
-            'operator_nama' => $this->rules()['operator_nama'],
-            'operator_jabatan' => $this->rules()['operator_jabatan'],
-        ]);
-
-        try {
-            if ($this->editOperatorMode) {
-                $operator = Operator::findOrFail($this->selectedOperatorId);
-                $operator->update([
-                    'nama' => $this->operator_nama,
-                    'jabatan' => $this->operator_jabatan,
-                    'is_active' => $this->operator_is_active,
-                ]);
-                $message = 'Operator berhasil diperbarui';
-            } else {
-                // Set all operators to inactive if this one is active
-                if ($this->operator_is_active) {
-                    Operator::where('is_active', true)->update(['is_active' => false]);
-                }
-                
-                Operator::create([
-                    'nama' => $this->operator_nama,
-                    'jabatan' => $this->operator_jabatan,
-                    'is_active' => $this->operator_is_active,
-                ]);
-                $message = 'Operator berhasil ditambahkan';
-            }
-
-            $this->closeOperatorModal();
-            $this->dispatch('success', message: $message);
-            $this->loadOperators();
-        } catch (\Exception $e) {
-            $this->dispatch('error', message: 'Terjadi kesalahan saat menyimpan operator');
-        }
-    }
-
-    public function deleteOperator($id)
-    {
-        try {
-            Operator::findOrFail($id)->delete();
-            $this->dispatch('success', message: 'Operator berhasil dihapus');
-            $this->loadOperators();
-        } catch (\Exception $e) {
-            $this->dispatch('error', message: 'Terjadi kesalahan saat menghapus operator');
-        }
-    }
-
-    public function toggleOperatorStatus($id)
-    {
-        try {
-            $operator = Operator::findOrFail($id);
-            
-            if (!$operator->is_active) {
-                // Set all others to inactive
-                Operator::where('is_active', true)->update(['is_active' => false]);
-            }
-            
-            $operator->update(['is_active' => !$operator->is_active]);
-            $message = 'Status operator berhasil ' . ($operator->is_active ? 'diaktifkan' : 'dinonaktifkan');
-            $this->dispatch('success', message: $message);
-            $this->loadOperators();
-        } catch (\Exception $e) {
-            $this->dispatch('error', message: 'Terjadi kesalahan saat mengubah status');
         }
     }
 
