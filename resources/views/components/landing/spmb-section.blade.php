@@ -8,11 +8,11 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 relative group">
             <div class="grid lg:grid-cols-2 gap-0 relative">
                 
-                {{-- Left Side: Content --}}
-                <div class="p-10 lg:p-16 flex flex-col justify-center relative z-20 transition-all duration-700 delay-100 ease-out transform"
-                     :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'">
+                <div class="p-10 lg:p-16 flex flex-col justify-center relative z-20">
                     
-                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-lime-50 border border-lime-100 rounded-full w-fit mb-8 animate-pulse-slow">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-lime-50 border border-lime-100 rounded-full w-fit mb-8 animate-pulse-slow transition-all duration-700 ease-out transform pointer-events-none"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 100ms">
                         <span class="flex h-2 w-2 relative">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
@@ -20,16 +20,22 @@
                         <span class="text-xs font-bold uppercase tracking-wider text-lime-700">Pendaftaran Dibuka</span>
                     </div>
 
-                    <h2 class="text-4xl lg:text-5xl font-bold text-zinc-900 mb-6 leading-[1.15]">
+                    <h2 class="text-4xl lg:text-5xl font-bold text-zinc-900 mb-6 leading-[1.15] transition-all duration-700 ease-out transform"
+                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                        style="transition-delay: 200ms">
                         Sistem Penerimaan <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-lime-600 to-emerald-600">Murid Baru (SPMB)</span>
                     </h2>
 
-                    <p class="text-lg text-zinc-600 mb-10 leading-relaxed">
+                    <p class="text-lg text-zinc-600 mb-10 leading-relaxed transition-all duration-700 ease-out transform"
+                       :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                       style="transition-delay: 300ms">
                         Bergabunglah dengan Lemdiklat Taruna Nusantara Indonesia dan jadilah bagian dari generasi pemimpin masa depan. Proses seleksi yang transparan, modern, dan terintegrasi menanti Anda.
                     </p>
 
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-4 transition-all duration-700 ease-out transform"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 400ms">
                         <a href="/spmb" 
                            class="group/btn relative px-8 py-4 bg-zinc-900 text-white font-bold rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                             <div class="absolute inset-0 bg-gradient-to-r from-lime-500 to-emerald-600 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
@@ -46,7 +52,9 @@
                     </div>
 
                     {{-- Stats / Features --}}
-                    <div class="mt-12 pt-8 border-t border-zinc-100 grid grid-cols-2 gap-8">
+                    <div class="mt-12 pt-8 border-t border-zinc-100 grid grid-cols-2 gap-8 transition-all duration-700 ease-out transform"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 500ms">
                         <div>
                             <p class="text-3xl font-bold text-zinc-900 mb-1">100%</p>
                             <p class="text-sm text-zinc-500 font-medium">Digital & Terintegrasi</p>

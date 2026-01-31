@@ -3,19 +3,23 @@
     <livewire:components.landing.stat-section />
     <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <livewire:components.landing.news-section />
+    </div>
         
-        {{-- New Explore School Section --}}
-        <livewire:components.landing.explore-school-section />
+    {{-- New Explore School Section --}}
+    <livewire:components.landing.explore-school-section />
 
-        {{-- SPMB Promo Section --}}
-        <x-landing.spmb-section />
+    {{-- SPMB Promo Section --}}
+    <x-landing.spmb-section />
 
+    <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <livewire:components.landing.encourage-section />
         <livewire:components.landing.achivement-section />
+    </div>
+
+    {{-- Location Section --}}
+    <x-landing.location-section />
         
-        {{-- Location Section --}}
-        <x-landing.location-section />
-        
+    <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <!-- gallery dan ke jalur pendaftaran -->
         <livewire:components.landing.link-photo-section />
         <livewire:components.landing.link-youtube />

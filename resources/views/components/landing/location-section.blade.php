@@ -18,7 +18,7 @@
                 size="sm"
                 class="mb-6 shadow-sm ring-1 ring-lime-200/50" />
             
-            <h2 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-900 mb-6 tracking-tight">
+            <h2 class="text-3xl md:text-5xl font-bold text-zinc-900 mb-6 tracking-tight">
                 Temukan <span class="text-lime-600 underline decoration-wavy decoration-lime-300 decoration-2 underline-offset-4">Kami</span>
             </h2>
             
@@ -47,7 +47,9 @@
                 {{-- Contact Items --}}
                 <div class="space-y-8">
                     {{-- Address --}}
-                    <div class="flex items-start gap-5 group/item">
+                    <div class="flex items-start gap-5 group/item transition-all duration-700 ease-out transform"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 300ms">
                         <div class="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-lime-100 to-emerald-50 rounded-2xl flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 shadow-sm text-lime-600">
                             <x-lucide-map-pin class="w-7 h-7" />
                         </div>
@@ -63,7 +65,9 @@
                     </div>
 
                     {{-- Phone --}}
-                    <div class="flex items-start gap-5 group/item">
+                    <div class="flex items-start gap-5 group/item transition-all duration-700 ease-out transform"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 400ms">
                         <div class="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-lime-100 to-emerald-50 rounded-2xl flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 shadow-sm text-lime-600">
                             <x-lucide-phone class="w-7 h-7" />
                         </div>
@@ -81,7 +85,9 @@
                     </div>
 
                     {{-- Email --}}
-                    <div class="flex items-start gap-5 group/item">
+                    <div class="flex items-start gap-5 group/item transition-all duration-700 ease-out transform"
+                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         style="transition-delay: 500ms">
                         <div class="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-lime-100 to-emerald-50 rounded-2xl flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 shadow-sm text-lime-600">
                             <x-lucide-mail class="w-7 h-7" />
                         </div>
@@ -193,14 +199,7 @@
                     <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.1)]"></div>
                 </div>
 
-                {{-- Floating Badge --}}
-                <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-zinc-100 flex items-center gap-4 animate-bounce-slow max-w-xs">
-                    <div class="w-12 h-12 bg-lime-100 rounded-full flex items-center justify-center text-3xl">📍</div>
-                    <div>
-                        <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Lokasi Strategis</p>
-                        <p class="text-sm font-semibold text-zinc-800">Dekat Pusat Kota</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

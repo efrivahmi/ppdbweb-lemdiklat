@@ -25,12 +25,14 @@
         </div>
 
         {{-- Dynamic Grid Content --}}
-        <div class="flex flex-wrap justify-center gap-8">
+        <div class="flex flex-wrap justify-center gap-8" x-data="{ showCards: false }" x-intersect.threshold.05.once="showCards = true">
             @foreach($items as $index => $item)
             <div x-data="{ hover: false }" 
                  @mouseenter="hover = true" 
                  @mouseleave="hover = false"
-                 class="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 border border-zinc-100 hover:border-lime-300 shadow-sm hover:shadow-2xl hover:shadow-lime-500/10 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)] max-w-lg">
+                 class="group relative bg-white rounded-3xl p-8 transition-all duration-700 ease-out border border-zinc-100 hover:border-lime-300 shadow-sm hover:shadow-2xl hover:shadow-lime-500/10 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-2rem)] max-w-lg transform"
+                 :class="showCards ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                 style="transition-delay: {{ $index * 150 }}ms">
                 
                 {{-- Card Background Gradient Hover --}}
                 <div class="absolute inset-0 bg-gradient-to-br from-lime-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>

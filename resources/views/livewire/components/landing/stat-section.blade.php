@@ -1,4 +1,4 @@
-<section wire:poll.5s>
+<section>
     <div class="bg-gradient-to-r from-lime-900 to-lime-500 p-7 shadow-xl transition-all duration-300 hover:shadow-2xl hover:bg-lime-600">
         <div class="grid lg:grid-cols-4 grid-cols-2 gap-6 md:gap-8">
             @foreach($statsData as $stat)
