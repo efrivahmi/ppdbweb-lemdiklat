@@ -36,12 +36,8 @@
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         style="transition-delay: 200ms">
                         Mulai Perjalanan <br>
-                        <span class="relative inline-block">
-                            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-lime-600 via-emerald-600 to-lime-600 animate-gradient-x">Masa Depanmu</span>
-                            {{-- Text Underline Decoration --}}
-                            <svg class="absolute -bottom-2 left-0 w-full h-3 text-lime-300/50 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none" />
-                            </svg>
+                        <span class="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-lime-600 via-emerald-600 to-lime-600 animate-gradient-x">
+                            Masa Depanmu
                         </span>
                         <br>Di Sini.
                     </h2>
