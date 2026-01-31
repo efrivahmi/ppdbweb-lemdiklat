@@ -312,7 +312,7 @@
     </div>
 
     <div class="main-content">
-        Berdasarkan hasil seleksi SPMB {{ $pdfSetting->nama_sekolah }} Tahun Pelajaran {{ $tahunPelajaran }}, dengan ini kami sampaikan bahwa {{ $user->name }} ... telah <strong class="ms-1">DITERIMA</strong> sebagai siswa baru.
+        Berdasarkan hasil seleksi SPMB {{ $pdfSetting->nama_sekolah }} Tahun Pelajaran {{ $tahunPelajaran }}, dengan ini kami sampaikan bahwa {{ strtoupper($user->name) }} telah&nbsp;<strong>DITERIMA</strong> sebagai siswa baru.
     </div>
 
     <!-- Student Information -->
