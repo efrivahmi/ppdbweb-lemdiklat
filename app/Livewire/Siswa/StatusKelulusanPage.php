@@ -16,10 +16,12 @@ class StatusKelulusanPage extends Component
     public $isOpen = false;
     public $dataPendaftaran;
     public $user;
+    public $register_setting;
 
     public function mount()
     {
         $this->user = Auth::user();
+        $this->register_setting = \App\Models\Admin\SchoolSetting::getCached();
         
         // Prioritize finding ACCCEPTED status
         $acceptedRegistration = PendaftaranMurid::where('user_id', $this->user->id)

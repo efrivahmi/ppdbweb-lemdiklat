@@ -63,8 +63,8 @@
                 <!-- Letterhead -->
                 <div class="mb-8 border-b-2 border-double border-gray-200 pb-6">
                     <img src="{{ asset('assets/logo.png') }}" class="w-20 h-20 mx-auto mb-4">
-                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 font-serif text-center uppercase">Panitia Penerimaan Peserta Didik Baru</h1>
-                    <p class="text-gray-500 text-sm">Lemdiklat Taruna Nusantara</p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 font-serif text-center uppercase">{{ $register_setting->nama_sekolah ?? 'Lemdiklat Taruna Nusantara Indonesia' }}</h1>
+                    <p class="text-gray-500 text-sm">{{ $school_setting->alamat_sekolah ?? 'Kab. Bandung Barat, Kec. Cikalong Wetan, Desa Cisomang Barat' }}</p>
                 </div>
 
                 <!-- Body -->
@@ -110,7 +110,7 @@
             </div>
             
              <div class="bg-gray-50 border-t border-gray-100 p-4 text-center text-xs text-gray-400">
-                &copy; {{ date('Y') }} Lemdiklat Taruna Nusantara. Dokumen ini sah dan dilindungi undang-undang.
+                &copy; {{ date('Y') }} Lemdiklat Taruna Nusantara Indonesia. Dokumen ini sah dan dilindungi undang-undang.
             </div>
         </div>
 

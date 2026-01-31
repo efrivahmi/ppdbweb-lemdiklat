@@ -69,8 +69,8 @@
         </div>
     @endif
     
-    <div class="text-center mt-8 text-xs text-gray-400">
-        ID Referensi: #VER-{{ Auth::id() }}
+    <div class="bg-gray-50 border-t border-gray-100 p-4 text-center text-xs text-gray-400">
+        &copy; {{ date('Y') }} Lemdiklat Taruna Nusantara Indonesia. Dokumen ini sah dan dilindungi undang-undang.
     </div>
 
 </div>
