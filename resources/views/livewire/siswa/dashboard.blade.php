@@ -246,7 +246,7 @@
                                 @else
                                     <div class="flex items-center gap-1">
                                         <i class="ri-information-line"></i>
-                                        <span>Lengkapi semua data untuk mengunduh</span>
+                                        <span>Lengkapi semua data dan test jalur untuk mengunduh</span>
                                     </div>
                                 @endif
                             </div>

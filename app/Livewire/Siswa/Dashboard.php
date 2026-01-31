@@ -235,12 +235,17 @@ class Dashboard extends Component
 
     public function checkPDFDownloadAvailability()
     {
-        // Check verifikasi PDF - bisa download jika sudah lengkap semua data dan ada pendaftaran
+        // Check verifikasi PDF - bisa download jika:
+        // 1. Semua data lengkap (dataMurid, dataOrangTua, berkasMurid, pendaftaran)
+        // 2. Semua test jalur sudah dikerjakan (bukan payment)
+        $allTestsCompleted = count($this->availableTests) > 0 && 
+            collect($this->availableTests)->every(fn($test) => $test['has_completed']);
+
         $this->canDownloadVerifikasiPDF = $this->dataMuridProgress >= 100 &&
             $this->dataOrangTuaProgress >= 100 &&
             $this->berkasMuridProgress >= 100 &&
             $this->pendaftaranProgress >= 100 &&
-            $this->getBuktiTransferStatus() === "success";
+            $allTestsCompleted;
 
         // Check penerimaan PDF - bisa download jika ada status diterima
         $this->canDownloadPenerimaanPDF = $this->hasAcceptedRegistration;
