@@ -11,42 +11,57 @@
         <div class="flex-1 max-w-md mx-4">
         </div>
 
-        <div class="flex items-center space-x-1">
-            {{-- Notification Bell --}}
-            <div class="mr-2">
+        <div class="grid grid-flow-col items-center gap-4 md:gap-6">
+            
+            {{-- 1. Notification Bell --}}
+            <div class="flex items-center justify-center">
                 @livewire('components.notification-bell')
             </div>
 
-            <div class="h-8 w-px bg-gray-300 mx-2 hidden md:block"></div>
+            {{-- 2. Vertical Separator --}}
+            <div class="hidden md:block h-8 w-px bg-gray-200"></div>
 
-             <div class="">
-                <x-atoms.description class="font-medium text-gray-800" size="sm" align="right">
+            {{-- 3. User Identification --}}
+            <div class="hidden md:flex flex-col items-end mr-1 space-y-0.5">
+                <span class="block text-sm font-bold text-gray-800 leading-none">
                     {{ Auth::user()->name }}
-                </x-atoms.description>
-                <x-atoms.description size="sm" color="gray-500" align="right">
+                </span>
+                <span class="block text-[11px] font-medium text-gray-500 uppercase tracking-wider leading-none">
                     {{ Auth::user()->email }}
-                </x-atoms.description>
+                </span>
             </div>
 
-            <x-atoms.dropdown>
-                <x-slot name="trigger">
-                    <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile"
-                        class="w-8 h-8 rounded-full object-cover">
-                </x-slot>
-                <div class="py-2">
-                    @foreach ($userMenuItems as $item)
-                    <a href="{{ route($item['url']) }}"
-                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                        <i class="{{ $item['icon'] }} mr-3 w-4 h-4"></i>
-                        {{ $item['name'] }}
-                    </a>
-                    @endforeach
-                </div>
-
-                <div class="border-t border-gray-200 py-2">
-                    @livewire('auth.logout')
-                </div>
-            </x-atoms.dropdown>
+            {{-- 4. Profile Dropdown --}}
+            <div class="relative">
+                <x-atoms.dropdown>
+                    <x-slot name="trigger">
+                        <button class="flex items-center justify-center transition-transform hover:scale-105 focus:outline-none">
+                            <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile"
+                                class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm ring-1 ring-gray-100">
+                        </button>
+                    </x-slot>
+                    <div class="py-2 w-48">
+                        <!-- Account Management Header -->
+                        <div class="block px-4 py-2 text-xs text-gray-400 uppercase tracking-wider font-semibold">
+                            Manage Account
+                        </div>
+                        
+                        @foreach ($userMenuItems as $item)
+                        <a href="{{ route($item['url']) }}"
+                            class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                            <i class="{{ $item['icon'] }} mr-3 w-4 h-4 text-gray-400 group-hover:text-blue-500"></i>
+                            {{ $item['name'] }}
+                        </a>
+                        @endforeach
+                        
+                        <div class="border-t border-gray-100 my-1"></div>
+                        
+                        <div class="block px-4 py-1">
+                            @livewire('auth.logout')
+                        </div>
+                    </div>
+                </x-atoms.dropdown>
+            </div>
         </div>
     </div>
 </header>

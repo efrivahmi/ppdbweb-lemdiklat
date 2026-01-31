@@ -63,8 +63,8 @@
                 <!-- Letterhead -->
                 <div class="mb-8 border-b-2 border-double border-gray-200 pb-6">
                     <img src="{{ asset('assets/logo.png') }}" class="w-20 h-20 mx-auto mb-4">
-                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 font-serif text-center uppercase">{{ $register_setting->nama_sekolah ?? 'Lemdiklat Taruna Nusantara Indonesia' }}</h1>
-                    <p class="text-gray-500 text-sm">{{ $school_setting->alamat_sekolah ?? 'Kab. Bandung Barat, Kec. Cikalong Wetan, Desa Cisomang Barat' }}</p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 font-serif text-center uppercase">{{ $schoolName }}</h1>
+                    <p class="text-gray-500 text-sm">{{ $register_setting->alamat ?? 'Kab. Bandung Barat, Kec. Cikalong Wetan, Desa Cisomang Barat' }}</p>
                 </div>
 
                 <!-- Body -->

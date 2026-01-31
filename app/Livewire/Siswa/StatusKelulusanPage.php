@@ -17,6 +17,7 @@ class StatusKelulusanPage extends Component
     public $dataPendaftaran;
     public $user;
     public $register_setting;
+    public $schoolName;
 
     public function mount()
     {
@@ -24,7 +25,7 @@ class StatusKelulusanPage extends Component
         $this->register_setting = \App\Models\Admin\SchoolSetting::getCached();
         
         // Prioritize finding ACCCEPTED status
-        $acceptedRegistration = PendaftaranMurid::where('user_id', $this->user->id)
+        $acceptedRegistration = PendaftaranMurid::with('tipeSekolah')->where('user_id', $this->user->id)
             ->where('status', 'diterima')
             ->latest()
             ->first();
@@ -34,17 +35,32 @@ class StatusKelulusanPage extends Component
             $this->dataPendaftaran = $acceptedRegistration;
         } else {
             // If not accepted, check latest status
-            $latestRegistration = PendaftaranMurid::where('user_id', $this->user->id)
+            $latestRegistration = PendaftaranMurid::with('tipeSekolah')->where('user_id', $this->user->id)
                 ->latest()
                 ->first();
             
             if ($latestRegistration) {
                 $this->status = $latestRegistration->status;
                 $this->dataPendaftaran = $latestRegistration;
-            } else {
                 $this->status = 'belum_daftar';
             }
         }
+        
+        $this->schoolName = $this->getDynamicSchoolName();
+    }
+
+    public function getDynamicSchoolName()
+    {
+        if ($this->dataPendaftaran && $this->dataPendaftaran->tipeSekolah) {
+            $tipe = strtoupper($this->dataPendaftaran->tipeSekolah->nama);
+            if (str_contains($tipe, 'SMK')) {
+                return 'SMK Taruna Nusantara Jaya';
+            }
+            if (str_contains($tipe, 'SMA')) {
+                return 'SMA Taruna Nusantara Indonesia';
+            }
+        }
+        return $this->register_setting->nama_sekolah ?? 'Lemdiklat Taruna Nusantara Indonesia';
     }
 
     public function toggleOpen()
