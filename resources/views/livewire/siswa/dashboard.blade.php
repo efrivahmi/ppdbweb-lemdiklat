@@ -682,7 +682,7 @@ document.addEventListener('livewire:initialized', () => {
             nextBtnText: 'Lanjut',
             prevBtnText: 'Kembali',
             doneBtnText: 'Selesai',
-            progressText: '{{current}} / {{total}}',
+            progressText: '@{{current}} / @{{total}}',
             popoverClass: 'driverjs-theme', // Use our custom class
             onDestroyStarted: function() {
                 @this.call('markTourComplete');
