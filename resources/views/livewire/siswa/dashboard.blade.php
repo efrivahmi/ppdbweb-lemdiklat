@@ -50,6 +50,18 @@
                             <span class="text-sm font-medium">SPMB Online</span>
                         </div>
                     </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 mt-6">
+                        <a href="{{ route('siswa.panduan') }}" class="flex items-center gap-2 px-4 py-2 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition shadow-sm">
+                            <i class="ri-book-open-line"></i>
+                            Panduan Pendaftaran
+                        </a>
+                        <button wire:click="resetTour" class="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-lg font-semibold hover:bg-white/30 transition backdrop-blur-sm border border-white/30">
+                            <i class="ri-play-circle-line"></i>
+                            Ulangi Tour
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="hidden md:flex items-center justify-center">
@@ -508,11 +520,11 @@
 
 @push('scripts')
 {{-- Driver.js Library --}}
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 
 @if(!$hasSeenTour)
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('livewire:initialized', () => {
     // Wait a bit for page to fully render
     setTimeout(function() {
         const driver = window.driver.js.driver;

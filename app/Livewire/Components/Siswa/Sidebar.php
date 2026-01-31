@@ -20,6 +20,13 @@ class Sidebar extends Component
             'type' => 'link'
         ],
         [
+            'key' => 'panduan',
+            'name' => 'Panduan Pendaftaran',
+            'url' => 'siswa.panduan',
+            'icon' => 'ri-map-pin-user-line',
+            'type' => 'link'
+        ],
+        [
             'key' => 'formulir',
             'name' => 'Formulir',
             'icon' => 'ri-folder-open-line',

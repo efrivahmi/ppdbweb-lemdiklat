@@ -97,6 +97,15 @@ class Dashboard extends Component
         $this->hasSeenTour = true;
     }
 
+    public function resetTour()
+    {
+        $user = Auth::user();
+        $user->has_seen_tour = false;
+        $user->save();
+        
+        return redirect()->route('siswa.dashboard');
+    }
+
     public function loadBankAccounts()
     {
         $this->bankAccounts = BankAccount::orderBy('bank_name')->get();

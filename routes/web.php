@@ -100,6 +100,7 @@ Route::prefix('siswa')
         Route::get('/status-penerimaan', App\Livewire\Siswa\StatusPenerimaan::class)->name('siswa.status-penerimaan')->middleware('checkHariPengumuman');
         
         // Special Pages (New)
+        Route::get('/panduan', App\Livewire\Siswa\PanduanPage::class)->name('siswa.panduan');
         Route::get('/hasil-seleksi', App\Livewire\Siswa\StatusKelulusanPage::class)->name('siswa.hasil-seleksi'); // Envelope Animation
         Route::get('/surat-verifikasi', App\Livewire\Siswa\SuratVerifikasiPage::class)->name('siswa.surat-verifikasi'); // Simple Page
 
