@@ -42,13 +42,11 @@
                     Kami mengundang putra-putri terbaik bangsa untuk bergabung. Sebelum melakukan pendaftaran, mohon persiapkan dokumen dan kelengkapan administrasi berikut ini.
                 </p>
 
-                {{-- Action Button (Visibility Fixed) --}}
-                {{-- Removed the :class binding for opacity to ensure it's always visible --}}
                 <div class="transition-all duration-700 delay-300 transform opacity-100 translate-y-0">
                     <a href="/spmb" 
-                       class="inline-flex items-center gap-3 px-8 py-4 bg-zinc-900 text-white font-bold rounded-2xl hover:bg-zinc-800 hover:scale-105 hover:shadow-xl hover:shadow-lime-500/20 transition-all duration-300 group">
+                       class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-lime-600 to-emerald-600 text-white font-bold rounded-2xl hover:shadow-lg hover:shadow-lime-500/30 hover:scale-105 transition-all duration-300 group shadow-md">
                         <span>Lanjut ke Formulir SPMB</span>
-                        <div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-lime-500 group-hover:text-zinc-900 transition-colors">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-lime-600 transition-colors">
                             <x-lucide-arrow-right class="w-4 h-4" />
                         </div>
                     </a>
@@ -107,7 +105,8 @@
                     {{-- Bottom Note --}}
                     <div class="mt-8 pt-6 border-t border-dashed border-zinc-200 text-center">
                         <p class="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-                            Lemdiklat Taruna Nusantara Indonesia
+                        Lemdiklat Taruna Nusantara Indonesia <br>
+                        SMA Taruna Nusantara Indonesia | SMK Taruna Nusantara Jaya
                         </p>
                     </div>
                 </div>
