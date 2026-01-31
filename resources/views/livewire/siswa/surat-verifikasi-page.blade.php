@@ -1,99 +1,76 @@
-<div class="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-    <!-- Header Section -->
-    <div class="mb-10 text-center space-y-4">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Dokumen Verifikasi</h1>
-        <p class="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Unduh tanda bukti resmi bahwa seluruh persyaratan administratif pendaftaran Anda telah lengkap dan tervalidasi.
-        </p>
+<div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-gray-900">Dokumen Verifikasi</h1>
+        <p class="mt-2 text-gray-600">Unduh bukti verifikasi pendaftaran Anda.</p>
     </div>
 
-    <!-- Main Content Card -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden relative">
-        <!-- Decoration Gradient -->
-        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-
-        <div class="p-8 md:p-12">
-            @if($canDownloadVerifikasiPDF)
-                <!-- Success State -->
-                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                    <!-- Visual Icon -->
-                    <div class="flex-shrink-0 w-32 h-32 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100 shadow-inner rotate-3 transition-transform hover:rotate-0">
-                        <i class="ri-file-verified-fill text-6xl text-blue-600 drop-shadow-sm"></i>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="flex-1 text-center md:text-left space-y-6">
-                        <div>
-                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 text-green-700 text-sm font-medium border border-green-200 mb-4">
-                                <span class="relative flex h-2 w-2">
-                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                </span>
-                                Status: Terverifikasi
-                            </div>
-                            <h2 class="text-2xl font-semibold text-gray-900 mb-2">Dokumen Siap Diunduh</h2>
-                            <p class="text-gray-600">Simpan dokumen ini sebagai bukti sah pendaftaran ulang.</p>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                            <a href="{{ route('siswa.pdf.verifikasi') }}" 
-                               target="_blank"
-                               class="group inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-gray-200 focus:ring-4 focus:ring-gray-100">
-                                <span>Download PDF</span>
-                                <i class="ri-download-line group-hover:translate-y-0.5 transition-transform"></i>
-                            </a>
-                        </div>
-                    </div>
+    @if($canDownloadVerifikasiPDF)
+        <!-- SUCCESS STATE -->
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
+            <div class="bg-blue-600 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-white font-bold text-lg flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        TERVERIFIKASI
+                    </span>
+                    <span class="bg-blue-500 text-blue-100 text-xs px-2 py-1 rounded">Semua Data Lengkap</span>
                 </div>
-            @else
-                <!-- Pending State -->
-                <div class="flex flex-col md:flex-row gap-10">
-                    <!-- Left: Status -->
-                    <div class="flex-1 space-y-6">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center border border-orange-100 flex-shrink-0">
-                                <i class="ri-history-line text-2xl text-orange-600"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold text-gray-900 mb-1">Verifikasi Belum Selesai</h3>
-                                <p class="text-gray-500 leading-relaxed">
-                                    Mohon lengkapi beberapa persyaratan berikut sebelum dokumen dapat diunduh.
-                                </p>
-                            </div>
-                        </div>
+            </div>
+            
+            <div class="p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row items-center gap-8">
+                <div class="flex-shrink-0 bg-blue-50 rounded-full p-6">
+                    <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Dokumen Siap Diunduh</h3>
+                    <p class="text-gray-600 mb-6">Seluruh persyaratan administratif telah terpenuhi. Silakan unduh dokumen ini sebagai bukti sah untuk pendaftaran ulang.</p>
+                    
+                    <a href="{{ route('siswa.pdf.verifikasi') }}" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition">
+                        <svg class="w-5 h-5 mr-3 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Download PDF Verifikasi
+                    </a>
+                </div>
+            </div>
+        </div>
 
-                        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200/60">
-                            <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Persyaratan Tertunda</h4>
+    @else
+        <!-- PENDING STATE -->
+        <div class="bg-white rounded-lg shadow-lg border-l-4 border-orange-500 overflow-hidden">
+            <div class="p-6 md:p-8">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Verifikasi Belum Selesai</h3>
+                        <p class="text-gray-600 mb-4">Mohon lengkapi persyaratan berikut agar dokumen verifikasi dapat diterbitkan:</p>
+                        
+                        <div class="bg-orange-50 rounded-lg p-4 border border-orange-100">
                             <ul class="space-y-3">
                                 @foreach($missingItems as $item)
-                                <li class="flex items-center gap-3 text-gray-700 bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
-                                    <i class="ri-close-circle-fill text-red-500 text-lg"></i>
+                                <li class="flex items-center gap-3 text-gray-700">
+                                    <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <span class="font-medium">{{ $item }}</span>
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
-                    </div>
 
-                    <!-- Right: Action -->
-                    <div class="md:w-72 bg-gray-900 rounded-xl p-8 text-center flex flex-col justify-center items-center text-gray-300">
-                        <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
-                             <i class="ri-arrow-right-up-line text-2xl text-white"></i>
+                        <div class="mt-6 flex justify-end">
+                            <a href="{{ route('siswa.dashboard') }}" class="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                                Kembali ke Dashboard <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
                         </div>
-                        <h4 class="text-white font-semibold mb-2">Lengkapi Data</h4>
-                        <p class="text-sm mb-6">Kembali ke dashboard untuk melengkapi data pendaftaran.</p>
-                        <a href="{{ route('siswa.dashboard') }}" class="inline-flex items-center gap-2 text-white font-medium hover:text-blue-300 transition-colors">
-                            Ke Dashboard <i class="ri-arrow-right-line"></i>
-                        </a>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
-        
-        <!-- Footer Info -->
-        <div class="bg-gray-50 border-t border-gray-200 px-8 py-4 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-2">
-            <span class="flex items-center gap-1.5"><i class="ri-shield-check-line"></i> Dokumen Resmi Lemdiklat</span>
-            <span>ID Referensi: #VER-{{ Auth::id() }}-{{ date('Y') }}</span>
-        </div>
+    @endif
+    
+    <div class="text-center mt-8 text-xs text-gray-400">
+        ID Referensi: #VER-{{ Auth::id() }}
     </div>
+
 </div>
