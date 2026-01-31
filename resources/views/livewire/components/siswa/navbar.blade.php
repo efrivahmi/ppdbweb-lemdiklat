@@ -20,6 +20,12 @@
                     {{ Auth::user()->email }}
                 </x-atoms.description>
             </div>
+            
+            {{-- Notification Bell --}}
+            <div class="mr-2">
+                @livewire('components.notification-bell')
+            </div>
+
             <x-atoms.dropdown>
                 <x-slot name="trigger">
                     <img src="{{ Auth::user()->profile_photo_url }}" alt="Profile"

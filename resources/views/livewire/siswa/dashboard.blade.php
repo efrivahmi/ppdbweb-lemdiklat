@@ -181,7 +181,7 @@
     @endif
 
     <!-- PDF Download Card -->
-    @if(count($pendaftaranList) > 0 && ($canDownloadVerifikasiPDF))
+    @if(count($pendaftaranList) > 0 && ($canDownloadVerifikasiPDF || $canDownloadPenerimaanPDF))
     {{-- PDF Download Card --}}
     <x-atoms.card className="mt-6 border border-gray-200">
         <div class="flex items-center gap-3 mb-6">
@@ -197,7 +197,7 @@
         </div>
 
         <!-- PDF Download Options -->
-        <div class="grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Formulir Verifikasi -->
             <div class="border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow">
                 <div class="flex items-start gap-4">
@@ -264,8 +264,76 @@
                 </div>
             </div>
 
-         
-        </div>
+            <!-- Surat Penerimaan -->
+            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow">
+                <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="ri-award-line text-green-600 text-2xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <x-atoms.title text="Surat Penerimaan" size="md" className="mb-2" />
+                        <x-atoms.description size="sm" color="gray-600" className="mb-3">
+                            Surat keputusan resmi penerimaan siswa baru. Hanya tersedia jika Anda dinyatakan diterima.
+                        </x-atoms.description>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm">
+                                <i class="ri-check-line text-green-500"></i>
+                                <span class="text-gray-600">Hasil Seleksi Final</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i class="ri-check-line text-green-500"></i>
+                                <span class="text-gray-600">Status Diterima</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i class="ri-check-line text-green-500"></i>
+                                <span class="text-gray-600">Tanda Tangan Kepala Sekolah</span>
+                            </div>
+                        </div>
+
+                        @if($canDownloadPenerimaanPDF && $penerimaanPDFSettings)
+                        <div class="space-y-2">
+                            <a href="{{ route('siswa.pdf.penerimaan') }}" 
+                               target="_blank"
+                               class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                <i class="ri-download-line"></i>
+                                <span>Download PDF</span>
+                            </a>
+                            <div class="flex items-center gap-1 text-xs text-green-600">
+                                <i class="ri-check-circle-line"></i>
+                                <span>Siap untuk diunduh</span>
+                            </div>
+                        </div>
+                        @else
+                        <div class="space-y-2">
+                            <button disabled 
+                                    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
+                                <i class="ri-lock-line"></i>
+                                <span>Belum Tersedia</span>
+                            </button>
+                            <div class="text-xs text-gray-500">
+                                @if(!$penerimaanPDFSettings)
+                                    <div class="flex items-center gap-1 text-red-500">
+                                        <i class="ri-error-warning-line"></i>
+                                        <span>Pengaturan PDF belum dikonfigurasi</span>
+                                    </div>
+                                @elseif(!$hasAcceptedRegistration)
+                                    <div class="flex items-center gap-1 text-orange-500">
+                                        <i class="ri-time-line"></i>
+                                        <span>Menunggu hasil seleksi / Tidak diterima</span>
+                                    </div>
+                                @else
+                                    <div class="flex items-center gap-1">
+                                        <i class="ri-information-line"></i>
+                                        <span>Dokumen belum siap</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
 
         <!-- Info Section -->
         <div class="mt-6 pt-6 border-t border-gray-200">
