@@ -58,6 +58,11 @@ class Sidebar extends Component
                     'icon' => 'ri-calendar-schedule-line'
                 ],
                 [
+                    'name' => 'Jadwal Ujian Khusus',
+                    'url' => 'admin.pendaftaran.jadwal-ujian-khusus',
+                    'icon' => 'ri-timer-flash-line'
+                ],
+                [
                     'name' => 'Jalur Pendaftaran',
                     'url' => 'admin.pendaftaran.jalur',
                     'icon' => 'ri-stack-line'

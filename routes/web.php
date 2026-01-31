@@ -131,6 +131,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('pendaftaran/custom-test', App\Livewire\Admin\Pendaftaran\CustomTestPage::class)->name('admin.pendaftaran.custom-test');
     Route::get('/review-answers', App\Livewire\Admin\Pendaftaran\ReviewAnswersPage::class)->name('admin.review-answers');
     Route::get("/pendaftaran/gelombang", App\Livewire\Admin\Pendaftaran\GelombangPendaftaranPage::class)->name('admin.pendaftaran.gelombang');
+    Route::get('/pendaftaran/jadwal-ujian-khusus', App\Livewire\Admin\Pendaftaran\JadwalUjianKhususPage::class)->name('admin.pendaftaran.jadwal-ujian-khusus');
 
     // Pembayaran
     Route::get('/pembayaran/bukti-transfer', BuktiTransferPage::class)->name('admin.pembayaran.bukti-transfer');

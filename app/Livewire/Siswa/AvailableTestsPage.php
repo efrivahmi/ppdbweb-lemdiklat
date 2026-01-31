@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Siswa;
 
+use App\Models\GelombangPendaftaran;
 use App\Models\Pendaftaran\CustomTest;
 use App\Models\Pendaftaran\CustomTestAnswer;
 use App\Models\Pendaftaran\TesJalur;
@@ -21,14 +22,44 @@ class AvailableTestsPage extends Component
     public $userRegistration = null;
     public $statusTransfer = "pending";
 
+    // Payment and schedule access properties
+    public $paymentApproved = false;
+    public $hasUrgentSchedule = false;
+    public $canAccessTest = false;
+    public $activeUrgentSchedules = [];
+    public $gelombangActive = null;
+    public $regularScheduleActive = false;
+    
+    // Test completion tracking
+    public $allTestsCompleted = false;
+
     public function mount()
     {
+        $user = Auth::user();
+
+        // Get active gelombang once
+        $this->gelombangActive = GelombangPendaftaran::aktif()->first();
+        $this->regularScheduleActive = $this->gelombangActive?->isUjianAktif() ?? false;
+
+        // Check payment status
+        $payment = BuktiTransfer::where('user_id', $user->id)
+            ->where('status', 'success')
+            ->exists();
+        $this->paymentApproved = $payment;
+
+        // Check urgent schedule access
+        $this->hasUrgentSchedule = $user->hasActiveUrgentSchedule();
+        $this->activeUrgentSchedules = $user->getActiveUrgentSchedules();
+
+        // Can access test if: payment approved AND (regular schedule active OR has urgent schedule)
+        $this->canAccessTest = $this->paymentApproved && ($this->regularScheduleActive || $this->hasUrgentSchedule);
+
         $this->userRegistration = PendaftaranMurid::with('jalurPendaftaran')
-            ->where('user_id', Auth::id())
+            ->where('user_id', $user->id)
             ->first();
 
         if ($this->userRegistration) {
-            // Ambil status transfer
+            // Ambil status transfer (for display purposes)
             $getStatusPembayaran = BuktiTransfer::where("user_id", $this->userRegistration->user_id)
                 ->latest()
                 ->first();
@@ -61,6 +92,12 @@ class AvailableTestsPage extends Component
 
             foreach ($kuesioners as $customTest) {
                 $this->availableTests[] = $this->formatTestData($customTest, null);
+            }
+            
+            // Check if all jalur tests are completed
+            $jalurTests = collect($this->availableTests)->where('test.category', 'custom_test');
+            if ($jalurTests->count() > 0) {
+                $this->allTestsCompleted = $jalurTests->every(fn($test) => $test['has_completed']);
             }
         }
     }
@@ -136,3 +173,4 @@ class AvailableTestsPage extends Component
         return view('livewire.siswa.available-tests-page');
     }
 }
+

@@ -170,6 +170,40 @@ class User extends Authenticatable
         return $this->hasMany(GuruDocument::class, 'guru_id');
     }
 
+    /**
+     * Relationship to urgent test schedules (Jadwal Ujian Khusus)
+     */
+    public function jadwalUjianKhusus()
+    {
+        return $this->belongsToMany(JadwalUjianKhusus::class, 'siswa_jadwal_ujian_khusus');
+    }
+
+    /**
+     * Check if student has any active urgent schedule right now
+     */
+    public function hasActiveUrgentSchedule(): bool
+    {
+        $now = now();
+        return $this->jadwalUjianKhusus()
+            ->where('is_active', true)
+            ->where('waktu_mulai', '<=', $now)
+            ->where('waktu_selesai', '>=', $now)
+            ->exists();
+    }
+
+    /**
+     * Get active urgent schedules for this student
+     */
+    public function getActiveUrgentSchedules()
+    {
+        $now = now();
+        return $this->jadwalUjianKhusus()
+            ->where('is_active', true)
+            ->where('waktu_mulai', '<=', $now)
+            ->where('waktu_selesai', '>=', $now)
+            ->get();
+    }
+
 
     // Method untuk cek apakah user sudah mengerjakan test tertentu
     public function hasCompletedTest($customTestId)

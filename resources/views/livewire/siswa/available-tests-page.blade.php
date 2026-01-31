@@ -4,8 +4,42 @@
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Test</h1>
 
+            {{-- Payment Warning --}}
+            @if (!$paymentApproved)
+            <div class="w-full bg-red-50 rounded-xl shadow-md p-4 border border-red-200 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                        <i class="ri-error-warning-line text-xl text-red-600"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-red-800">Pembayaran Belum Diverifikasi</h2>
+                        <p class="text-sm text-red-600">Silakan selesaikan pembayaran dan tunggu verifikasi admin untuk mengakses ujian.</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            {{-- Urgent Schedule Badge --}}
+            @if ($hasUrgentSchedule && $paymentApproved)
+            <div class="w-full bg-orange-50 rounded-xl shadow-md p-4 border border-orange-200 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        <i class="ri-timer-flash-line text-xl text-orange-600"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-orange-800">Jadwal Ujian Khusus Aktif</h2>
+                        @foreach($activeUrgentSchedules as $schedule)
+                        <p class="text-sm text-orange-600">
+                            {{ $schedule->nama }} - sampai {{ $schedule->waktu_selesai->format('d M Y H:i') }}
+                        </p>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+
             @if ($gelombangActive)
-                @if (!$gelombangActive->isUjianAktif())
+                @if (!$regularScheduleActive && !$hasUrgentSchedule && $paymentApproved)
                     <div class="w-full bg-white rounded-xl shadow-md p-4 border border-gray-200">
                         <h2 class="text-lg font-semibold text-gray-800 mb-3">📅 Jadwal Ujian</h2>
                         <div class="space-y-2">
@@ -19,7 +53,7 @@
                             </p>
                         </div>
                     </div>
-                @else
+                @elseif($canAccessTest)
                     <p class="text-green-600 font-semibold">✅ Sudah bisa dimulai</p>
                 @endif
             @else
@@ -36,6 +70,27 @@
                     <p class="text-red-500 font-medium">Anda belum terdaftar di jalur pendaftaran manapun</p>
                 @endif
             </div>
+            
+            {{-- PDF Verification Download - Shows when all tests completed --}}
+            @if ($allTestsCompleted && $paymentApproved)
+            <div class="mt-6 w-full bg-gradient-to-r from-green-50 to-lime-50 rounded-xl shadow-md p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-center gap-4">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="ri-checkbox-circle-fill text-3xl text-green-600"></i>
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h2 class="text-xl font-bold text-green-800">🎉 Selamat! Semua Test Selesai</h2>
+                        <p class="text-sm text-green-600 mt-1">Anda telah menyelesaikan semua test. Silakan unduh formulir verifikasi pendaftaran Anda.</p>
+                    </div>
+                    <a href="{{ route('siswa.pdf.verifikasi') }}" 
+                       target="_blank"
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                        <i class="ri-file-pdf-line text-lg"></i>
+                        <span class="font-medium">Unduh Formulir Verifikasi</span>
+                    </a>
+                </div>
+            </div>
+            @endif
         </div>
 
         {{-- ====================== TES JALUR PENDAFTARAN ====================== --}}
@@ -107,6 +162,26 @@
                                    class="block w-full text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm">
                                     <i class="ri-eye-line mr-1"></i> Lihat Hasil
                                 </a>
+                            @elseif(!$paymentApproved)
+                                <div class="space-y-2">
+                                    <button disabled
+                                       class="block w-full text-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
+                                        <i class="ri-lock-line mr-1"></i> Mulai Test
+                                    </button>
+                                    <p class="text-xs text-red-500 text-center">
+                                        <i class="ri-error-warning-line mr-1"></i> Silakan selesaikan pembayaran terlebih dahulu
+                                    </p>
+                                </div>
+                            @elseif(!$canAccessTest)
+                                <div class="space-y-2">
+                                    <button disabled
+                                       class="block w-full text-center px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-sm">
+                                        <i class="ri-time-line mr-1"></i> Mulai Test
+                                    </button>
+                                    <p class="text-xs text-orange-500 text-center">
+                                        <i class="ri-calendar-line mr-1"></i> Menunggu jadwal ujian
+                                    </p>
+                                </div>
                             @else
                                 <a href="{{ route('siswa.test.take', $testData['test']->id) }}"
                                    class="block w-full text-center px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors text-sm">
@@ -220,4 +295,6 @@
         </div>
         @endif
     </div>
+
 </div>
+

@@ -2,8 +2,12 @@
 
 namespace App\Livewire\Siswa;
 
+use App\Models\GelombangPendaftaran;
 use App\Models\Pendaftaran\CustomTest;
 use App\Models\Pendaftaran\CustomTestAnswer;
+use App\Models\Pendaftaran\PendaftaranMurid;
+use App\Models\Pendaftaran\TesJalur;
+use App\Models\Siswa\BuktiTransfer;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +27,38 @@ class TestTakingPage extends Component
     public $scoreData = [];
     public $startTime;
     
+    // For PDF verification button
+    public $allTestsCompleted = false;
+    
     public function mount($testId)
     {
+        $user = Auth::user();
+        
         $this->customTest = CustomTest::with(['questions' => fn($q) => $q->orderBy('urutan')])
             ->findOrFail($testId);
+        
+        // Skip payment/schedule check for kuesioner_ortu (can be accessed anytime)
+        if ($this->customTest->category !== 'kuesioner_ortu') {
+            // Check payment status
+            $paymentApproved = BuktiTransfer::where('user_id', $user->id)
+                ->where('status', 'success')
+                ->exists();
+
+            if (!$paymentApproved) {
+                session()->flash('error', 'Silakan selesaikan pembayaran terlebih dahulu untuk mengakses ujian.');
+                return redirect()->route('siswa.tests.index');
+            }
+
+            // Check schedule access
+            $hasUrgentSchedule = $user->hasActiveUrgentSchedule();
+            $gelombangActive = GelombangPendaftaran::aktif()->first();
+            $regularScheduleActive = $gelombangActive?->isUjianAktif() ?? false;
+
+            if (!$regularScheduleActive && !$hasUrgentSchedule) {
+                session()->flash('error', 'Waktu ujian belum dimulai. Silakan tunggu jadwal ujian atau hubungi admin.');
+                return redirect()->route('siswa.tests.index');
+            }
+        }
         
         $this->questions = $this->customTest->questions->toArray();
         $this->startTime = now();
@@ -82,6 +114,45 @@ class TestTakingPage extends Component
         $this->scoreData = $this->calculateScoreData($existingAnswers->values());
         $this->isCompleted = true;
         $this->showResult = true;
+        
+        // Check if all jalur tests are completed for PDF button
+        $this->checkAllTestsCompleted();
+    }
+    
+    private function checkAllTestsCompleted(): void
+    {
+        $user = Auth::user();
+        $registration = PendaftaranMurid::where('user_id', $user->id)->first();
+        
+        if (!$registration) {
+            return;
+        }
+        
+        // Get all tests for this jalur
+        $tesJalurs = TesJalur::with('customTests')
+            ->where('jalur_pendaftaran_id', $registration->jalur_pendaftaran_id)
+            ->get();
+        
+        $allTestIds = collect();
+        foreach ($tesJalurs as $tesJalur) {
+            foreach ($tesJalur->customTests as $test) {
+                if ($test->is_active && $test->category === 'custom_test') {
+                    $allTestIds->push($test->id);
+                }
+            }
+        }
+        
+        if ($allTestIds->isEmpty()) {
+            return;
+        }
+        
+        // Check how many are completed
+        $completedCount = CustomTestAnswer::where('user_id', $user->id)
+            ->whereIn('custom_test_id', $allTestIds)
+            ->distinct('custom_test_id')
+            ->count('custom_test_id');
+        
+        $this->allTestsCompleted = ($completedCount >= $allTestIds->count());
     }
     
     // Method untuk handle perubahan jawaban radio

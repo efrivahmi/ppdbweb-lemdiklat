@@ -310,7 +310,28 @@
             </div>
 
             <!-- Hanya tombol kembali ke dashboard, tidak ada tombol ulangi -->
-            <div class="flex justify-center">
+            <div class="flex flex-col items-center gap-4">
+                {{-- PDF Verification Download - Shows when all tests completed --}}
+                @if ($allTestsCompleted)
+                <div class="w-full max-w-lg bg-gradient-to-r from-green-50 to-lime-50 rounded-xl p-6 border border-green-200 mb-4">
+                    <div class="flex flex-col items-center gap-3 text-center">
+                        <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="ri-file-check-line text-2xl text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-green-800">🎉 Semua Test Selesai!</h3>
+                            <p class="text-sm text-green-600 mt-1">Silakan unduh formulir verifikasi pendaftaran Anda.</p>
+                        </div>
+                        <a href="{{ route('siswa.pdf.verifikasi') }}" 
+                           target="_blank"
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                            <i class="ri-file-pdf-line text-lg"></i>
+                            <span class="font-medium">Unduh Formulir Verifikasi</span>
+                        </a>
+                    </div>
+                </div>
+                @endif
+                
                 <a href="{{ route('siswa.dashboard') }}" 
                    class="px-8 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-gray-500">
                     <i class="ri-home-line"></i>
