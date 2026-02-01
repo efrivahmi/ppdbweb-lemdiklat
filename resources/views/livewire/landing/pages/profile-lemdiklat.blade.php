@@ -1,6 +1,6 @@
 <div>
     <!-- Hero Section -->
-    <section class="relative w-screen overflow-hidden">
+    <section class="relative w-full overflow-hidden">
         <div class="relative w-full flex justify-center">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-800 via-indigo-900 to-purple-900"></div>
         </div>

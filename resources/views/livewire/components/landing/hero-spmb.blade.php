@@ -1,5 +1,5 @@
 <section 
-    class="relative w-screen h-[calc(100vh-5rem)] overflow-hidden"
+    class="relative w-full h-[calc(100vh-5rem)] overflow-hidden"
     x-data="{
         imageLoaded: true,
         mounted: false,
