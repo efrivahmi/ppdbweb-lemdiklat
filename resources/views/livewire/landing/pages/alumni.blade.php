@@ -4,8 +4,8 @@
             <div class="bg-gray-900/20 p-5 rounded-full">
                 <x-heroicon-o-academic-cap class="w-12 h-12 text-white" />
             </div>
-            <x-atoms.title text="Alumni Berprestasi" size="3xl" color="white" />
-            <x-atoms.description color="white">
+            <x-atoms.title text="Alumni Berprestasi" size="3xl" class="text-white" />
+            <x-atoms.description class="text-white">
                 Bangga dengan para alumni terbaik yang telah mengabdi untuk bangsa dan negara
             </x-atoms.description>
         </div>

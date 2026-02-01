@@ -15,11 +15,16 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'build/*', 'assets/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'build/*', 'assets/*', '*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+        'https://lemdiklattarunanusantaraindonesia.id',
+        'https://www.lemdiklattarunanusantaraindonesia.id',
+    ],
 
     'allowed_origins_patterns' => [],
 
