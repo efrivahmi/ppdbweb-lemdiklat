@@ -1,9 +1,9 @@
 import './bootstrap';
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
-import Csp from '@alpinejs/csp';
+import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import Alpine from '@alpinejs/csp';
 import Swal from 'sweetalert2'
 
-Alpine.plugin(Csp);
+window.Alpine = Alpine;
 Livewire.start();
 
 window.Swal = Swal
