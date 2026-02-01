@@ -30,6 +30,3 @@ if (import.meta.env.VITE_PUSHER_APP_KEY) {
 } else {
     console.log('Skipping Laravel Echo init: VITE_PUSHER_APP_KEY not defined');
 }
-
-// Debug: Log when Echo is ready (remove in production)
-console.log('🔌 Laravel Echo initialized with Pusher');
