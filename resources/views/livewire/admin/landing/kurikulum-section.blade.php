@@ -37,9 +37,9 @@
                     <x-molecules.textarea-field label="Deskripsi Gambar" wire:model="image_description" :rows="2" />
 
                     @if($image)
-                        <img src="{{ $image->temporaryUrl() }}" class="w-64 h-40 object-cover rounded-lg border mt-3">
+                        <img src="{{ $image->temporaryUrl() }}" class="w-full md:w-64 h-auto rounded-lg border mt-3 shadow-sm">
                     @elseif($image_url)
-                        <img src="{{ asset('storage/' . $image_url) }}" class="w-64 h-40 object-cover rounded-lg border mt-3">
+                        <img src="{{ Str::startsWith($image_url, 'storage') ? asset($image_url) : asset('storage/' . $image_url) }}" class="w-full md:w-64 h-auto rounded-lg border mt-3 shadow-sm">
                     @endif
                 </div>
 
@@ -52,9 +52,9 @@
                             <x-molecules.input-field label="Judul Foto 1" wire:model="photo_1_title" />
                             <input type="file" wire:model="photo_1" class="w-full mt-2 border-gray-300 rounded-md" />
                             @if($photo_1)
-                                <img src="{{ $photo_1->temporaryUrl() }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ $photo_1->temporaryUrl() }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @elseif($photo_1_url)
-                                <img src="{{ asset('storage/' . $photo_1_url) }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ Str::startsWith($photo_1_url, 'storage') ? asset($photo_1_url) : asset('storage/' . $photo_1_url) }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @endif
                         </div>
 
@@ -63,9 +63,9 @@
                             <x-molecules.input-field label="Judul Foto 2" wire:model="photo_2_title" />
                             <input type="file" wire:model="photo_2" class="w-full mt-2 border-gray-300 rounded-md" />
                             @if($photo_2)
-                                <img src="{{ $photo_2->temporaryUrl() }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ $photo_2->temporaryUrl() }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @elseif($photo_2_url)
-                                <img src="{{ asset('storage/' . $photo_2_url) }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ Str::startsWith($photo_2_url, 'storage') ? asset($photo_2_url) : asset('storage/' . $photo_2_url) }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @endif
                         </div>
 
@@ -74,9 +74,9 @@
                             <x-molecules.input-field label="Judul Foto 3" wire:model="photo_3_title" />
                             <input type="file" wire:model="photo_3" class="w-full mt-2 border-gray-300 rounded-md" />
                             @if($photo_3)
-                                <img src="{{ $photo_3->temporaryUrl() }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ $photo_3->temporaryUrl() }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @elseif($photo_3_url)
-                                <img src="{{ asset('storage/' . $photo_3_url) }}" class="w-full h-40 object-cover rounded-lg mt-3 border">
+                                <img src="{{ Str::startsWith($photo_3_url, 'storage') ? asset($photo_3_url) : asset('storage/' . $photo_3_url) }}" class="w-full h-auto rounded-lg mt-3 border shadow-sm">
                             @endif
                         </div>
                     </div>

@@ -223,10 +223,7 @@
                                     Program Kepemimpinan
                                 </div>
                             </div>
-                            <a href="/profile/sma" class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-slate-900 font-bold text-sm px-4 py-2 rounded-lg hover:gap-3 transition-all shadow-lg hover:shadow-xl">
-                                Lihat Profil Lengkap
-                                <x-heroicon-o-arrow-right class="w-4 h-4" />
-                            </a>
+                            </div>
                         </div>
                     </div>
 
@@ -263,10 +260,7 @@
                                     Administrasi Perkantoran
                                 </div>
                             </div>
-                            <a href="/profile/smk" class="inline-flex items-center gap-2 bg-gradient-to-r from-lime-400 to-lime-500 text-slate-900 font-bold text-sm px-4 py-2 rounded-lg hover:gap-3 transition-all shadow-lg hover:shadow-xl">
-                                Lihat Profil Lengkap
-                                <x-heroicon-o-arrow-right class="w-4 h-4" />
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>

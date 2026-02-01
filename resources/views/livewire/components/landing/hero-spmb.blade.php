@@ -1,5 +1,5 @@
 <section 
-    class="relative w-screen overflow-hidden"
+    class="relative w-screen h-[calc(100vh-5rem)] overflow-hidden"
     x-data="{
         imageLoaded: true,
         mounted: false,
@@ -11,12 +11,12 @@
     x-init="init()"
 >
     {{-- Background Image Layer --}}
-    <div class="relative w-full flex justify-center">
+    <div class="relative w-full h-full flex justify-center">
         @if($heroData['backgroundImage'])
             <img 
                 src="{{ asset('storage/' . $heroData['backgroundImage']) }}" 
                 alt="Taruna Nusantara"
-                class="w-full h-auto object-contain object-center transition-all duration-1000"
+                class="w-full h-full object-cover object-center transition-all duration-1000"
                 x-bind:class="{
                     'opacity-100 scale-100': imageLoaded && !hasError,
                     'opacity-0 scale-110': !imageLoaded || hasError

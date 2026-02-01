@@ -42,6 +42,17 @@
     
     {{-- Scroll Reveal Animation Script --}}
     <script>
+        document.addEventListener('contextmenu', event => {
+            if (event.target.tagName === 'IMG') {
+                event.preventDefault();
+            }
+        });
+        document.addEventListener('dragstart', event => {
+            if (event.target.tagName === 'IMG') {
+                event.preventDefault();
+            }
+        });
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Intersection Observer for scroll reveal animations
             const observerOptions = {
