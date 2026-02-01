@@ -38,7 +38,7 @@
     
     @livewire('components.landing.footer-section')
     
-    @livewireScripts
+
     
     {{-- Scroll Reveal Animation Script --}}
     <script>

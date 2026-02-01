@@ -5,8 +5,8 @@
             <div class="bg-gray-900/20 p-5 rounded-full">
                 <x-heroicon-o-building-office-2 class="w-12 h-12 text-white" />
             </div>
-            <x-atoms.title text="Fasilitas Sekolah" size="3xl" class="text-white" />
-            <x-atoms.description class="text-white text-center">
+            <x-atoms.title text="Fasilitas Sekolah" size="3xl" color="white" />
+            <x-atoms.description color="white" class="text-center">
                 Jelajahi fasilitas modern dan lengkap yang mendukung kegiatan belajar mengajar
             </x-atoms.description>
         </div>
