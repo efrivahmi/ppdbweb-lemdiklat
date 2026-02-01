@@ -3,7 +3,8 @@ import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.e
 import Csp from '@alpinejs/csp';
 import Swal from 'sweetalert2'
 
-Alpine.plugin(Csp);
+// Fix for production build where Csp might be wrapped in 'default'
+Alpine.plugin(Csp.default || Csp);
 Livewire.start();
 
 window.Swal = Swal
