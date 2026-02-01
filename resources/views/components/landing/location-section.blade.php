@@ -72,7 +72,7 @@
                             <h4 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Email</h4>
                             @if($settings->email)
                                 <a href="mailto:{{ $settings->email }}" 
-                                   class="text-gray-800 hover:text-lime-600 transition-colors">
+                                   class="text-gray-800 hover:text-lime-600 transition-colors break-all">
                                     {{ $settings->email }}
                                 </a>
                             @else

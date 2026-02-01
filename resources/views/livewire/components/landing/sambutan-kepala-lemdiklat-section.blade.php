@@ -122,7 +122,8 @@
                                 <x-atoms.title
                                     :text="$greetingData['principal']['name'] ?? 'Kepala Lemdiklat'"
                                     size="lg"
-                                    class="text-white mb-2" />
+                                    color="white"
+                                    class="mb-2" />
                                 <x-atoms.description
                                     size="sm"
                                     color="indigo-200"

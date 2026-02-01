@@ -38,7 +38,8 @@
                         size="md"
                         mdSize="lg"
                         align="center"
-                        class="text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+                        color="white/90"
+                        class="mb-8 max-w-2xl mx-auto leading-relaxed">
                         {{ $description }}
                     </x-atoms.description>
 

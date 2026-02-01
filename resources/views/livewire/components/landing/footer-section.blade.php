@@ -5,9 +5,9 @@
             {{-- Brand Section --}}
             <div class="flex-1 max-w-md">
                 <div class="mb-4">
-                    <x-atoms.title :text="$footerData->site_title" class="text-white text-xl font-semibold"/>
+                    <x-atoms.title :text="$footerData->site_title" color="white" class="text-xl font-semibold"/>
                 </div>
-                <x-atoms.description class="text-white text-sm leading-relaxed mb-5">
+                <x-atoms.description color="white" class="text-sm leading-relaxed mb-5">
                     {{ $footerData->site_description }}
                 </x-atoms.description>
                 

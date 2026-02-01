@@ -61,7 +61,8 @@
                     :highlight="$heroData['title']['highlight']" 
                     size="3xl" 
                     mdSize="5xl"
-                    class="text-white leading-tight lg:text-6xl" />
+                    color="white"
+                    class="leading-tight lg:text-6xl" />
                 
                 <x-atoms.description 
                     color="gray-100" 

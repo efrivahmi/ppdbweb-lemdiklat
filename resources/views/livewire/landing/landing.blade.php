@@ -53,14 +53,16 @@
                         size="3xl"
                         mdSize="4xl"
                         align="center"
-                        class="text-white mb-6 leading-tight" />
+                        color="white"
+                        class="mb-6 leading-tight" />
 
                     {{-- Description --}}
                     <x-atoms.description
                         size="md"
                         mdSize="lg"
                         align="center"
-                        class="text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        color="white/90"
+                        class="mb-10 max-w-2xl mx-auto leading-relaxed">
                         {{ $description }}
                     </x-atoms.description>
 

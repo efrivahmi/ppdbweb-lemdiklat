@@ -4,6 +4,7 @@
     'size' => 'base',
     'mdSize' => '',
     'align' => 'left',
+    'color' => 'gray-800',
     'className' => '',
 ])
 
@@ -38,8 +39,11 @@ switch($align) {
         break;
 }
 
+$colorClass = 'text-' . $color;
+
 $classes = trim(implode(' ', [
-    'font-bold text-gray-800',
+    'font-bold',
+    $colorClass,
     $sizeClass,
     $mdSizeClass,
     $alignClass,

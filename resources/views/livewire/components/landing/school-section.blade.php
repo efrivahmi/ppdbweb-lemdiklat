@@ -128,7 +128,8 @@
                                         <x-atoms.title
                                             :text="$profileData['image']['title'] ?? 'Gedung Sekolah'"
                                             size="lg"
-                                            class="text-white mb-2 text-xl lg:text-2xl"
+                                            color="white"
+                                            class="mb-2 text-xl lg:text-2xl"
                                         />
                                         <x-atoms.description
                                             size="sm"

@@ -66,11 +66,13 @@
                                     :text="$greetingData['principal']['name'] ?? 'Kepala Sekolah'"
                                     size="md"
                                     mdSize="lg"
-                                    class="text-white mb-1 md:mb-2" 
+                                    color="white"
+                                    class="mb-1 md:mb-2" 
                                 />
                                 <x-atoms.description
                                     size="xs"
-                                    class="text-indigo-200 flex items-center gap-2">
+                                    color="indigo-200"
+                                    class="flex items-center gap-2">
                                     <x-heroicon-o-academic-cap class="w-4 h-4 md:w-5 md:h-5" />
                                     {{ $greetingData['principal']['title'] ?? 'Kepala Sekolah' }}
                                 </x-atoms.description>

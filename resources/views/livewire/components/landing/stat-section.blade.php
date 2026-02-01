@@ -54,7 +54,8 @@
                     
                     <x-atoms.description
                         size="sm"
-                        class="lg:text-md text-lime-100 text-center"
+                        color="lime-100"
+                        class="lg:text-md text-center"
                     >
                         {{ $stat['label'] }}
                     </x-atoms.description>

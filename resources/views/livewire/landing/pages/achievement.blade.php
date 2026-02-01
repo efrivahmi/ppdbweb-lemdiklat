@@ -4,8 +4,8 @@
             <div class="bg-gray-900/20 p-5 rounded-full">
                 <x-heroicon-o-trophy class="w-12 h-12 text-white " />
             </div>
-            <x-atoms.title text="Prestasi & Pencapaian" size="3xl" class=" text-white" />
-            <x-atoms.description class="text-white">
+            <x-atoms.title text="Prestasi & Pencapaian" size="3xl" color="white" />
+            <x-atoms.description color="white">
                 Membanggakan pencapaian siswa-siswi terbaik
             </x-atoms.description>
         </div>
