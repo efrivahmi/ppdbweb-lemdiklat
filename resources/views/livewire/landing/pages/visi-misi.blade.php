@@ -5,8 +5,8 @@
             <div class="bg-gray-900/20 p-5 rounded-full">
                 <x-heroicon-o-light-bulb class="w-12 h-12 text-white" />
             </div>
-            <x-atoms.title text="Visi & Misi" size="3xl" class="text-white" />
-            <x-atoms.description class="text-white text-center px-4">
+            <x-atoms.title text="Visi & Misi" size="3xl" color="white" />
+            <x-atoms.description color="white" class="text-center px-4">
                 Fondasi dan arah pengembangan Lemdiklat Taruna Nusantara Indonesia
             </x-atoms.description>
         </div>

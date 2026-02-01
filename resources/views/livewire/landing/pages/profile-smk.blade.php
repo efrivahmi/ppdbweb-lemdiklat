@@ -368,14 +368,16 @@
                         size="3xl"
                         mdSize="4xl"
                         align="center"
-                        class="text-white mb-6 leading-tight"
+                        color="white"
+                        class="mb-6 leading-tight"
                     />
 
                     <x-atoms.description
                         size="md"
                         mdSize="lg"
                         align="center"
-                        class="text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed"
+                        color="white"
+                        class="mb-10 max-w-2xl mx-auto leading-relaxed"
                     >
                         {{ $ctaData['description'] ?? 'Bergabunglah dengan SMK yang siap mengantarkanmu ke dunia kerja atau wirausaha sukses' }}
                     </x-atoms.description>

@@ -27,6 +27,4 @@ if (import.meta.env.VITE_PUSHER_APP_KEY) {
         forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
         enabledTransports: ['ws', 'wss'],
     });
-} else {
-    console.log('Skipping Laravel Echo init: VITE_PUSHER_APP_KEY not defined');
 }

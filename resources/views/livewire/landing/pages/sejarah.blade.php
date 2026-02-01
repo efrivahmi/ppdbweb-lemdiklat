@@ -5,8 +5,8 @@
             <div class="bg-gray-900/20 p-5 rounded-full">
                 <x-heroicon-o-book-open class="w-12 h-12 text-white" />
             </div>
-            <x-atoms.title text="Sejarah Sekolah" size="3xl" class="text-white" />
-            <x-atoms.description class="text-white text-center px-4">
+            <x-atoms.title text="Sejarah Sekolah" size="3xl" color="white" />
+            <x-atoms.description color="white" class="text-center px-4">
                 Perjalanan panjang dalam membangun generasi unggul dan berkarakter
             </x-atoms.description>
         </div>
