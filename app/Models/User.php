@@ -47,6 +47,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'guru_approved_at' => 'datetime',
             'show_in_contact' => 'boolean',
+            'is_super_admin' => 'boolean',
         ];
     }
 

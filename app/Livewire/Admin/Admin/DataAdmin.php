@@ -48,7 +48,7 @@ class DataAdmin extends Component
         $this->resetForm();
     }
     public function detail($id){
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
              $this->dispatch("alert", message: "Akses ditolak!", type: "error");
              return;
         }
@@ -64,7 +64,7 @@ class DataAdmin extends Component
     public function createAdmin()
     {
         // STRICT CHECK
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
             $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin.", type: "error");
             return;
         }
@@ -88,7 +88,7 @@ class DataAdmin extends Component
     public function deleteAdmin($id)
     {
         // STRICT CHECK
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
             $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin.", type: "error");
             return;
         }
@@ -102,6 +102,27 @@ class DataAdmin extends Component
         
         $admin->delete();
         $this->dispatch("alert", message: "Berhasil menghapus admin", type: "success");
+    }
+
+    public function toggleSuperAdmin($id)
+    {
+        if (!Auth::user()->is_super_admin) {
+            return;
+        }
+
+        $admin = User::findOrFail($id);
+        
+        // Prevent editing self super admin status (safety)
+        if ($admin->id === Auth::id()) {
+            $this->dispatch("alert", message: "Tidak dapat mengubah status sendiri", type: "warning");
+            return;
+        }
+
+        $admin->is_super_admin = !$admin->is_super_admin;
+        $admin->save();
+
+        $status = $admin->is_super_admin ? "dijadikan Super Admin" : "dicabut akses Super Admin";
+        $this->dispatch("alert", message: "Admin {$admin->name} telah {$status}", type: "success");
     }
     
     public function updatingSearch()

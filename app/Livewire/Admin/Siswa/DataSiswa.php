@@ -74,7 +74,7 @@ class DataSiswa extends Component
 
     public function openForceRegisterModal($siswaId)
     {
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
             $this->dispatch("alert", message: "Akses ditolak!", type: "error");
             return;
         }
@@ -115,7 +115,7 @@ class DataSiswa extends Component
 
     public function forceRegisterSubmit()
     {
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
             return;
         }
 
@@ -222,7 +222,7 @@ class DataSiswa extends Component
     public function loginAs($userId)
     {
         // STRICT CHECK: Only Super User can use this
-        if (Auth::user()->email !== 'forsake002@gmail.com') {
+        if (!Auth::user()->is_super_admin) {
             $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin yang dapat menggunakan fitur ini.", type: "error");
             return;
         }

@@ -13,7 +13,7 @@
                     className="md:w-64"
                 />
 
-                @if(auth()->user()->email === 'forsake002@gmail.com')
+                @if(auth()->user()->is_super_admin)
                 <x-atoms.button
                     wire:click="openCreateModal"
                     variant="success"
@@ -53,7 +53,12 @@
                                             </span>
                                         </div>
                                         <div>
-                                            <p class="font-medium text-gray-900">{{ $admin->name }}</p>
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-medium text-gray-900">{{ $admin->name }}</p>
+                                                @if($admin->is_super_admin)
+                                                    <x-atoms.badge text="Super Admin" variant="purple" size="xs" />
+                                                @endif
+                                            </div>
                                             @if ($admin->id === auth()->id())
                                                 <x-atoms.badge text="Anda" variant="emerald" size="sm" />
                                             @endif
@@ -84,7 +89,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex gap-2 justify-center">
-                                        @if(auth()->user()->email === 'forsake002@gmail.com')
+                                        @if(auth()->user()->is_super_admin)
                                         <x-atoms.button
                                         wire:click='detail({{ $admin->id }})'
                                             variant="ghost"
@@ -92,11 +97,25 @@
                                             size="sm"
                                             heroicon="eye"
                                             className="text-blue-600 hover:text-blue-800"
+                                            title="Detail"
                                         >
-                                            Detail
+                                           <!-- Detail -->
                                         </x-atoms.button>
-                                        
+
                                         @if ($admin->id !== auth()->id())
+                                            <x-atoms.button
+                                                wire:click="toggleSuperAdmin({{ $admin->id }})"
+                                                wire:confirm="Ubah status Super Admin untuk {{ $admin->name }}?"
+                                                variant="ghost"
+                                                theme="dark"
+                                                size="sm"
+                                                heroicon="{{ $admin->is_super_admin ? 'shield-check' : 'shield-exclamation' }}"
+                                                className="{{ $admin->is_super_admin ? 'text-purple-600 hover:text-purple-800' : 'text-gray-400 hover:text-purple-600' }}"
+                                                title="{{ $admin->is_super_admin ? 'Cabut Super Admin' : 'Jadikan Super Admin' }}"
+                                            >
+                                               <!-- Toggle SA -->
+                                            </x-atoms.button>
+
                                             <x-atoms.button
                                                 wire:click="deleteAdmin({{ $admin->id }})"
                                                 wire:confirm="Yakin ingin menghapus admin ini?"
@@ -105,8 +124,9 @@
                                                 size="sm"
                                                 heroicon="trash"
                                                 className="text-red-600 hover:text-red-800"
+                                                title="Hapus"
                                             >
-                                                Hapus
+                                                <!-- Hapus -->
                                             </x-atoms.button>
                                         @endif
                                         @else
