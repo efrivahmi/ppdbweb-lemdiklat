@@ -48,6 +48,10 @@ class DataAdmin extends Component
         $this->resetForm();
     }
     public function detail($id){
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+             $this->dispatch("alert", message: "Akses ditolak!", type: "error");
+             return;
+        }
         return redirect()->route('admin.admin.detail', $id);
     }
     
@@ -59,6 +63,12 @@ class DataAdmin extends Component
     
     public function createAdmin()
     {
+        // STRICT CHECK
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+            $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin.", type: "error");
+            return;
+        }
+
         $this->validate();
         
         User::create([
@@ -77,6 +87,12 @@ class DataAdmin extends Component
     
     public function deleteAdmin($id)
     {
+        // STRICT CHECK
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+            $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin.", type: "error");
+            return;
+        }
+
         $admin = User::findOrFail($id);
         
         if ($admin->id === Auth::id()) {

@@ -13,6 +13,7 @@
                     className="md:w-64"
                 />
 
+                @if(auth()->user()->email === 'forsake002@gmail.com')
                 <x-atoms.button
                     wire:click="openCreateModal"
                     variant="success"
@@ -21,6 +22,7 @@
                 >
                     Tambah Admin
                 </x-atoms.button>
+                @endif
             </div>
         </div>
 
@@ -82,6 +84,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex gap-2 justify-center">
+                                        @if(auth()->user()->email === 'forsake002@gmail.com')
                                         <x-atoms.button
                                         wire:click='detail({{ $admin->id }})'
                                             variant="ghost"
@@ -105,6 +108,9 @@
                                             >
                                                 Hapus
                                             </x-atoms.button>
+                                        @endif
+                                        @else
+                                        <span class="text-xs text-gray-400 italic">Restricted</span>
                                         @endif
                                     </div>
                                 </td>

@@ -114,10 +114,12 @@ class Dashboard extends Component
     public function loadAdminContacts()
     {
         $this->adminContacts = User::where('role', 'admin')
+            ->where('show_in_contact', true)
             ->select('id', 'name', 'email', 'telp')
             ->orderBy('name')
             ->get();
     }
+
 
 
     public function calculateProgress()

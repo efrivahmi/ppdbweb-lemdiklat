@@ -171,6 +171,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     
     // Settings
     Route::get('/settings/school', App\Livewire\Admin\Settings\SchoolSettingsPage::class)->name('admin.settings.school');
+    Route::get('/settings/contact', App\Livewire\Admin\Settings\AdminContactSettings::class)->name('admin.settings.contact');
     
     // Profile Sekolah (SMA & SMK)
     Route::get('/profile-sekolah/sma', App\Livewire\Admin\ProfileSekolah\SmaPage::class)->name('admin.profile-sekolah.sma');

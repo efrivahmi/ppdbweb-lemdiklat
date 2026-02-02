@@ -205,10 +205,22 @@
                                     wire:confirm="Anda yakin ingin login sebagai {{ $siswa->name }}? Anda akan dialihkan ke dashboard siswa."
                                     variant="warning"
                                     theme="dark"
-                                    size="sm"
-                                    heroicon="key"
-                                    className="text-yellow-600 hover:text-yellow-800"
                                     title="Login Sebagai Siswa">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                                    </svg>
+                                </x-atoms.button>
+                                
+                                <x-atoms.button
+                                    wire:click="openForceRegisterModal({{ $siswa->id }})"
+                                    variant="danger"
+                                    theme="dark"
+                                    size="sm"
+                                    className="text-red-600 hover:text-red-800"
+                                    title="Force Register/Edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                                    </svg>
                                 </x-atoms.button>
                                 @endif
                                 <x-atoms.button
@@ -399,9 +411,24 @@
                             variant="warning"
                             theme="dark"
                             size="sm"
-                            heroicon="key"
                             className="flex-1 text-yellow-600 hover:text-yellow-800 justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                            </svg>
                             Login
+                        </x-atoms.button>
+
+                        <x-atoms.button
+                            wire:click="openForceRegisterModal({{ $siswa->id }})"
+                            variant="danger"
+                            theme="dark"
+                            size="sm"
+                            className="flex-1 text-red-600 hover:text-red-800 justify-center"
+                            title="Force Register/Edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                            </svg>
+                            Force
                         </x-atoms.button>
                         @endif
                         <x-atoms.button
@@ -582,6 +609,82 @@
                             Batal
                         </x-atoms.button>
                     </div>
+                </div>
+            </form>
+        </div>
+    </x-atoms.modal>
+
+    {{-- Modal Force Register (Super User Only) --}}
+    <x-atoms.modal name="force-register" maxWidth="lg">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <x-heroicon-o-clipboard-document-check class="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                    <x-atoms.title text="{{ $isEditingRegistration ? 'Edit Registrasi (Force)' : 'Registrasi Darurat (Bypass)' }}" size="lg" />
+                    <x-atoms.description size="sm" color="gray-500">
+                        Fitur khusus Super User untuk bypass tanggal/edit data
+                    </x-atoms.description>
+                </div>
+            </div>
+
+            <form wire:submit.prevent="forceRegisterSubmit" class="space-y-4">
+                {{-- Jalur --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jalur Pendaftaran</label>
+                    <select wire:model="forceJalurId" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Pilih Jalur</option>
+                        @foreach($forceJalurs as $jalur)
+                            <option value="{{ $jalur->id }}">{{ $jalur->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('forceJalurId') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Tipe Sekolah --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Sekolah</label>
+                    <select wire:model.live="forceTipeId" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Pilih Tipe Sekolah</option>
+                        @foreach($forceTipes as $tipe)
+                            <option value="{{ $tipe->id }}">{{ $tipe->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('forceTipeId') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Jurusan --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Program Studi / Jurusan</label>
+                    <select wire:model="forceJurusanId" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Pilih Jurusan</option>
+                        @foreach($forceJurusans as $jurusan)
+                            <option value="{{ $jurusan->id }}">{{ $jurusan->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('forceJurusanId') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="border-t pt-4 mt-4 flex gap-3">
+                    <x-atoms.button
+                        type="submit"
+                        variant="danger"
+                        heroicon="check"
+                        className="flex-1 justify-center"
+                        wire:loading.attr="disabled"
+                        wire:target="forceRegisterSubmit">
+                        <span wire:loading.remove>Simpan (Force)</span>
+                        <span wire:loading>Menyimpan...</span>
+                    </x-atoms.button>
+                     <x-atoms.button
+                        type="button"
+                        wire:click="$dispatch('close-modal', { name: 'force-register' })"
+                        variant="ghost"
+                        theme="dark"
+                        className="flex-1 justify-center">
+                        Batal
+                    </x-atoms.button>
                 </div>
             </form>
         </div>

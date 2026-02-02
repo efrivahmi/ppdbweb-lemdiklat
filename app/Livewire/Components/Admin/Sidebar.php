@@ -272,6 +272,11 @@ class Sidebar extends Component
                     'url' => 'admin.settings.school',
                     'icon' => 'ri-school-line'
                 ],
+                [
+                    'name' => 'Kontak Admin',
+                    'url' => 'admin.settings.contact',
+                    'icon' => 'ri-contacts-book-line'
+                ],
             ]
         ]
     ];

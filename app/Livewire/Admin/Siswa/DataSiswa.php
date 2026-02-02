@@ -3,6 +3,10 @@
 namespace App\Livewire\Admin\Siswa;
 
 use App\Models\User;
+use App\Models\Pendaftaran\JalurPendaftaran;
+use App\Models\Pendaftaran\TipeSekolah;
+use App\Models\Pendaftaran\Jurusan;
+use App\Models\Pendaftaran\PendaftaranMurid;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +34,17 @@ class DataSiswa extends Component
         'password' => 'required|string|min:8|confirmed',
     ];
     
+    // Force Register Properties
+    public $forceSiswaId;
+    public $forceJalurId;
+    public $forceTipeId;
+    public $forceJurusanId;
+    public $forceJurusans = [];
+    public $forceJalurs = [];
+    public $forceTipes = [];
+    public $isEditingRegistration = false;
+    public $editingRegistrationId = null;
+    
     protected $messages = [
         'name.required' => 'Nama wajib diisi',
         'name.max' => 'Nama maksimal 255 karakter',
@@ -55,6 +70,97 @@ class DataSiswa extends Component
     {
         $this->resetForm();
         $this->dispatch('open-modal', name: 'create-siswa');
+    }
+
+    public function openForceRegisterModal($siswaId)
+    {
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+            $this->dispatch("alert", message: "Akses ditolak!", type: "error");
+            return;
+        }
+
+        $this->resetForceRegisterForm();
+        $this->forceSiswaId = $siswaId;
+        
+        // Load initial data
+        $this->forceJalurs = JalurPendaftaran::all();
+        $this->forceTipes = TipeSekolah::all();
+        $this->forceJurusans = collect();
+
+        // Check if student already has a registration
+        $registration = PendaftaranMurid::where('user_id', $siswaId)->first();
+        if ($registration) {
+            $this->isEditingRegistration = true;
+            $this->editingRegistrationId = $registration->id;
+            $this->forceJalurId = $registration->jalur_pendaftaran_id;
+            $this->forceTipeId = $registration->tipe_sekolah_id;
+            $this->forceJurusanId = $registration->jurusan_id;
+            
+            // Load jurusans for selected tipe
+            $this->forceJurusans = Jurusan::where('tipe_sekolah_id', $this->forceTipeId)->get();
+        }
+
+        $this->dispatch('open-modal', name: 'force-register');
+    }
+
+    public function updatedForceTipeId($value)
+    {
+        if ($value) {
+            $this->forceJurusans = Jurusan::where('tipe_sekolah_id', $value)->get();
+        } else {
+            $this->forceJurusans = collect();
+        }
+        $this->forceJurusanId = null;
+    }
+
+    public function forceRegisterSubmit()
+    {
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+            return;
+        }
+
+        $this->validate([
+            'forceJalurId' => 'required',
+            'forceTipeId' => 'required',
+            'forceJurusanId' => 'required',
+        ], [
+            'required' => 'Wajib dipilih'
+        ]);
+
+        try {
+            if ($this->isEditingRegistration) {
+                // Update
+                $registration = PendaftaranMurid::find($this->editingRegistrationId);
+                $registration->update([
+                    'jalur_pendaftaran_id' => $this->forceJalurId,
+                    'tipe_sekolah_id' => $this->forceTipeId,
+                    'jurusan_id' => $this->forceJurusanId,
+                ]);
+                $message = "Registrasi berhasil diperbarui (Force Update)";
+            } else {
+                // Create New
+                 PendaftaranMurid::create([
+                    'user_id' => $this->forceSiswaId,
+                    'jalur_pendaftaran_id' => $this->forceJalurId,
+                    'tipe_sekolah_id' => $this->forceTipeId,
+                    'jurusan_id' => $this->forceJurusanId,
+                    'status' => 'pending', // Default pending
+                ]);
+                $message = "Registrasi berhasil dibuat (Force Register)";
+            }
+
+            $this->dispatch('close-modal', name: 'force-register');
+            $this->dispatch("alert", message: $message, type: "success");
+            $this->resetPage(); // Refresh table
+
+        } catch (\Exception $e) {
+             $this->dispatch("alert", message: "Error: " . $e->getMessage(), type: "error");
+        }
+    }
+
+    public function resetForceRegisterForm()
+    {
+        $this->reset(['forceSiswaId', 'forceJalurId', 'forceTipeId', 'forceJurusanId', 'forceJurusans', 'isEditingRegistration', 'editingRegistrationId']);
     }
     
     public function closeCreateModal()

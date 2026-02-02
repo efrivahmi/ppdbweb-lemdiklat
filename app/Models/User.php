@@ -46,6 +46,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'guru_approved_at' => 'datetime',
+            'show_in_contact' => 'boolean',
         ];
     }
 
