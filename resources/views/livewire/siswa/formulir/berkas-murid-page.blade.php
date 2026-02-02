@@ -44,6 +44,7 @@
                             maxSize="2MB"
                             wire:model.live="{{ $input['name'] }}"
                             :currentFile="${$input['name']}"
+                            :required="!$file"
                             :error="$errors->first($input['name'])">
                             <x-slot name="label">
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2 sm:gap-0">

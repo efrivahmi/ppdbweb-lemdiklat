@@ -30,12 +30,39 @@ class BerkasMuridPage extends Component
         $this->proses = $berkas->proses;
     }
 
-    protected array $rules = [
-        'kk' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        'ktp_ortu' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        'akte' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        'surat_sehat' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        'pas_foto' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+    protected function rules(): array
+    {
+        $berkas = BerkasMurid::where('user_id', $this->user_id)->first();
+
+        return [
+            'kk' => ($berkas && $berkas->kk) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ktp_ortu' => ($berkas && $berkas->ktp_ortu) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'akte' => ($berkas && $berkas->akte) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'surat_sehat' => ($berkas && $berkas->surat_sehat) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'pas_foto' => ($berkas && $berkas->pas_foto) ? 'nullable|file|mimes:jpg,jpeg,png|max:2048' : 'required|file|mimes:jpg,jpeg,png|max:2048',
+        ];
+    }
+
+    protected array $messages = [
+        'kk.required' => 'Kartu Keluarga wajib diupload.',
+        'kk.mimes' => 'Format file harus PDF, JPG, JPEG, atau PNG.',
+        'kk.max' => 'Ukuran file maksimal 2MB.',
+        
+        'ktp_ortu.required' => 'KTP Orang Tua wajib diupload.',
+        'ktp_ortu.mimes' => 'Format file harus PDF, JPG, JPEG, atau PNG.',
+        'ktp_ortu.max' => 'Ukuran file maksimal 2MB.',
+        
+        'akte.required' => 'Akte Kelahiran wajib diupload.',
+        'akte.mimes' => 'Format file harus PDF, JPG, JPEG, atau PNG.',
+        'akte.max' => 'Ukuran file maksimal 2MB.',
+        
+        'surat_sehat.required' => 'Surat Sehat wajib diupload.',
+        'surat_sehat.mimes' => 'Format file harus PDF, JPG, JPEG, atau PNG.',
+        'surat_sehat.max' => 'Ukuran file maksimal 2MB.',
+        
+        'pas_foto.required' => 'Pas Foto wajib diupload.',
+        'pas_foto.mimes' => 'Format file harus JPG, JPEG, atau PNG.',
+        'pas_foto.max' => 'Ukuran file maksimal 2MB.',
     ];
 
     public function update(): void
