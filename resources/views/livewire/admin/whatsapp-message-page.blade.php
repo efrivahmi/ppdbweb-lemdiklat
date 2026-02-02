@@ -162,7 +162,7 @@
                 {{-- Pagination --}}
                 @if($students->hasPages())
                 <div class="mt-4 pt-4 border-t">
-                    {{ $students->links('vendor.pagination.tailwind') }}
+                    {{ $students->links('vendor.pagination.simple-tailwind') }}
                 </div>
                 @endif
             </x-atoms.card>
