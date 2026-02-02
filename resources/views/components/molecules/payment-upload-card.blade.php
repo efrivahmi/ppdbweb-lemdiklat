@@ -70,7 +70,7 @@
                 @error('transfer_picture')
                     <span class="text-red-600 text-xs mt-1 block">{{ $message }}</span>
                 @enderror
-                @if($transfer_picture)
+                @if(isset($transfer_picture) && $transfer_picture)
                     <div class="mt-2 text-sm text-lime-600 flex items-center gap-1">
                         <i class="ri-check-line"></i>
                         File terpilih: {{ $transfer_picture->getClientOriginalName() }}
