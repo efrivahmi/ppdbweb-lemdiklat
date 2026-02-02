@@ -199,6 +199,18 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex gap-2 justify-center">
+                                @if(auth()->user()->email === 'forsake002@gmail.com')
+                                <x-atoms.button
+                                    wire:click="loginAs({{ $siswa->id }})"
+                                    wire:confirm="Anda yakin ingin login sebagai {{ $siswa->name }}? Anda akan dialihkan ke dashboard siswa."
+                                    variant="warning"
+                                    theme="dark"
+                                    size="sm"
+                                    heroicon="key"
+                                    className="text-yellow-600 hover:text-yellow-800"
+                                    title="Login Sebagai Siswa">
+                                </x-atoms.button>
+                                @endif
                                 <x-atoms.button
                                     wire:click='detail({{ $siswa->id }})'
                                     variant="ghost"
@@ -380,6 +392,18 @@
 
                     <!-- Action Buttons -->
                     <div class="flex gap-2 pt-3 border-t border-gray-100">
+                        @if(auth()->user()->email === 'forsake002@gmail.com')
+                        <x-atoms.button
+                            wire:click="loginAs({{ $siswa->id }})"
+                            wire:confirm="Anda yakin ingin login sebagai {{ $siswa->name }}? Anda akan dialihkan ke dashboard siswa."
+                            variant="warning"
+                            theme="dark"
+                            size="sm"
+                            heroicon="key"
+                            className="flex-1 text-yellow-600 hover:text-yellow-800 justify-center">
+                            Login
+                        </x-atoms.button>
+                        @endif
                         <x-atoms.button
                             wire:click='detail({{ $siswa->id }})'
                             variant="ghost"

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Siswa;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
@@ -108,6 +109,31 @@ class DataSiswa extends Component
             
         } catch (\Exception $e) {
             $this->dispatch("alert", message: "Gagal menghapus siswa", type: "error");
+        }
+    }
+
+    // Login as user method
+    public function loginAs($userId)
+    {
+        // STRICT CHECK: Only Super User can use this
+        if (Auth::user()->email !== 'forsake002@gmail.com') {
+            $this->dispatch("alert", message: "Akses ditolak! Hanya Super Admin yang dapat menggunakan fitur ini.", type: "error");
+            return;
+        }
+
+        try {
+            $user = User::findOrFail($userId);
+            
+            // Log the action (optional security measure)
+            // Log::info('Admin ' . Auth::user()->name . ' logged in as ' . $user->name);
+
+            Auth::loginUsingId($userId);
+            
+            // Redirect to student dashboard
+            return redirect()->route('siswa.dashboard');
+            
+        } catch (\Exception $e) {
+            $this->dispatch("alert", message: "Gagal login sebagai user", type: "error");
         }
     }
 
