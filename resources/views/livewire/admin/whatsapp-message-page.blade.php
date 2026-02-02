@@ -26,45 +26,56 @@
                 </div>
 
                 {{-- Search Bar --}}
-                <div class="mb-4">
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            wire:model.live.debounce.300ms="search"
-                            placeholder="Cari nama, email, atau NISN..."
-                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400" />
+                {{-- Search & Filters --}}
+                <div x-data="{ showFilters: false }" class="mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex-1">
+                            <x-atoms.input
+                                type="search"
+                                wire:model.live="search"
+                                placeholder="Cari siswa..."
+                                class="w-full"
+                            />
                         </div>
+                        <button 
+                            @click="showFilters = !showFilters"
+                            class="p-2 border rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
+                            :class="{ 'bg-lime-50 text-lime-600 border-lime-200': showFilters }"
+                            title="Filter Data">
+                            <x-heroicon-o-funnel class="w-5 h-5" />
+                        </button>
                     </div>
-                </div>
-                
-                {{-- Filters --}}
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <select wire:model.live="statusFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
-                        <option value="">Semua Status</option>
-                        <option value="lengkap">Lengkap</option>
-                        <option value="belum_lengkap">Belum Lengkap</option>
-                        <option value="pendaftaran_diterima">Diterima</option>
-                    </select>
 
-                    <select wire:model.live="transferFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
-                        <option value="">Semua Transfer</option>
-                        <option value="pending">Transfer Pending</option>
-                        <option value="success">Transfer Diterima</option>
-                        <option value="decline">Transfer Ditolak</option>
-                        <option value="no_transfer">Belum Upload</option>
-                    </select>
+                    {{-- Collapsible Filters --}}
+                    <div x-show="showFilters" x-transition class="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <select wire:model.live="statusFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
+                            <option value="">Semua Status</option>
+                            <option value="lengkap">Lengkap</option>
+                            <option value="belum_lengkap">Belum Lengkap</option>
+                            <option value="pendaftaran_diterima">Diterima</option>
+                        </select>
+
+                        <select wire:model.live="transferFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
+                            <option value="">Semua Transfer</option>
+                            <option value="pending">Transfer Pending</option>
+                            <option value="success">Transfer Diterima</option>
+                            <option value="decline">Transfer Ditolak</option>
+                            <option value="no_transfer">Belum Upload</option>
+                        </select>
+                    </div>
                 </div>
 
                 {{-- Select All --}}
                 <div class="flex items-center gap-2 mb-4 pb-4 border-b">
                     <input 
                         type="checkbox" 
-                        wire:model.live="selectAll"
                         id="selectAll"
-                        class="rounded border-gray-300 text-lime-600 focus:ring-lime-500">
-                    <label for="selectAll" class="text-sm text-gray-700">Pilih Semua (halaman ini)</label>
+                        wire:model.live="selectAll"
+                        class="rounded border-gray-300 text-green-600 focus:ring-green-600"
+                    >
+                    <label for="selectAll" class="text-sm text-gray-700 cursor-pointer select-none">
+                        Pilih Semua (halaman ini)
+                    </label>
                 </div>
 
                 {{-- Student List --}}
@@ -146,7 +157,7 @@
 
                 {{-- Pagination --}}
                 @if($students->hasPages())
-                <div class="mt-4 pt-4 border-t sticky bottom-0 bg-white z-10 pb-2">
+                <div class="mt-4 pt-4 border-t">
                     {{ $students->links('vendor.pagination.tailwind') }}
                 </div>
                 @endif
