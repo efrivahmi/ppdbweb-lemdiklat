@@ -6,14 +6,17 @@ use App\Models\User;
 use App\Services\WhatsAppService;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout("layouts.admin")]
 #[Title("WhatsApp Message")]
 class WhatsAppMessagePage extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     // Search & Filter
     public $search = '';
@@ -25,8 +28,10 @@ class WhatsAppMessagePage extends Component
 
     // Message
     public $messageType = 'custom'; // 'custom' or 'template'
+    public $targetTypes = ['siswa']; // array of selected targets
     public $selectedTemplate = '';
     public $customMessage = '';
+    public $attachment;
 
     // Templates
     public $templates = [
@@ -118,33 +123,78 @@ class WhatsAppMessagePage extends Component
         $students = User::whereIn('id', $this->selectedStudents)->get();
 
         foreach ($students as $student) {
-            // Get phone number from dataMurid or user telp
-            $phone = $student->dataMurid?->whatsapp ?? $student->telp;
-            
-            if (!$phone) {
-                $this->sendingStatus[$student->id] = 'no_phone';
-                $failCount++;
-                continue;
-            }
-
-            // Replace placeholders
-            $message = str_replace('{nama}', $student->name, $this->customMessage);
-            
-            try {
-                $result = $whatsApp->send($phone, $message);
+            foreach ($this->targetTypes as $type) {
+                // Get phone number based on target type
+                $phone = null;
+                $recipientName = $student->name;
                 
-                if ($result) {
-                    $this->sendingStatus[$student->id] = 'success';
-                    $successCount++;
-                } else {
-                    $this->sendingStatus[$student->id] = 'failed';
+                switch ($type) {
+                    case 'ayah':
+                        $phone = $student->dataOrangTua?->telp_ayah;
+                        $recipientName = "Bapak " . ($student->dataOrangTua?->nama_ayah ?? 'Orang Tua');
+                        break;
+                    case 'ibu':
+                        $phone = $student->dataOrangTua?->telp_ibu;
+                        $recipientName = "Ibu " . ($student->dataOrangTua?->nama_ibu ?? 'Orang Tua');
+                        break;
+                    case 'wali':
+                        $phone = $student->dataOrangTua?->telp_wali;
+                        $recipientName = "Bapak/Ibu " . ($student->dataOrangTua?->nama_wali ?? 'Wali');
+                        break;
+                    case 'siswa':
+                    default:
+                        $phone = $student->dataMurid?->whatsapp ?? $student->telp;
+                        break;
+                }
+                
+                if (!$phone) {
+                    // Only mark as no_phone if it's the ONLY target, or maybe just log it?
+                    // For multi-target, we probably want to track partial success.
+                    // Let's use a composite key for status? "id_type"
+                    $this->sendingStatus[$student->id . '_' . $type] = 'no_phone';
+                    // We don't increment failCount globally per student for partial failure? 
+                    // Let's count *messages* sent/failed, not students.
+                    $failCount++;
+                    continue;
+                }
+                
+                // Clean phone number strictly
+                $phone = preg_replace('/[^0-9]/', '', $phone);
+                if (strlen($phone) < 10) { 
+                     $this->sendingStatus[$student->id . '_' . $type] = 'invalid_phone';
+                     $failCount++;
+                     continue;
+                }
+
+                // Replace placeholders
+                $message = str_replace('{nama}', $student->name, $this->customMessage);
+                $message = str_replace('{penerima}', $recipientName, $message);
+                
+                try {
+                    $fileUrl = null;
+                    if ($this->attachment) {
+                       $path = $this->attachment->store('whatsapp-attachments', 'public');
+                       $fileUrl = asset('storage/' . $path);
+                    }
+
+                    $result = $whatsApp->send($phone, $message, $fileUrl);
+                    
+                    if ($result['success']) {
+                        $this->sendingStatus[$student->id . '_' . $type] = 'success';
+                        $successCount++;
+                    } else {
+                        $this->sendingStatus[$student->id . '_' . $type] = 'failed';
+                        $failCount++;
+                    }
+                } catch (\Exception $e) {
+                    $this->sendingStatus[$student->id . '_' . $type] = 'error';
                     $failCount++;
                 }
-            } catch (\Exception $e) {
-                $this->sendingStatus[$student->id] = 'error';
-                $failCount++;
             }
         }
+        
+        // Clean up attachment after sending (optional, but good practice to save space)
+        // For now we keep it simple, maybe clear property only
 
         $this->isSending = false;
 
@@ -160,6 +210,7 @@ class WhatsAppMessagePage extends Component
         // Clear selection after sending
         $this->clearSelection();
         $this->customMessage = '';
+        $this->attachment = null;
         $this->selectedTemplate = '';
         $this->sendingStatus = [];
     }
@@ -177,6 +228,18 @@ class WhatsAppMessagePage extends Component
             ->orderBy('created_at', 'desc');
     }
 
+    public function toggleTargetType($type)
+    {
+        if (in_array($type, $this->targetTypes)) {
+            // Don't allow empty, must have at least one
+            if (count($this->targetTypes) > 1) {
+                $this->targetTypes = array_diff($this->targetTypes, [$type]);
+            }
+        } else {
+            $this->targetTypes[] = $type;
+        }
+    }
+    
     public function render()
     {
         $students = $this->getStudentsQuery()->paginate($this->perPage);

@@ -27,7 +27,7 @@ class WhatsAppService
     /**
      * Send a WhatsApp message
      */
-    public function send(string $phone, string $message): array
+    public function send(string $phone, string $message, ?string $fileUrl = null): array
     {
         if (empty($this->token)) {
             Log::warning('WhatsApp: Token not configured');
@@ -38,13 +38,19 @@ class WhatsAppService
         $phone = $this->cleanPhoneNumber($phone);
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => $this->token,
-            ])->post($this->baseUrl . '/send', [
+            $payload = [
                 'target' => $phone,
                 'message' => $message,
                 'countryCode' => '62', // Indonesia
-            ]);
+            ];
+
+            if ($fileUrl) {
+                $payload['url'] = $fileUrl;
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => $this->token,
+            ])->post($this->baseUrl . '/send', $payload);
 
             $result = $response->json();
 

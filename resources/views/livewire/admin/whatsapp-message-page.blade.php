@@ -73,20 +73,49 @@
                         </div>
                         
                         <div class="text-right flex-shrink-0">
+                        <div class="text-right flex-shrink-0 flex flex-col items-end gap-1">
                             @php
-                                $phone = $student->dataMurid?->whatsapp ?? $student->telp;
+                                $phones = [
+                                    'S' => $student->dataMurid?->whatsapp ?? $student->telp,
+                                    'A' => $student->dataOrangTua?->telp_ayah,
+                                    'I' => $student->dataOrangTua?->telp_ibu,
+                                    'W' => $student->dataOrangTua?->telp_wali,
+                                ];
                             @endphp
-                            @if($phone)
-                            <span class="text-sm text-green-600 flex items-center gap-1">
-                                <x-heroicon-s-check-circle class="w-4 h-4" />
-                                {{ $phone }}
-                            </span>
-                            @else
-                            <span class="text-sm text-red-500 flex items-center gap-1">
-                                <x-heroicon-s-x-circle class="w-4 h-4" />
-                                No WA
-                            </span>
-                            @endif
+                            
+                            {{-- Phone Indicators --}}
+                            <div class="flex gap-1">
+                                @foreach($phones as $label => $phone)
+                                    <span 
+                                        title="{{ $label == 'S' ? 'Siswa' : ($label == 'A' ? 'Ayah' : ($label == 'I' ? 'Ibu' : 'Wali')) }}: {{ $phone ?? 'Kosong' }}"
+                                        class="text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold cursor-help
+                                        {{ $phone ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-300' }}">
+                                        {{ $label }}
+                                    </span>
+                                @endforeach
+                            </div>
+                            
+                            
+                            {{-- Selected Target Status --}}
+                            <div class="text-xs mt-1 flex flex-col items-end gap-0.5">
+                                @foreach($targetTypes as $type)
+                                    @php
+                                        $label = match($type) { 'ayah' => 'A', 'ibu' => 'I', 'wali' => 'W', default => 'S' };
+                                        $targetPhone = match($type) {
+                                            'ayah' => $phones['A'],
+                                            'ibu' => $phones['I'],
+                                            'wali' => $phones['W'],
+                                            default => $phones['S'],
+                                        };
+                                    @endphp
+                                    @if($targetPhone)
+                                        <div class="flex items-center gap-1 text-[10px] text-green-600 font-medium">
+                                            <span class="w-3 h-3 bg-green-100 rounded-full flex items-center justify-center text-[8px]">{{ $label }}</span>
+                                            {{ $targetPhone }}
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
                     </label>
                     @empty
@@ -121,6 +150,24 @@
                     </div>
                 </div>
 
+                {{-- Target Selection --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kirim Ke (Pilih satu atau lebih)</label>
+                    <div class="flex p-1 bg-gray-100 rounded-lg gap-1">
+                        @foreach(['siswa' => 'Siswa', 'ayah' => 'Ayah', 'ibu' => 'Ibu', 'wali' => 'Wali'] as $key => $label)
+                        <button 
+                            wire:click="toggleTargetType('{{ $key }}')"
+                            class="flex-1 py-1.5 text-xs font-medium rounded-md transition-all flex items-center justify-center gap-1
+                            {{ in_array($key, $targetTypes) ? 'bg-white text-green-700 shadow-sm ring-1 ring-green-100' : 'text-gray-500 hover:text-gray-700' }}">
+                            @if(in_array($key, $targetTypes))
+                                <x-heroicon-s-check class="w-3 h-3" />
+                            @endif
+                            {{ $label }}
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
+
                 {{-- Template Selection --}}
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Template Pesan</label>
@@ -133,6 +180,52 @@
                             {{ $template['name'] }}
                         </button>
                         @endforeach
+                    </div>
+                </div>
+
+                {{-- Attachment --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Lampiran <span class="text-gray-400 font-normal">(Opsional)</span>
+                    </label>
+                    <div 
+                        x-data="{ isUploading: false, progress: 0 }"
+                        x-on:livewire-upload-start="isUploading = true"
+                        x-on:livewire-upload-finish="isUploading = false"
+                        x-on:livewire-upload-error="isUploading = false"
+                        x-on:livewire-upload-progress="progress = $event.detail.progress"
+                        class="w-full">
+                        
+                        <input 
+                            type="file" 
+                            wire:model="attachment"
+                            accept="image/*,application/pdf"
+                            class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-lime-50 file:text-lime-700
+                                hover:file:bg-lime-100
+                            "/>
+                        
+                        {{-- Upload Progress Info --}}
+                        <div x-show="isUploading" class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-lime-600 h-2.5 rounded-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                        </div>
+
+                        @if($attachment)
+                            <div class="mt-2 flex items-center gap-2 text-sm text-lime-600">
+                                <x-heroicon-s-paper-clip class="w-4 h-4" />
+                                <span>File terpilih: {{ $attachment->getClientOriginalName() }}</span>
+                                <button type="button" wire:click="$set('attachment', null)" class="text-red-500 hover:text-red-700">
+                                    <x-heroicon-s-x-mark class="w-4 h-4" />
+                                </button>
+                            </div>
+                        @endif
+                        
+                        @error('attachment') 
+                            <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> 
+                        @enderror
                     </div>
                 </div>
 
