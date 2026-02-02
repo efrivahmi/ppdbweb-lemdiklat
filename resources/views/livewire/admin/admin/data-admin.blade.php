@@ -97,11 +97,13 @@
                                             variant="ghost"
                                             theme="dark"
                                             size="sm"
-                                            heroicon="eye"
                                             className="text-blue-600 hover:text-blue-800"
                                             title="Detail"
                                         >
-                                           Detail
+                                            <span class="flex items-center gap-1.5">
+                                                <x-heroicon-o-eye class="w-5 h-5" />
+                                                <span>Detail</span>
+                                            </span>
                                         </x-atoms.button>
 
                                         @if ($admin->id !== auth()->id())
@@ -114,10 +116,12 @@
                                                 className="{{ $admin->is_super_admin ? 'text-purple-600 hover:text-purple-800' : 'text-gray-400 hover:text-purple-600' }}"
                                                 title="{{ $admin->is_super_admin ? 'Cabut Super Admin' : 'Jadikan Super Admin' }}"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                                                </svg>
-                                                <span>Super Admin</span>
+                                                <span class="flex items-center gap-1.5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                                                    </svg>
+                                                    <span>Super Admin</span>
+                                                </span>
                                             </x-atoms.button>
 
                                             <x-atoms.button
@@ -126,11 +130,13 @@
                                                 variant="ghost"
                                                 theme="dark"
                                                 size="sm"
-                                                heroicon="trash"
                                                 className="text-red-600 hover:text-red-800"
                                                 title="Hapus"
                                             >
-                                                Hapus
+                                                <span class="flex items-center gap-1.5">
+                                                    <x-heroicon-o-trash class="w-5 h-5" />
+                                                    <span>Hapus</span>
+                                                </span>
                                             </x-atoms.button>
                                         @endif
                                         @else
