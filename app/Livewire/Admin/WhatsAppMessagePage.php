@@ -21,6 +21,8 @@ class WhatsAppMessagePage extends Component
     // Search & Filter
     public $search = '';
     public $perPage = 10;
+    public $statusFilter = '';
+    public $transferFilter = '';
 
     // Selected students
     public $selectedStudents = [];
@@ -68,6 +70,16 @@ class WhatsAppMessagePage extends Component
     protected $queryString = ['search'];
 
     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedStatusFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedTransferFilter()
     {
         $this->resetPage();
     }
@@ -224,6 +236,79 @@ class WhatsAppMessagePage extends Component
                       ->orWhere('email', 'like', '%' . $this->search . '%')
                       ->orWhere('nisn', 'like', '%' . $this->search . '%');
                 });
+            })
+            ->when($this->statusFilter, function ($query) {
+                switch ($this->statusFilter) {
+                    case 'lengkap':
+                        $query->whereHas('dataMurid', fn($q) => $q
+                            ->whereNotNull('tempat_lahir')->whereNotNull('tgl_lahir')
+                            ->whereNotNull('jenis_kelamin')->whereNotNull('agama')
+                            ->whereNotNull('whatsapp')->whereNotNull('alamat')
+                            ->whereNotNull('asal_sekolah')
+                        )
+                        ->where(function($q) {
+                            $q->whereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_ayah')->whereNotNull('pendidikan_ayah')
+                                ->whereNotNull('telp_ayah')->whereNotNull('pekerjaan_ayah')
+                                ->whereNotNull('alamat_ayah')
+                            )
+                            ->orWhereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_ibu')->whereNotNull('pendidikan_ibu')
+                                ->whereNotNull('telp_ibu')->whereNotNull('pekerjaan_ibu')
+                                ->whereNotNull('alamat_ibu')
+                            )
+                            ->orWhereHas('dataOrangTua', fn($sub) => $sub
+                                ->whereNotNull('nama_wali')->whereNotNull('pendidikan_wali')
+                                ->whereNotNull('telp_wali')->whereNotNull('pekerjaan_wali')
+                                ->whereNotNull('alamat_wali')
+                            );
+                        })
+                        ->whereHas('berkasMurid', fn($q) => $q
+                            ->whereNotNull('kk')->whereNotNull('ktp_ortu')
+                            ->whereNotNull('akte')->whereNotNull('surat_sehat')
+                            ->whereNotNull('pas_foto')
+                        )
+                        ->whereHas('pendaftaranMurids');
+                        break;
+                    case 'belum_lengkap':
+                        $query->where(function($q) {
+                            $q->whereDoesntHave('dataMurid')
+                            ->orWhereHas('dataMurid', fn($sub) => $sub->where(fn($s) => 
+                                $s->whereNull('tempat_lahir')->orWhereNull('tgl_lahir')
+                                  ->orWhereNull('jenis_kelamin')->orWhereNull('agama')
+                                  ->orWhereNull('whatsapp')->orWhereNull('alamat')
+                                  ->orWhereNull('asal_sekolah')
+                            ))
+                            ->orWhereDoesntHave('dataOrangTua')
+                            ->orWhereDoesntHave('berkasMurid')
+                            ->orWhereHas('berkasMurid', fn($sub) => $sub->where(fn($s) => 
+                                $s->whereNull('kk')->orWhereNull('ktp_ortu')
+                                  ->orWhereNull('akte')->orWhereNull('surat_sehat')
+                                  ->orWhereNull('pas_foto')
+                            ))
+                            ->orWhereDoesntHave('pendaftaranMurids');
+                        });
+                        break;
+                    case 'pendaftaran_diterima':
+                        $query->whereHas('pendaftaranMurids', fn($q) => $q->where('status', 'diterima'));
+                        break;
+                }
+            })
+            ->when($this->transferFilter, function ($query) {
+                switch ($this->transferFilter) {
+                    case 'pending':
+                        $query->whereHas('buktiTransfer', fn($q) => $q->where('status', 'pending'));
+                        break;
+                    case 'success':
+                        $query->whereHas('buktiTransfer', fn($q) => $q->where('status', 'success'));
+                        break;
+                    case 'decline':
+                        $query->whereHas('buktiTransfer', fn($q) => $q->where('status', 'decline'));
+                        break;
+                    case 'no_transfer':
+                        $query->whereDoesntHave('buktiTransfer');
+                        break;
+                }
             })
             ->orderBy('created_at', 'desc');
     }

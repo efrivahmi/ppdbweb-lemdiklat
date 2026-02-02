@@ -38,6 +38,24 @@
                         </div>
                     </div>
                 </div>
+                
+                {{-- Filters --}}
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <select wire:model.live="statusFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
+                        <option value="">Semua Status</option>
+                        <option value="lengkap">Lengkap</option>
+                        <option value="belum_lengkap">Belum Lengkap</option>
+                        <option value="pendaftaran_diterima">Diterima</option>
+                    </select>
+
+                    <select wire:model.live="transferFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
+                        <option value="">Semua Transfer</option>
+                        <option value="pending">Transfer Pending</option>
+                        <option value="success">Transfer Diterima</option>
+                        <option value="decline">Transfer Ditolak</option>
+                        <option value="no_transfer">Belum Upload</option>
+                    </select>
+                </div>
 
                 {{-- Select All --}}
                 <div class="flex items-center gap-2 mb-4 pb-4 border-b">
@@ -128,7 +146,7 @@
 
                 {{-- Pagination --}}
                 @if($students->hasPages())
-                <div class="mt-4 pt-4 border-t">
+                <div class="mt-4 pt-4 border-t sticky bottom-0 bg-white z-10 pb-2">
                     {{ $students->links('vendor.pagination.tailwind') }}
                 </div>
                 @endif
