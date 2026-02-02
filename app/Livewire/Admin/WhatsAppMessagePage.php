@@ -327,7 +327,7 @@ class WhatsAppMessagePage extends Component
     
     public function render()
     {
-        $students = $this->getStudentsQuery()->simplePaginate($this->perPage);
+        $students = $this->getStudentsQuery()->paginate($this->perPage);
 
         return view('livewire.admin.whatsapp-message-page', [
             'students' => $students,

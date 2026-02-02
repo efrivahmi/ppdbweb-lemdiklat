@@ -69,100 +69,101 @@
                     </div>
                 </div>
 
-                {{-- Select All --}}
-                <div class="flex items-center gap-2 mb-4 pb-4 border-b">
-                    <input 
-                        type="checkbox" 
-                        id="selectAll"
-                        wire:model.live="selectAll"
-                        class="rounded border-gray-300 text-green-600 focus:ring-green-600"
-                    >
-                    <label for="selectAll" class="text-sm text-gray-700 cursor-pointer select-none">
-                        Pilih Semua (halaman ini)
-                    </label>
-                </div>
-
-                {{-- Student List --}}
-                <div class="space-y-2 max-h-[500px] overflow-y-auto">
-                    @forelse($students as $student)
-                    <label 
-                        for="student-{{ $student->id }}"
-                        class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors
-                            {{ in_array($student->id, $selectedStudents) ? 'border-lime-500 bg-lime-50' : 'border-gray-200 hover:bg-gray-50' }}">
-                        <input 
-                            type="checkbox" 
-                            wire:model.live="selectedStudents"
-                            value="{{ $student->id }}"
-                            id="student-{{ $student->id }}"
-                            class="rounded border-gray-300 text-lime-600 focus:ring-lime-500">
-                        
-                        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-gray-600 font-medium">{{ strtoupper(substr($student->name, 0, 1)) }}</span>
-                        </div>
-                        
-                        <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-900 truncate">{{ $student->name }}</p>
-                            <p class="text-sm text-gray-500 truncate">{{ $student->email }}</p>
-                        </div>
-                        
-                        <div class="text-right flex-shrink-0">
-                        <div class="text-right flex-shrink-0 flex flex-col items-end gap-1">
-                            @php
-                                $phones = [
-                                    'S' => $student->dataMurid?->whatsapp ?? $student->telp,
-                                    'A' => $student->dataOrangTua?->telp_ayah,
-                                    'I' => $student->dataOrangTua?->telp_ibu,
-                                    'W' => $student->dataOrangTua?->telp_wali,
-                                ];
-                            @endphp
-                            
-                            {{-- Phone Indicators --}}
-                            <div class="flex gap-1">
-                                @foreach($phones as $label => $phone)
-                                    <span 
-                                        title="{{ $label == 'S' ? 'Siswa' : ($label == 'A' ? 'Ayah' : ($label == 'I' ? 'Ibu' : 'Wali')) }}: {{ $phone ?? 'Kosong' }}"
-                                        class="text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold cursor-help
-                                        {{ $phone ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-300' }}">
-                                        {{ $label }}
-                                    </span>
-                                @endforeach
-                            </div>
-                            
-                            
-                            {{-- Selected Target Status --}}
-                            <div class="text-xs mt-1 flex flex-col items-end gap-0.5">
-                                @foreach($targetTypes as $type)
-                                    @php
-                                        $label = match($type) { 'ayah' => 'A', 'ibu' => 'I', 'wali' => 'W', default => 'S' };
-                                        $targetPhone = match($type) {
-                                            'ayah' => $phones['A'],
-                                            'ibu' => $phones['I'],
-                                            'wali' => $phones['W'],
-                                            default => $phones['S'],
-                                        };
-                                    @endphp
-                                    @if($targetPhone)
-                                        <div class="flex items-center gap-1 text-[10px] text-green-600 font-medium">
-                                            <span class="w-3 h-3 bg-green-100 rounded-full flex items-center justify-center text-[8px]">{{ $label }}</span>
-                                            {{ $targetPhone }}
+                {{-- Student Table --}}
+                <div class="relative overflow-x-auto border rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-600">
+                        <thead class="text-xs text-white uppercase bg-lime-600">
+                            <tr>
+                                <th scope="col" class="p-4 w-4">
+                                    <div class="flex items-center">
+                                        <input id="checkbox-all" type="checkbox" wire:model.live="selectAll" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                                        <label for="checkbox-all" class="sr-only">checkbox</label>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3">Nama Siswa</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3 text-right">Kontak</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($students as $student)
+                            <tr class="bg-white border-b hover:bg-gray-50 transition-colors">
+                                <td class="w-4 p-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" value="{{ $student->id }}" wire:model.live="selectedStudents" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    <div class="flex flex-col">
+                                        <span class="text-base">{{ $student->name }}</span>
+                                        <span class="text-xs text-gray-500 font-mono">{{ $student->nisn }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                        @php
+                                            $pendaftaranDiterima = $student->pendaftaranMurids->where('status', 'diterima')->count() > 0;
+                                            $transferStatus = $student->buktiTransfer?->status;
+                                        @endphp
+                                        
+                                        @if($pendaftaranDiterima)
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">Diterima</span>
+                                        @endif
+                                        
+                                        @if($transferStatus)
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium border
+                                                {{ $transferStatus == 'success' ? 'bg-blue-50 text-blue-700 border-blue-200' : 
+                                                  ($transferStatus == 'pending' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 'bg-red-50 text-red-700 border-red-200') }}">
+                                                {{ ucfirst($transferStatus) }}
+                                            </span>
+                                        @endif
+                                        
+                                        @if(!$pendaftaranDiterima && !$transferStatus)
+                                            <span class="text-xs text-gray-400 italic">-</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex flex-col items-end gap-1">
+                                        @php
+                                            $phones = [
+                                                'S' => $student->dataMurid?->whatsapp ?? $student->telp,
+                                                'A' => $student->dataOrangTua?->telp_ayah,
+                                                'I' => $student->dataOrangTua?->telp_ibu,
+                                                'W' => $student->dataOrangTua?->telp_wali,
+                                            ];
+                                        @endphp
+                                        <div class="flex gap-1 justify-end">
+                                            @foreach($phones as $label => $phone)
+                                                <span 
+                                                    title="{{ $label == 'S' ? 'Siswa' : ($label == 'A' ? 'Ayah' : ($label == 'I' ? 'Ibu' : 'Wali')) }}: {{ $phone ?? 'Kosong' }}"
+                                                    class="text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold cursor-help border
+                                                    {{ $phone ? 'bg-green-100 text-green-700 border-green-200' : 'bg-gray-50 text-gray-400 border-gray-200' }}">
+                                                    {{ $label }}
+                                                </span>
+                                            @endforeach
                                         </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    </label>
-                    @empty
-                    <div class="text-center py-8 text-gray-500">
-                        <x-heroicon-o-users class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                        <p>Tidak ada siswa ditemukan</p>
-                    </div>
-                    @endforelse
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <x-heroicon-o-users class="w-10 h-10 text-gray-400 mb-2" />
+                                        <p>Tidak ada siswa ditemukan</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
                 {{-- Pagination --}}
                 @if($students->hasPages())
-                <div class="mt-4 pt-4 border-t">
-                    {{ $students->links('vendor.pagination.simple-tailwind') }}
+                <div class="mt-4">
+                    {{ $students->links('vendor.pagination.tailwind') }}
                 </div>
                 @endif
             </x-atoms.card>
