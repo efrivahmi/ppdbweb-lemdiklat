@@ -992,6 +992,12 @@
                 @error($field['name'])
                 <span class="text-red-500 text-xs">{{ $message }}</span>
                 @enderror
+                @if(${$field['name']})
+                <div class="mt-1 flex items-center gap-1 text-xs text-indigo-700">
+                    <i class="ri-file-text-line"></i>
+                    <span>{{ ${$field['name']}->getClientOriginalName() }}</span>
+                </div>
+                @endif
             </div>
             @endforeach
 
@@ -1159,6 +1165,12 @@
                                 <i class="ri-error-warning-line mr-1"></i>{{ $message }}
                             </p>
                             @enderror
+                            @if($bukti_prestasi)
+                            <div class="mt-2 flex items-center gap-2 text-sm text-yellow-700 bg-yellow-50 p-2 rounded border border-yellow-200">
+                                <i class="ri-check-line"></i>
+                                <span>{{ $bukti_prestasi->getClientOriginalName() }}</span>
+                            </div>
+                            @endif
                         </div>
 
                         {{-- Upload Preview --}}
@@ -1298,6 +1310,12 @@
                             @error('bukti_tahfidz')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
+                            @if($bukti_tahfidz)
+                            <div class="mt-2 flex items-center gap-2 text-sm text-green-700 bg-green-50 p-2 rounded border border-green-200">
+                                <i class="ri-check-line"></i>
+                                <span>{{ $bukti_tahfidz->getClientOriginalName() }}</span>
+                            </div>
+                            @endif
 
                             {{-- Loading Indicator --}}
                             <div wire:loading wire:target="bukti_tahfidz" class="mt-2 flex items-center gap-2 text-xs text-green-600">

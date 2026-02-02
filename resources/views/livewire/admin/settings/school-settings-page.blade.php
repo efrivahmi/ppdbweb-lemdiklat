@@ -152,6 +152,12 @@
                         <p class="text-xs text-gray-500 mt-1">Upload gambar peta jika tidak menggunakan embed Google Maps</p>
                     </div>
                 </div>
+                @if($maps_image)
+                    <div class="mt-2 text-sm text-lime-600 flex items-center gap-1">
+                        <x-lucide-check class="w-4 h-4" />
+                        File terpilih: {{ $maps_image->getClientOriginalName() }}
+                    </div>
+                @endif
                 @error('maps_image') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
             </div>
 

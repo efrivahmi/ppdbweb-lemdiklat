@@ -69,6 +69,12 @@
                 @error('transfer_picture')
                     <span class="text-red-600 text-xs mt-1 block">{{ $message }}</span>
                 @enderror
+                @if($transfer_picture)
+                    <div class="mt-2 text-sm text-lime-600 flex items-center gap-1">
+                        <i class="ri-check-line"></i>
+                        File terpilih: {{ $transfer_picture->getClientOriginalName() }}
+                    </div>
+                @endif
             </div>
             <x-molecules.input-field name="atas_nama" wire:model='atas_nama' id="atas_nama" label="Atas Nama" inputType="text" placeholder="Atas Nama sesuai bank/e-wallet pengirim" :required="true" />
             <x-molecules.input-field name="no_rek" wire:model='no_rek' id="no_rek" label="No Rekening/E-Wallet" inputType="text" placeholder="Nomor rekening/e-wallet pengirim" :required="true" />

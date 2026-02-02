@@ -66,6 +66,12 @@
                                     </button>
                                 @endif
                             </div>
+                            @if($new_foto_profile)
+                                <div class="mt-2 text-sm text-indigo-600 flex items-center gap-1">
+                                    <i class="ri-check-line"></i>
+                                    File terpilih: {{ $new_foto_profile->getClientOriginalName() }}
+                                </div>
+                            @endif
                             @error('new_foto_profile')
                                 <span class="text-red-600 text-xs mt-1 block">{{ $message }}</span>
                             @enderror
