@@ -73,7 +73,7 @@
                 @if(isset($transfer_picture) && $transfer_picture)
                     <div class="mt-2 text-sm text-lime-600 flex items-center gap-1">
                         <i class="ri-check-line"></i>
-                        File terpilih: {{ $transfer_picture->getClientOriginalName() }}
+                        File terpilih: {{ is_object($transfer_picture) && method_exists($transfer_picture, 'getClientOriginalName') ? $transfer_picture->getClientOriginalName() : 'File siap diupload' }}
                     </div>
                 @endif
             </div>
