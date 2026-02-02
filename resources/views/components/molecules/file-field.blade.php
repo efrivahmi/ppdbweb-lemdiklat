@@ -30,35 +30,40 @@ $inputClasses = trim(implode(' ', [
         @endif
     </x-atoms.label>
     
-    <input
-        type="file"
-        name="{{ $name }}"
-        id="{{ $id ?: $name }}"
-        accept="{{ $accept }}"
-        @if($disabled) disabled @endif
-        class="{{ $inputClasses }}"
-        {{ $attributes->except(['label', 'name', 'id', 'currentFile', 'error', 'required', 'accept', 'maxSize', 'disabled', 'className']) }}
-    />
+    <div class="relative group">
+        <input
+            type="file"
+            name="{{ $name }}"
+            id="{{ $id ?: $name }}"
+            accept="{{ $accept }}"
+            @if($disabled) disabled @endif
+            class="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer {{ $disabled ? 'cursor-not-allowed' : '' }}"
+            {{ $attributes->except(['label', 'name', 'id', 'currentFile', 'error', 'required', 'accept', 'maxSize', 'disabled', 'className']) }}
+        />
+        
+        <div class="flex items-center w-full border rounded-md overflow-hidden {{ $error ? 'border-red-500' : 'border-gray-300' }} {{ $disabled ? 'bg-gray-100' : 'bg-white' }} transition-colors duration-200">
+            <div class="px-4 py-2 {{ $disabled ? 'bg-gray-200 text-gray-500' : 'bg-lime-50 text-lime-700 group-hover:bg-lime-100' }} border-r border-gray-200 font-semibold text-sm transition-colors">
+                Pilih File
+            </div>
+            <div class="px-4 py-2 text-sm text-gray-500 flex-1 truncate">
+                @if($currentFile)
+                    @if(is_array($currentFile))
+                        {{ $currentFile['name'] ?? 'Unknown file' }}
+                    @elseif(is_object($currentFile) && method_exists($currentFile, 'getClientOriginalName'))
+                        {{ $currentFile->getClientOriginalName() }}
+                    @else
+                        {{ $currentFile }}
+                    @endif
+                @else
+                    Tidak ada file yang dipilih
+                @endif
+            </div>
+        </div>
+    </div>
     
     <div class="mt-1 text-xs text-gray-500">
         Format: {{ strtoupper(str_replace(['.', ','], ['', ', '], $accept)) }} • Maksimal: {{ $maxSize }}
     </div>
-    
-    @if($currentFile)
-        <div class="mt-1 text-sm text-lime-600 flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-            File terpilih: 
-            @if(is_array($currentFile))
-                {{ $currentFile['name'] ?? 'Unknown file' }}
-            @elseif(is_object($currentFile) && method_exists($currentFile, 'getClientOriginalName'))
-                {{ $currentFile->getClientOriginalName() }}
-            @else
-                {{ $currentFile }}
-            @endif
-        </div>
-    @endif
     
     @if($error)
         <p class="text-sm text-red-500 mt-1">{{ $error }}</p>

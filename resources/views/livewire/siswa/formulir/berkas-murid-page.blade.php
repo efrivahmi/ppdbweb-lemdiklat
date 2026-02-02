@@ -34,6 +34,8 @@
                     @php
                         $file = optional(App\Models\Siswa\BerkasMurid::where('user_id', auth()->id())->first())
                             ->{$input['name']};
+                        // Use the new upload if available, otherwise show existing file name
+                        $displayFile = ${$input['name']} ?: ($file ? basename($file) : null);
                     @endphp
 
                     <div class="w-full">
@@ -43,7 +45,7 @@
                             :accept="$input['name'] === 'pas_foto' ? 'image/*' : '.pdf,.jpg,.jpeg,.png'"
                             maxSize="2MB"
                             wire:model.live="{{ $input['name'] }}"
-                            :currentFile="${$input['name']}"
+                            :currentFile="$displayFile"
                             :required="!$file"
                             :error="$errors->first($input['name'])">
                             <x-slot name="label">
