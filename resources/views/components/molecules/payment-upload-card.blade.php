@@ -1,6 +1,7 @@
 @props([
     'canUploadPayment' => false,
     'buktiTransfer' => null,
+    'transfer_picture' => null,
 ])
 
 <div class="bg-white border border-gray-300 shadow-md rounded-md p-6">

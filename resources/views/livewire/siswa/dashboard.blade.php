@@ -339,6 +339,7 @@
             <x-molecules.payment-upload-card
                 :canUploadPayment="$canUploadPayment"
                 :buktiTransfer="$buktiTransfer"
+                :transfer_picture="$transfer_picture"
             />
         </div>
     @endif
