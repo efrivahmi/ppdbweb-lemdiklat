@@ -28,26 +28,30 @@
                 {{-- Search Bar --}}
                 {{-- Search & Filters --}}
                 <div x-data="{ showFilters: false }" class="mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="flex-1">
-                            <x-atoms.input
-                                type="search"
-                                wire:model.live="search"
-                                placeholder="Cari siswa..."
-                                class="w-full"
-                            />
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            wire:model.live.debounce.300ms="search"
+                            placeholder="Cari nama, email, atau NISN..."
+                            class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
+                        
+                        {{-- Search Icon (Left) --}}
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400" />
                         </div>
+
+                        {{-- Filter Button (Right) --}}
                         <button 
                             @click="showFilters = !showFilters"
-                            class="p-2 border rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
-                            :class="{ 'bg-lime-50 text-lime-600 border-lime-200': showFilters }"
+                            class="absolute inset-y-0 right-0 px-3 flex items-center hover:bg-gray-50 rounded-r-lg transition-colors border-l border-gray-200"
+                            :class="{ 'text-lime-600 bg-lime-50': showFilters, 'text-gray-400': !showFilters }"
                             title="Filter Data">
                             <x-heroicon-o-funnel class="w-5 h-5" />
                         </button>
                     </div>
 
                     {{-- Collapsible Filters --}}
-                    <div x-show="showFilters" x-transition class="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <div x-show="showFilters" x-transition class="mt-2 grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
                         <select wire:model.live="statusFilter" class="w-full text-sm border-gray-300 rounded-lg focus:ring-lime-500 focus:border-lime-500">
                             <option value="">Semua Status</option>
                             <option value="lengkap">Lengkap</option>
