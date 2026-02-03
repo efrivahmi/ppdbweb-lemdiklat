@@ -14,12 +14,13 @@
 <body class="h-screen flex flex-col lg:flex-row bg-gray-50">
 
   <div class="hidden lg:block relative w-1/2 h-full">
-    <img src="{{ asset('assets/images/sekolah.jpg') }}" alt="Sekolah"
+    <img src="{{ asset('assets/kepalasekolahsma.png') }}" alt="Sekolah"
       class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="absolute bottom-8 left-8 text-white">
-      <h1 class="text-3xl font-bold">Selamat Datang di Portal Sekolah</h1>
-      <p class="text-gray-200 mt-2">Tempat login admin dan manajemen data sekolah</p>
+      <h1 class="text-3xl font-bold">Selamat Datang di SPMB 2026/2027</h1>
+      <p class="text-gray-200 mt-2">Sistem Penerimaan Murid Baru</p>
+      <p class="text-gray-200 mt-2">Copyright © 2026 Lemdiklat Taruna Nusantara Indonesia</p>
     </div>
   </div>
 

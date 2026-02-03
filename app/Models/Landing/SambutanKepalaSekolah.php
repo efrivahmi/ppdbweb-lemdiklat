@@ -62,7 +62,7 @@ class SambutanKepalaSekolah extends Model
             'principal' => [
                 'name' => $this->principal_name,
                 'title' => $this->principal_title,
-                'image' => $this->principal_image ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'image' => $this->principal_image ?? asset('login.png'),
                 'signature' => $this->principal_signature,
             ],
             'greeting' => [
