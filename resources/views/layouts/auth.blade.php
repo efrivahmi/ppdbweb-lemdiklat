@@ -18,8 +18,8 @@
       class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute top-8 left-4 text-black">
       <h1 class="text-3xl font-bold">Selamat Datang di SPMB 2026/2027</h1>
-      <p class="text-gray-200 mt-2">Sistem Penerimaan Murid Baru</p>
-      <p class="text-gray-200 mt-2">Copyright © 2026 Lemdiklat Taruna Nusantara Indonesia</p>
+      <p class="text-black mt-2">Sistem Penerimaan Murid Baru</p>
+      <p class="text-black mt-2">Copyright © 2026 Lemdiklat Taruna Nusantara Indonesia</p>
     </div>
   </div>
 
