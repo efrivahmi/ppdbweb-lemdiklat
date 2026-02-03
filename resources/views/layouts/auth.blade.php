@@ -17,9 +17,8 @@
     <img src="{{ asset('assets/login.png') }}" alt="Sekolah"
       class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute top-8 left-4 text-black">
-      <h1 class="text-3xl font-bold">Selamat Datang di SPMB 2026/2027</h1>
-      <p class="text-black mt-2">Sistem Penerimaan Murid Baru</p>
-      <p class="text-black mt-2">Copyright © 2026 Lemdiklat Taruna Nusantara Indonesia</p>
+      <h1 class="text-4xl font-bold tracking-tight lg:text-5xl">Selamat Datang di SPMB 2026/2027</h1>
+<p class="mt-4 text-lg font-medium text-gray-800 lg:text-xl">Sistem Penerimaan Murid Baru</p>
     </div>
   </div>
 
