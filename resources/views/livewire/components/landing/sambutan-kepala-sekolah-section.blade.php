@@ -54,10 +54,10 @@
                     <div class="relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg md:shadow-2xl">
                         <div class="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-50 to-blue-50 h-64 md:h-96 lg:h-150">
                             <img
-                                src="{{ $greetingData['principal']['image'] ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' }}"
+                                src="{{ $greetingData['principal']['image'] ?? asset('assets/kepalasekolahsma.png') }}"
                                 alt="{{ $greetingData['principal']['name'] ?? 'Kepala Sekolah' }}"
                                 class="w-full h-full object-cover object-center"
-                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';" />
+                                onerror="this.onerror=null; this.src='{{ asset('assets/kepalasekolahsma.png') }}';" />
                         </div>
 
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 md:p-6">

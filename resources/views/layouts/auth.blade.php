@@ -14,7 +14,7 @@
 <body class="h-screen flex flex-col lg:flex-row bg-gray-50">
 
   <div class="hidden lg:block relative w-1/2 h-full">
-    <img src="{{ asset('assets/kepalasekolahsma.png') }}" alt="Sekolah"
+    <img src="{{ asset('assets/login.png') }}" alt="Sekolah"
       class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="absolute bottom-8 left-8 text-white">
