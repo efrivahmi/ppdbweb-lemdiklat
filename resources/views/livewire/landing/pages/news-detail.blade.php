@@ -46,9 +46,24 @@
         window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(this.shareUrl) + '&text=' + encodeURIComponent(text), '_blank', 'width=600,height=400');
     },
     shareToWhatsApp() {
-        // Format: *Title* \n\n Description \n\n Url
         const text = `*${this.shareTitle}*\n\n${this.shareExcerpt}\n\n${this.shareUrl}`;
         window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    },
+    async shareToTikTok() {
+        await this.copyLink();
+        window.open('https://www.tiktok.com/', '_blank');
+    },
+    shareToLinkedIn() {
+        window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(this.shareUrl), '_blank', 'width=600,height=600');
+    },
+    shareToTelegram() {
+        window.open('https://t.me/share/url?url=' + encodeURIComponent(this.shareUrl) + '&text=' + encodeURIComponent(this.shareTitle), '_blank');
+    },
+    shareToLine() {
+        window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(this.shareUrl), '_blank');
+    },
+    shareToEmail() {
+        window.open('mailto:?subject=' + encodeURIComponent(this.shareTitle) + '&body=' + encodeURIComponent(this.shareTitle + '\n\n' + this.shareExcerpt + '\n\n' + this.shareUrl), '_self');
     },
     async copyLink() {
         try {
@@ -57,7 +72,12 @@
             setTimeout(() => this.copied = false, 2000);
         } catch(e) {}
     }
-}">
+}"><div x-data="{
+    showShareMenu: false,
+    shareUrl: '{{ $shareUrl }}',
+    shareTitle: '{{ addslashes($title) }}',
+    shareExcerpt: '{{ addslashes($excerpt) }}',
+    copied: false,
 
     {{-- ==================== HERO SECTION (CLEAN) ==================== --}}
     <div class="relative w-full h-[50vh] min-h-[400px] max-h-[600px] bg-gray-100 overflow-hidden group">
@@ -374,6 +394,7 @@
                     </div>
                     <span class="text-xs font-semibold text-gray-600">Facebook</span>
                 </button>
+
                 {{-- Twitter --}}
                 <button @click="shareToTwitter()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-gray-100 group transition-colors">
                     <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center shadow-lg shadow-black/30 group-hover:scale-110 transition-transform">
@@ -381,6 +402,7 @@
                     </div>
                     <span class="text-xs font-semibold text-gray-600">X (Twitter)</span>
                 </button>
+
                 {{-- WhatsApp --}}
                 <button @click="shareToWhatsApp()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-green-50 group transition-colors">
                     <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
@@ -388,6 +410,47 @@
                     </div>
                     <span class="text-xs font-semibold text-gray-600">WhatsApp</span>
                 </button>
+
+                {{-- TikTok --}}
+                <button @click="shareToTikTok()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-gray-100 group transition-colors">
+                    <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center shadow-lg shadow-black/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.62-1.1-.01.95-.02 1.91-.03 2.87 0 2.38-.28 4.79-1.25 6.99-2.14 4.14-7.05 5.83-11.23 3.93-3.15-1.41-5.17-4.57-5.07-8.02.02-3.14 2.15-5.91 5.16-6.79.79-.23 1.61-.31 2.43-.28v4.2c-1.52.12-2.86 1.25-3.16 2.76-.32 1.57.51 3.23 2.01 3.92 1.94.94 4.31-.01 5.06-2.02.24-1.13.25-2.31.22-3.48V.02z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600">TikTok</span>
+                </button>
+
+                {{-- LinkedIn --}}
+                <button @click="shareToLinkedIn()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-blue-50 group transition-colors">
+                    <div class="w-12 h-12 rounded-full bg-[#0077b5] text-white flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600">LinkedIn</span>
+                </button>
+
+                {{-- Telegram --}}
+                <button @click="shareToTelegram()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-sky-50 group transition-colors">
+                    <div class="w-12 h-12 rounded-full bg-[#229ED9] text-white flex items-center justify-center shadow-lg shadow-sky-500/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600">Telegram</span>
+                </button>
+
+                {{-- Line --}}
+                <button @click="shareToLine()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-green-50 group transition-colors">
+                    <div class="w-12 h-12 rounded-full bg-[#00C300] text-white flex items-center justify-center shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.629-.285-.629-.629V8.108c0-.345.284-.63.629-.63.347 0 .628.285.628.63v4.145h2.388c.346 0 .626.285.626.63 0 .344-.28.629-.626.629z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600">Line</span>
+                </button>
+
+                {{-- Email --}}
+                <button @click="shareToEmail()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-gray-50 group transition-colors">
+                    <div class="w-12 h-12 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg shadow-gray-600/30 group-hover:scale-110 transition-transform">
+                        <x-heroicon-o-envelope class="w-6 h-6" />
+                    </div>
+                    <span class="text-xs font-semibold text-gray-600">Email</span>
+                </button>
+
                 {{-- Copy Link --}}
                 <button @click="copyLink()" class="flex flex-col items-center gap-3 p-4 rounded-2xl hover:bg-lime-50 group transition-colors">
                     <div class="w-12 h-12 rounded-full bg-lime-500 text-white flex items-center justify-center shadow-lg shadow-lime-500/30 group-hover:scale-110 transition-transform">
