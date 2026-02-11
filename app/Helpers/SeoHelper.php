@@ -10,11 +10,11 @@ class SeoHelper
     public static function defaults(): array
     {
         return [
-            'title' => config('app.seo.default_title', 'Lemdiklat Taruna Nusantara Indonesia'),
-            'description' => config('app.seo.default_description', 'Lembaga Pendidikan dan Pelatihan Taruna Nusantara Indonesia - Membentuk generasi pemimpin masa depan yang berkarakter, berintegritas, dan berprestasi.'),
-            'keywords' => config('app.seo.default_keywords', 'PPDB, Penerimaan Siswa Baru, Lemdiklat, Taruna Nusantara, Pendidikan, Sekolah, Indonesia'),
+            'title' => config('app.seo.default_title', 'Lemdiklat Taruna Nusantara Indonesia - Pusat Informasi Pendidikan'),
+            'description' => config('app.seo.default_description', 'Website Resmi Lemdiklat Taruna Nusantara Indonesia. Pusat informasi Penerimaan Peserta Didik Baru (PPDB), profil SMA Taruna Nusantara, kurikulum pendidikan karakter, dan berita terbaru.'),
+            'keywords' => config('app.seo.default_keywords', 'lemdiklat taruna nusantara indonesia, sma taruna nusantara, ppdb sma tn, sekolah unggulan, pendidikan karakter, magelang, asrama taruna nusantara'),
             'author' => config('app.seo.author', 'Lemdiklat Taruna Nusantara Indonesia'),
-            'image' => config('app.seo.default_image', asset('assets/images/og-default.jpg')),
+            'image' => config('app.seo.default_image', asset('assets/logo.png')),
             'url' => config('app.url'),
             'type' => 'website',
             'locale' => 'id_ID',
@@ -47,7 +47,7 @@ class SeoHelper
             'description' => strip_tags(substr($article->content, 0, 160)),
             'keywords' => $article->kategori->name ?? $defaults['keywords'],
             'author' => $article->creator->name ?? $defaults['author'],
-            'image' => $article->thumbnail ? asset('storage/' . $article->thumbnail) : $defaults['image'],
+            'image' => $article->thumbnail ? (str_starts_with($article->thumbnail, 'http') ? $article->thumbnail : asset('storage/' . $article->thumbnail)) : $defaults['image'],
             'url' => url('/news/' . $article->slug),
             'type' => 'article',
             'locale' => $defaults['locale'],
@@ -138,7 +138,7 @@ class SeoHelper
             '@type' => 'Article',
             'headline' => $article->title,
             'description' => strip_tags(substr($article->content, 0, 160)),
-            'image' => $article->thumbnail ? asset('storage/' . $article->thumbnail) : $defaults['image'],
+            'image' => $article->thumbnail ? (str_starts_with($article->thumbnail, 'http') ? $article->thumbnail : asset('storage/' . $article->thumbnail)) : $defaults['image'],
             'datePublished' => $article->created_at->toIso8601String(),
             'dateModified' => $article->updated_at->toIso8601String(),
             'author' => [

@@ -28,19 +28,22 @@
     $id = $berita?->id;
     $title = $berita?->title ?? '';
     $slug = $berita?->slug ?? '';
-    $excerpt = $berita?->content ? Str::limit(strip_tags($berita->content), 150) : '';
+    $excerpt = $berita?->excerpt ?? '';
     $fullContent = $berita?->content ?? '';
     $category = $berita?->kategori?->name ?? '';
     $image = $berita?->thumbnail ?? '';
     $placeholderImage =
         'https://images.unsplash.com/photo-1586776977607-310e9c725c37?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+    $imageUrl = $image
+        ? (str_starts_with($image, 'http') ? $image : asset('storage/' . $image))
+        : $placeholderImage;
     $author = $berita?->creator?->name ?? '';
     $isActive = $berita?->is_active ?? true;
     $date = $berita?->created_at ? $berita->created_at->format('d M Y') : '';
     $modalId = 'news-modal-' . $id;
     
-    // Share URL - gunakan URL spesifik untuk berita dengan parameter
-    $shareUrl = url()->current() . (str_contains(url()->current(), '?') ? '&' : '?') . 'berita=' . $slug;
+    // Share URL - gunakan URL detail page yang bisa dibagikan
+    $shareUrl = route('news.detail', $slug);
     $shareTitle = $title;
     $shareText = $excerpt;
 
@@ -169,8 +172,8 @@
     }">
         <article
             class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group">
-            <div class="relative h-48 overflow-hidden">
-                <img src="{{ $image ? asset('storage/' . $image) : $placeholderImage }}" alt="{{ $title }}"
+            <div class="relative aspect-[16/9] overflow-hidden">
+                <img src="{{ $imageUrl }}" alt="{{ $title }}"
                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
 
@@ -186,67 +189,71 @@
                     </div>
                 </div>
 
-                <div class="absolute top-4 right-4">
-                    @if ($category)
-                        <x-atoms.badge :text="$category" :variant="getNewsBadgeVariant($category)" />
-                    @endif
-                </div>
 
                 @if (!$isActive)
                     <div class="absolute top-4 left-4">
                         <x-atoms.badge text="Draft" variant="black" />
                     </div>
                 @endif
-
-                <!-- Share Button on Card -->
-                <div class="absolute bottom-3 right-3 md:bottom-4 md:right-4 z-10">
-                    <button @click="showShareMenu = !showShareMenu"
-                        class="w-10 h-10 md:w-12 md:h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-lime-600 hover:text-white transition-all duration-300 group/share active:scale-95">
-                        <x-heroicon-o-share class="w-5 h-5 md:w-6 md:h-6 text-lime-600 group-hover/share:text-white" />
-                    </button>
-                </div>
             </div>
 
-            <div class="p-6">
-                <div class="flex items-center justify-between mb-3 text-sm text-gray-500">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-o-calendar-days class="w-4 h-4" />
-                        <span>{{ $date }}</span>
-                    </div>
-
+            <div class="p-5">
+                {{-- Meta: date, author, category --}}
+                <div class="flex items-center gap-3 mb-3 text-xs text-gray-500">
+                    <span class="flex items-center gap-1">
+                        <x-heroicon-o-calendar-days class="w-3.5 h-3.5" />
+                        {{ $date }}
+                    </span>
                     @if ($author)
-                        <div class="flex items-center gap-1">
-                            <x-heroicon-o-user class="w-4 h-4" />
-                            <span class="text-xs">{{ $author }}</span>
-                        </div>
+                        <span class="flex items-center gap-1">
+                            <x-heroicon-o-user class="w-3.5 h-3.5" />
+                            {{ $author }}
+                        </span>
                     @endif
                 </div>
 
+                {{-- Title --}}
                 <x-atoms.title :text="$title" size="md"
-                    class="mb-3 group-hover:text-lime-600 transition-colors line-clamp-2" />
+                    class="mb-2 group-hover:text-lime-600 transition-colors line-clamp-2" />
 
-                <x-atoms.description class="mb-4 line-clamp-3 text-gray-600 leading-relaxed">
+                {{-- Excerpt --}}
+                <x-atoms.description class="mb-4 line-clamp-3 text-gray-600 text-sm leading-relaxed">
                     {{ $excerpt }}
                 </x-atoms.description>
 
+                {{-- Stats row: views, likes, category --}}
+                <div class="flex items-center gap-3 mb-4 flex-wrap">
+                    @if($category)
+                        <x-atoms.badge :text="$category" :variant="getNewsBadgeVariant($category)" size="sm" />
+                    @endif
+                    <span class="text-xs text-gray-400 flex items-center gap-1">
+                        <x-heroicon-o-eye class="w-3.5 h-3.5" />
+                        {{ number_format($berita->views_count ?? 0) }}
+                    </span>
+                    <span class="text-xs text-gray-400 flex items-center gap-1">
+                        <x-heroicon-o-hand-thumb-up class="w-3.5 h-3.5" />
+                        {{ number_format($berita->likes_count ?? 0) }}
+                    </span>
+                </div>
+
+                {{-- Buttons --}}
+                <div class="flex items-center gap-2">
+                    <button @click="openModal()"
+                            class="px-4 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        Lihat Sekilas
+                    </button>
+                    <a href="{{ route('news.detail', $slug) }}"
+                       class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-lime-600 rounded-lg hover:bg-lime-700 transition-colors shadow-sm">
+                        <x-heroicon-o-arrow-right class="w-3.5 h-3.5" />
+                        Baca Selengkapnya
+                    </a>
+                </div>
+
                 @if ($showDebug && $slug)
-                    <div class="mb-3 p-2 bg-gray-50 rounded text-xs text-gray-400 font-mono">
+                    <div class="mt-3 p-2 bg-gray-50 rounded text-xs text-gray-400 font-mono">
                         Slug: {{ $slug }}
                     </div>
                 @endif
-
-                <div class="flex items-center justify-between">
-                    <x-atoms.button variant="ghost" theme="dark" class="flex-1"
-                        @click="openModal()">
-                        {{ $buttonText }}
-                    </x-atoms.button>
-
-                    @if ($showDebug)
-                        <div class="ml-3 text-xs text-gray-400">
-                            ID: {{ $id }}
-                        </div>
-                    @endif
-                </div>
             </div>
         </article>
 
@@ -379,7 +386,7 @@
 
         <x-atoms.modal name="{{ $modalId }}" maxWidth="3xl">
             <div class="relative">
-                <img src="{{ $image ? asset('storage/' . $image) : $placeholderImage }}" alt="{{ $title }}"
+                <img src="{{ $imageUrl }}" alt="{{ $title }}"
                     class="w-full h-64 md:h-80 object-cover"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
 
@@ -435,17 +442,17 @@
                 <x-atoms.title :text="$title" size="2xl" mdSize="3xl"
                     class="mb-6 text-gray-900 leading-tight" />
 
-                <div class="prose prose-lg max-w-none mb-8">
-                    @if ($fullContent)
-                        <div class="text-gray-700 leading-relaxed text-justify">
-                            {!! $fullContent !!}
-                        </div>
-                    @else
-                        <x-atoms.description class="text-gray-700 leading-relaxed text-justify">
-                            {{ $excerpt }}
-                        </x-atoms.description>
-                    @endif
+                <div class="prose max-w-none mb-8">
+                    <x-atoms.description class="text-gray-700 leading-relaxed text-justify">
+                        {{ $excerpt }}
+                    </x-atoms.description>
                 </div>
+
+                <a href="{{ route('news.detail', $slug) }}"
+                   class="inline-flex items-center gap-2 px-6 py-3 bg-lime-600 text-white font-semibold rounded-xl hover:bg-lime-700 transition-colors shadow-md">
+                    <x-heroicon-o-arrow-right class="w-5 h-5" />
+                    Baca Selengkapnya
+                </a>
 
                 @if ($showDebug)
                     <div class="mb-6 p-4 bg-gray-50 rounded-lg">

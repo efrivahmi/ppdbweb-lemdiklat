@@ -27,10 +27,13 @@ if (!function_exists('getNewsBadgeVariant')) {
 $id = $berita?->id;
 $title = $berita?->title ?? '';
 $slug = $berita?->slug ?? '';
-$content = $berita?->content ?? '';
+$content = $berita?->excerpt ?? '';
 $category = $berita?->kategori?->name ?? '';
 $image = $berita?->thumbnail ?? '';
 $placeholderImage = 'https://images.unsplash.com/photo-1586776977607-310e9c725c37?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+$imageUrl = $image
+    ? (str_starts_with($image, 'http') ? $image : asset('storage/' . $image))
+    : $placeholderImage;
 $author = $berita?->creator?->name ?? '';
 $isActive = $berita?->is_active ?? true;
 $date = $berita?->created_at ? $berita->created_at->format('d M Y') : '';
@@ -71,7 +74,7 @@ $date = $berita?->created_at ? $berita->created_at->format('d M Y') : '';
             <div class="relative lg:col-span-2 h-64 sm:h-80 lg:h-96 overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-lime-500/20 to-emerald-600/30 z-10"></div>
                 <img
-                    src="{{ $image ? asset('storage/' . $image) : $placeholderImage }}"
+                    src="{{ $imageUrl }}"
                     alt="{{ $title }}"
                     class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                     loading="lazy"
@@ -118,12 +121,16 @@ $date = $berita?->created_at ? $berita->created_at->format('d M Y') : '';
                 </div>
 
                 <div class="pt-4 border-t border-gray-100">
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <div class="w-2 h-2 bg-lime-500 rounded-full animate-pulse"></div>
                             <span class="text-sm text-lime-600 font-semibold">Berita Utama</span>
-                            <div class="w-2 h-2 bg-lime-500 rounded-full animate-pulse"></div>
                         </div>
+                        <a href="{{ route('news.detail', $slug) }}"
+                           class="inline-flex items-center gap-1.5 text-sm font-semibold text-lime-600 hover:text-lime-700 transition-colors group">
+                            <span>Baca Selengkapnya</span>
+                            <x-heroicon-o-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
                     </div>
                 </div>
             </div>

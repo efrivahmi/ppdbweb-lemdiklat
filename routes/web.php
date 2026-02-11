@@ -34,6 +34,7 @@ use App\Livewire\Admin\Siswa\DetailSiswa;
 use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
 use App\Livewire\Landing\Pages\News;
+use App\Livewire\Landing\Pages\NewsDetail;
 use App\Livewire\Landing\Pages\ProfileSma;
 use App\Livewire\Landing\Pages\ProfileSmk;
 use App\Livewire\Landing\LandingProfile;
@@ -60,6 +61,7 @@ Route::get('/profile', LandingProfile::class)->name('profile');
 Route::get('/profile/sma', ProfileSma::class)->name('profile.sma');
 Route::get('/profile/smk', ProfileSmk::class)->name('profile.smk');
 Route::get('/news', News::class)->name('news');
+Route::get('/news/{slug}', NewsDetail::class)->name('news.detail');
 Route::get('/achievement', Achievement::class)->name('achievement');
 Route::get('/facility', Facility::class)->name('facility');
 Route::get('/requirement', Requirement::class)->name('requirement');
@@ -116,6 +118,9 @@ Route::prefix('siswa')
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/', AdminDashboard::class)->name('admin.dashboard');
     Route::get('/profile', \App\Livewire\Admin\ProfileAdmin::class)->name('admin.profile');
+
+    // Media upload for TinyMCE
+    Route::post('/upload-media', [\App\Http\Controllers\Admin\MediaUploadController::class, 'upload'])->name('admin.upload-media');
     // Siswa
     Route::get('/siswa', DataSiswa::class)->name('admin.siswa');
     Route::get('/siswa/{id}', DetailSiswa::class)->name('admin.siswa.detail');
