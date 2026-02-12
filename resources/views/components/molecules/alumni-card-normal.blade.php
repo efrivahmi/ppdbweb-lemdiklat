@@ -6,41 +6,45 @@ $avatarUrl = $alumni->image ? asset('storage/' . $alumni->image) : null;
 @endphp
 
 <div class="group h-full">
-    <article
-        class="h-full bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+    <article class="h-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col">
 
-        <div class="h-28 bg-gradient-to-r from-gray-500 to-slate-700"></div>
-
-        <div class="relative -mt-20 flex justify-center">
-            <div class="w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gradient-to-br from-gray-100 to-slate-100">
-                @if ($avatarUrl)
+        {{-- Image Section --}}
+        <div class="relative aspect-[4/3] overflow-hidden bg-gray-100">
+            @if ($avatarUrl)
                 <img src="{{ $avatarUrl }}" alt="{{ $alumni->name }}"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                @endif
-                <div class="w-full h-full flex items-center justify-center {{ $avatarUrl ? 'hidden' : 'flex' }}">
-                    <x-heroicon-o-user class="w-8 h-8 text-lime-600" />
+            @endif
+            <div class="w-full h-full flex items-center justify-center absolute inset-0 {{ $avatarUrl ? 'hidden' : 'flex' }}" style="{{ $avatarUrl ? 'display:none' : '' }}">
+                <div class="w-16 h-16 bg-gradient-to-br from-lime-100 to-emerald-100 rounded-full flex items-center justify-center">
+                    <x-heroicon-o-user class="w-8 h-8 text-lime-500" />
+                </div>
+            </div>
+
+            {{-- Jurusan & Year --}}
+            <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
+                <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-white/90 text-gray-700 backdrop-blur-sm">
+                        {{ $alumni->jurusan?->nama ?? 'Jurusan' }}
+                    </span>
+                    <span class="text-[11px] font-bold text-white/90">
+                        {{ $alumni->tahun_lulus }}
+                    </span>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-col flex-1 px-6 pt-4 pb-6 text-center justify-between">
-            <div>
-                <x-atoms.title :text="$alumni->name"
-                    size="md"
-                    align="center"
-                    class="text-gray-800 mb-3 group-hover:text-lime-600 transition-colors" />
+        {{-- Content --}}
+        <div class="flex flex-col flex-1 p-4">
+            <h3 class="text-sm font-bold text-gray-900 group-hover:text-lime-600 transition-colors leading-snug mb-2">
+                {{ $alumni->name }}
+            </h3>
 
-                <div class="mb-2 text-sm text-gray-500">
-                    {{ $alumni->jurusan?->nama }} · {{ $alumni->tahun_lulus }}
-                </div>
-
-                @if ($alumni->desc)
-                <x-atoms.description class="text-gray-600 text-sm leading-relaxed line-clamp-4">
-                    {{ $alumni->desc }}
-                </x-atoms.description>
-                @endif
-            </div>
+            @if ($alumni->desc)
+                <p class="text-gray-400 text-xs leading-relaxed line-clamp-3 italic flex-1">
+                    "{{ $alumni->desc }}"
+                </p>
+            @endif
         </div>
     </article>
 </div>

@@ -47,7 +47,20 @@ class TestTakingPage extends Component
             return redirect()->route('siswa.tests.index');
         }
 
-        // Check schedule access - applies to ALL tests
+        $this->questions = $this->customTest->questions->toArray();
+        $this->startTime = now();
+        
+        // Initialize answers
+        $this->initializeAnswers();
+        
+        // Check if student already completed this test — if so, show results
+        // regardless of whether the schedule is still active
+        if ($this->checkExistingAnswers()) {
+            $this->loadCompletedTest();
+            return;
+        }
+
+        // Schedule check only applies for students who haven't taken the test yet
         $hasUrgentSchedule = $user->hasActiveUrgentSchedule();
         $gelombangActive = GelombangPendaftaran::aktif()->first();
         $regularScheduleActive = $gelombangActive?->isUjianAktif() ?? false;
@@ -55,17 +68,6 @@ class TestTakingPage extends Component
         if (!$regularScheduleActive && !$hasUrgentSchedule) {
             session()->flash('error', 'Waktu ujian belum dimulai. Silakan tunggu jadwal ujian atau hubungi admin.');
             return redirect()->route('siswa.tests.index');
-        }
-        
-        $this->questions = $this->customTest->questions->toArray();
-        $this->startTime = now();
-        
-        // Initialize answers dengan question ID sebagai key
-        $this->initializeAnswers();
-        
-        // Cek existing answers - jika sudah ada, langsung tampilkan hasil
-        if ($this->checkExistingAnswers()) {
-            $this->loadCompletedTest();
         }
     }
     

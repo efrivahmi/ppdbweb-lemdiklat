@@ -24,6 +24,12 @@
         <livewire:components.landing.link-photo-section />
         <livewire:components.landing.link-youtube />
         <livewire:components.landing.gallery-section />
+    </div>
+
+    {{-- FAQ Section --}}
+    <livewire:components.landing.faq-section />
+
+    <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         @props([
         'badgeText' => 'Pendidikan Calon Penerus Bangsa',
         'title' => 'Siap Memulai Pendidikan Berkualitas?',
