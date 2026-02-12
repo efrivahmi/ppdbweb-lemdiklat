@@ -72,174 +72,229 @@
             setTimeout(() => this.copied = false, 2000);
         } catch(e) {}
     }
-}"><div x-data="{
-    showShareMenu: false,
-    shareUrl: '{{ $shareUrl }}',
-    shareTitle: '{{ addslashes($title) }}',
-    shareExcerpt: '{{ addslashes($excerpt) }}',
-    copied: false,
+}">
 
-    {{-- ==================== HERO SECTION (CLEAN) ==================== --}}
-    <div class="relative w-full h-[50vh] min-h-[400px] max-h-[600px] bg-gray-100 overflow-hidden group">
-        {{-- Image --}}
-        <img src="{{ $imageUrl ?: $placeholderImage }}"
-             alt="{{ $title }}"
-             class="w-full h-full object-cover"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        
-        {{-- Fallback --}}
-        <div class="absolute inset-0 bg-gray-200 flex items-center justify-center" style="display: none;">
-            <x-heroicon-o-photo class="w-16 h-16 text-gray-400" />
-        </div>
-
-        {{-- Gradient Overlay (Subtle) --}}
-        <div class="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/30 pointer-events-none"></div>
-
-        {{-- Top Navigation --}}
-        <div class="absolute top-0 left-0 right-0 p-6 z-20 flex justify-between items-center max-w-7xl mx-auto w-full">
-            <a href="{{ route('news') }}" 
-               class="group flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white transition-all border border-white/20 shadow-sm">
-                <x-heroicon-o-arrow-left class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span class="text-sm font-medium hidden sm:block">Kembali</span>
-            </a>
+    {{-- ==================== HERO SECTION (MODERN) ==================== --}}
+    <div class="relative w-full overflow-hidden bg-gray-950">
+        {{-- Proportional Image Container (16:9) --}}
+        <div class="relative w-full aspect-video max-h-[75vh]">
+            <img src="{{ $imageUrl ?: $placeholderImage }}"
+                 alt="{{ $title }}"
+                 class="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
             
-            <button @click="showShareMenu = true" 
-                    class="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white transition-all border border-white/20 shadow-sm active:scale-95">
-                <x-heroicon-o-share class="w-5 h-5" />
-            </button>
+            {{-- Fallback --}}
+            <div class="absolute inset-0 bg-gray-900 flex items-center justify-center" style="display: none;">
+                <x-heroicon-o-photo class="w-20 h-20 text-gray-700" />
+            </div>
+
+
+            {{-- Top gradient — just enough for button contrast --}}
+            <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/30 to-transparent pointer-events-none z-30"></div>
+
+            {{-- Top Navigation Bar (hides on scroll) --}}
+            <div class="absolute top-0 inset-x-0 z-40 p-4 sm:p-6"
+                 x-data="{ showHeroNav: true }"
+                 @scroll.window="showHeroNav = (window.scrollY < 50)">
+                <div class="max-w-7xl mx-auto flex justify-between items-center"
+                     x-show="showHeroNav"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 -translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 -translate-y-4">
+                    <a href="{{ route('news') }}" 
+                       class="group inline-flex items-center gap-2 px-4 py-2.5 bg-black/40 hover:bg-black/55 backdrop-blur-xl rounded-full text-white transition-all duration-300 border border-white/15 shadow-lg shadow-black/20">
+                        <x-heroicon-o-arrow-left class="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
+                        <span class="text-sm font-medium hidden sm:block">Kembali</span>
+                    </a>
+                    
+                    <button @click="showShareMenu = true" 
+                            class="p-2.5 bg-black/40 hover:bg-black/55 backdrop-blur-xl rounded-full text-white transition-all duration-300 border border-white/15 shadow-lg shadow-black/20 hover:scale-105 active:scale-95">
+                        <x-heroicon-o-share class="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+
+            {{-- Bottom gradient for text readability on any image --}}
+            <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none z-10 hidden md:block"></div>
+
+            {{-- Hero Title Overlay (Desktop only) --}}
+            <div class="absolute bottom-0 inset-x-0 z-20 p-6 sm:p-8 md:p-12 hidden md:block">
+                <div class="max-w-4xl">
+                    @if($category)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-lime-500/90 text-white mb-4 backdrop-blur-sm shadow-lg shadow-lime-500/20">
+                            {{ $category }}
+                        </span>
+                    @endif
+                    
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);">
+                        {{ $title }}
+                    </h1>
+
+                    <div class="flex items-center gap-4 flex-wrap text-white text-base font-medium" style="text-shadow: 0 2px 6px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.5);">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-bold text-sm border border-white/20">
+                                {{ $authorInitial }}
+                            </div>
+                            <span class="font-semibold">{{ $author }}</span>
+                        </div>
+                        <span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+                        <span class="flex items-center gap-2">
+                            <x-heroicon-o-calendar-days class="w-5 h-5" />
+                            {{ $date }}
+                        </span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+                        <span class="flex items-center gap-2">
+                            <x-heroicon-o-clock class="w-5 h-5" />
+                            {{ $readTime }} min baca
+                        </span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+                        <span class="flex items-center gap-2">
+                            <x-heroicon-o-eye class="w-5 h-5" />
+                            {{ number_format($berita->views_count) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ==================== MOBILE HEADER (below hero) ==================== --}}
+    <div class="md:hidden bg-white px-4 py-6 border-b border-gray-100">
+        <div class="space-y-4">
+            @if($category)
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-lime-100 text-lime-700">
+                    {{ $category }}
+                </span>
+            @endif
+            
+            <h1 class="text-2xl font-bold text-gray-900 leading-snug">
+                {{ $title }}
+            </h1>
+
+            <div class="flex items-center gap-3 flex-wrap text-gray-500 text-sm">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-xs border border-gray-200">
+                        {{ $authorInitial }}
+                    </div>
+                    <span class="font-medium text-gray-700">{{ $author }}</span>
+                </div>
+                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                <span class="flex items-center gap-1">
+                    <x-heroicon-o-calendar-days class="w-3.5 h-3.5" />
+                    {{ $date }}
+                </span>
+                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                <span class="flex items-center gap-1">
+                    <x-heroicon-o-clock class="w-3.5 h-3.5" />
+                    {{ $readTime }} min
+                </span>
+                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                <span class="flex items-center gap-1">
+                    <x-heroicon-o-eye class="w-3.5 h-3.5" />
+                    {{ number_format($berita->views_count) }}
+                </span>
+            </div>
         </div>
     </div>
 
     {{-- ==================== MAIN CONTENT ==================== --}}
-    <div class="bg-white border-t border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="relative bg-gradient-to-b from-gray-50 to-white">
+        {{-- Decorative top accent --}}
+        <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-lime-500/50 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
             
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                 
-                {{-- Left Column: Header & Content --}}
+                {{-- Left Column: Content --}}
                 <article class="lg:col-span-8">
-                    
-                    {{-- HEADER SECTION (Moved Inside Left Column) --}}
-                    <div class="mb-10 text-left">
-                        {{-- Badges & Stats --}}
-                        <div class="flex items-center gap-3 sm:gap-4 mb-6 flex-wrap">
-                            @if($category)
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-lime-100 text-lime-700">
-                                    {{ $category }}
-                                </span>
-                            @endif
-                            <div class="w-px h-4 bg-gray-300 hidden sm:block"></div>
-                            <span class="flex items-center gap-1.5 text-sm font-medium text-gray-500">
-                                <x-heroicon-o-calendar-days class="w-4 h-4" />
-                                {{ $date }}
-                            </span>
-                            <div class="w-px h-4 bg-gray-300 hidden sm:block"></div>
-                            <span class="flex items-center gap-1.5 text-sm font-medium text-gray-500">
-                                <x-heroicon-o-clock class="w-4 h-4" />
-                                {{ $readTime }} min baca
-                            </span>
-                            <span class="flex items-center gap-1.5 text-sm font-medium text-gray-500 ml-2">
-                                <x-heroicon-o-eye class="w-4 h-4" />
-                                {{ number_format($berita->views_count) }}
-                            </span>
-                        </div>
-
-                        {{-- Title --}}
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-8 tracking-tight">
-                            {{ $title }}
-                        </h1>
-
-                        {{-- Author --}}
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-600 font-bold text-sm">
-                                {{ $authorInitial }}
-                            </div>
-                            <div class="text-left">
-                                <p class="text-sm font-bold text-gray-900">{{ $author }}</p>
-                                <p class="text-xs text-gray-500">Penulis Artikel</p>
-                            </div>
-                        </div>
-                    </div>
 
                     {{-- Typography Content --}}
-                    <div class="prose prose-lg md:prose-xl max-w-none 
-                        prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
-                        prose-p:text-gray-600 prose-p:leading-relaxed prose-p:text-justify
-                        prose-a:text-lime-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                        prose-img:rounded-xl prose-img:shadow-lg prose-img:my-10 prose-img:w-full
-                        prose-blockquote:border-l-4 prose-blockquote:border-lime-500 prose-blockquote:bg-gray-50 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-gray-700
-                        prose-ul:marker:text-lime-500 prose-ol:marker:text-lime-500
-                        [&_strong]:text-gray-900 [&_strong]:font-bold">
-                        @if($content)
-                            {!! $content !!}
-                        @else
-                            <div class="text-center py-20 text-gray-400">
-                                <x-heroicon-o-document-text class="w-16 h-16 mx-auto mb-4 opacity-50" />
-                                <p class="text-lg">Konten belum tersedia.</p>
-                            </div>
-                        @endif
+                    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-6 sm:p-8 md:p-10 mb-8">
+                        <div class="prose prose-lg md:prose-xl max-w-none 
+                            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
+                            prose-p:text-gray-600 prose-p:leading-relaxed prose-p:text-justify
+                            prose-a:text-lime-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                            prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8 prose-img:w-full
+                            prose-blockquote:border-l-4 prose-blockquote:border-lime-500 prose-blockquote:bg-lime-50/50 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-gray-700
+                            prose-ul:marker:text-lime-500 prose-ol:marker:text-lime-500
+                            [&_strong]:text-gray-900 [&_strong]:font-bold">
+                            @if($content)
+                                {!! $content !!}
+                            @else
+                                <div class="text-center py-20 text-gray-400">
+                                    <x-heroicon-o-document-text class="w-16 h-16 mx-auto mb-4 opacity-50" />
+                                    <p class="text-lg">Konten belum tersedia.</p>
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     {{-- Interaction Footer --}}
-                    <div class="mt-12 pt-8 border-t border-gray-100">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-5 sm:p-6 mb-8">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div class="flex items-center gap-4">
-                                <span class="text-sm font-semibold text-gray-700">Apakah artikel ini membantu?</span>
-                                <div class="flex items-center bg-white rounded-full shadow-sm ring-1 ring-gray-200 p-1">
+                                <span class="text-sm font-semibold text-gray-600">Apakah artikel ini membantu?</span>
+                                <div class="flex items-center bg-gray-50 rounded-full p-1 ring-1 ring-gray-200/80">
                                     <button wire:click="toggleLike" 
-                                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all {{ $userReaction === 'like' ? 'bg-lime-100 text-lime-700' : 'text-gray-500 hover:bg-gray-50' }}">
+                                            class="flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200 {{ $userReaction === 'like' ? 'bg-lime-500 text-white shadow-md shadow-lime-500/30' : 'text-gray-500 hover:bg-white hover:shadow-sm' }}">
                                         <x-heroicon-o-hand-thumb-up class="w-4 h-4 {{ $userReaction === 'like' ? 'fill-current' : '' }}" />
                                         <span class="text-xs font-bold">{{ number_format($berita->likes_count) }}</span>
                                     </button>
-                                    <div class="w-px h-4 bg-gray-200 mx-1"></div>
                                     <button wire:click="toggleDislike" 
-                                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all {{ $userReaction === 'dislike' ? 'bg-red-100 text-red-700' : 'text-gray-500 hover:bg-gray-50' }}">
+                                            class="flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200 {{ $userReaction === 'dislike' ? 'bg-red-500 text-white shadow-md shadow-red-500/30' : 'text-gray-500 hover:bg-white hover:shadow-sm' }}">
                                         <x-heroicon-o-hand-thumb-down class="w-4 h-4 {{ $userReaction === 'dislike' ? 'fill-current' : '' }}" />
                                     </button>
                                 </div>
                             </div>
-                            <button @click="showShareMenu = true" class="text-sm font-bold text-lime-600 hover:text-lime-700 flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-lime-50 transition-colors">
-                                <x-heroicon-o-share class="w-4 h-4" />
-                                Bagikan Artikel
+                            <button @click="showShareMenu = true" class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-lime-500 hover:bg-lime-600 text-white text-sm font-semibold transition-all duration-200 shadow-md shadow-lime-500/20 hover:shadow-lg hover:shadow-lime-500/30 active:scale-95">
+                                <x-heroicon-o-share class="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                                Bagikan
                             </button>
                         </div>
                     </div>
 
                     {{-- Comments Section --}}
-                    <div class="mt-12 pt-10 border-t border-gray-100" id="comments">
-                        <h3 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
-                            Komentar <span class="bg-gray-100 text-gray-600 text-sm py-0.5 px-2 rounded-full">{{ $comments->count() }}</span>
+                    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-6 sm:p-8 md:p-10" id="comments">
+                        <h3 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-lime-100 flex items-center justify-center">
+                                <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 text-lime-600" />
+                            </div>
+                            Komentar
+                            <span class="bg-gray-100 text-gray-500 text-xs font-bold py-1 px-2.5 rounded-full">{{ $comments->count() }}</span>
                         </h3>
 
                         {{-- Comment Form --}}
-                        <div class="mb-10 bg-gray-50 rounded-2xl p-6 md:p-8">
+                        <div class="mb-8 bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl p-5 sm:p-6 border border-gray-100">
                             @if($commentSubmitted)
-                                <div class="flex flex-col items-center justify-center text-center py-4">
-                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 text-green-600">
-                                        <x-heroicon-o-check class="w-6 h-6" />
+                                <div class="flex flex-col items-center justify-center text-center py-6">
+                                    <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4 text-green-500 shadow-sm">
+                                        <x-heroicon-o-check-circle class="w-8 h-8" />
                                     </div>
-                                    <h4 class="font-bold text-gray-900">Terkirim!</h4>
+                                    <h4 class="font-bold text-gray-900 text-lg">Terkirim!</h4>
                                     <p class="text-sm text-gray-500 mt-1">Komentar menunggu moderasi admin.</p>
                                 </div>
                             @else
                                 <form wire:submit.prevent="submitComment" class="space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="name" class="block text-sm font-semibold text-gray-700 mb-1">Nama</label>
-                                            <input type="text" wire:model="commentName" id="name" placeholder="Nama Anda"
-                                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all">
-                                            @error('commentName') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
-                                        </div>
+                                    <div>
+                                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-1.5">Nama</label>
+                                        <input type="text" wire:model="commentName" id="name" placeholder="Nama Anda"
+                                            class="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-100 outline-none transition-all text-sm shadow-sm">
+                                        @error('commentName') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                                     </div>
                                     <div>
-                                        <label for="message" class="block text-sm font-semibold text-gray-700 mb-1">Komentar</label>
+                                        <label for="message" class="block text-sm font-semibold text-gray-700 mb-1.5">Komentar</label>
                                         <textarea wire:model="commentMessage" id="message" rows="3" placeholder="Tulis komentar..."
-                                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all resize-none"></textarea>
+                                                class="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-100 outline-none transition-all resize-none text-sm shadow-sm"></textarea>
                                         @error('commentMessage') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="flex justify-end">
-                                        <button type="submit" class="px-6 py-2.5 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 active:scale-95">
+                                        <button type="submit" class="group px-6 py-2.5 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition-all duration-200 shadow-lg shadow-gray-900/10 active:scale-95 text-sm">
                                             Kirim Komentar
+                                            <x-heroicon-o-paper-airplane class="w-4 h-4 inline-block ml-1 -rotate-45 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                                         </button>
                                     </div>
                                 </form>
@@ -247,15 +302,15 @@
                         </div>
 
                         {{-- Comment List --}}
-                        <div class="space-y-6">
+                        <div class="space-y-4">
                             @forelse($comments as $comment)
-                                <div class="flex gap-4">
+                                <div class="flex gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                                     <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm border border-gray-200">
+                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-lime-400 to-lime-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
                                             {{ strtoupper(substr($comment->name, 0, 1)) }}
                                         </div>
                                     </div>
-                                    <div class="flex-1">
+                                    <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between mb-1">
                                             <h5 class="font-bold text-gray-900 text-sm">{{ $comment->name }}</h5>
                                             <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
@@ -264,42 +319,49 @@
                                     </div>
                                 </div>
                             @empty
-                                <p class="text-gray-400 text-center text-sm py-4">Belum ada komentar.</p>
+                                <div class="text-center py-8">
+                                    <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gray-100 flex items-center justify-center">
+                                        <x-heroicon-o-chat-bubble-left class="w-6 h-6 text-gray-400" />
+                                    </div>
+                                    <p class="text-gray-400 text-sm">Belum ada komentar. Jadilah yang pertama!</p>
+                                </div>
                             @endforelse
                         </div>
                     </div>
                 </article>
 
                 {{-- Right Column: Sidebar --}}
-                <aside class="lg:col-span-4 space-y-8">
+                <aside class="lg:col-span-4 space-y-6">
                     
-                    {{-- Related News Widget (Only if exists) --}}
+                    {{-- Related News Widget --}}
                     @if(isset($relatedNews) && $relatedNews->count() > 0)
-                        <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100">
-                            <h3 class="text-lg font-bold text-gray-900 mb-6 pb-4 border-b border-gray-200/60 flex items-center justify-between">
-                                <span>Berita Terkait</span>
-                                <a href="{{ route('news') }}" class="text-xs font-semibold text-lime-600 hover:text-lime-700">Lihat Semua</a>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow duration-300">
+                            <h3 class="text-base font-bold text-gray-900 mb-5 pb-3 border-b border-gray-100 flex items-center justify-between">
+                                <span class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-md bg-lime-100 flex items-center justify-center">
+                                        <x-heroicon-o-fire class="w-3.5 h-3.5 text-lime-600" />
+                                    </div>
+                                    Berita Terkait
+                                </span>
+                                <a href="{{ route('news') }}" class="text-xs font-semibold text-lime-600 hover:text-lime-700 transition-colors">Semua →</a>
                             </h3>
-                            <div class="space-y-6">
+                            <div class="space-y-4">
                                 @foreach($relatedNews as $news)
-                                    <a href="{{ route('news.detail', $news->slug) }}" class="group flex gap-4 items-start">
-                                        <div class="flex-shrink-0 relative w-20 h-20 rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5">
+                                    <a href="{{ route('news.detail', $news->slug) }}" class="group flex gap-3 items-start p-2 -mx-2 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+                                        <div class="flex-shrink-0 relative w-20 h-16 rounded-lg overflow-hidden bg-gray-100 ring-1 ring-gray-900/5">
                                             @if($news->thumbnail)
                                                 <img src="{{ str_starts_with($news->thumbnail, 'http') ? $news->thumbnail : asset('storage/' . $news->thumbnail) }}" 
                                                      alt="{{ $news->title }}"
                                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                             @else
-                                                <div class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
-                                                    <x-heroicon-o-photo class="w-8 h-8" />
+                                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                                    <x-heroicon-o-photo class="w-6 h-6" />
                                                 </div>
                                             @endif
                                         </div>
-                                        <div class="flex-1 min-w-0 py-1">
-                                            <div class="flex items-center gap-2 mb-1.5">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-lime-500"></span>
-                                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $news->created_at->format('d M Y') }}</p>
-                                            </div>
-                                            <h4 class="text-sm font-bold text-gray-900 group-hover:text-lime-600 line-clamp-2 leading-snug transition-colors">
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">{{ $news->created_at->format('d M Y') }}</p>
+                                            <h4 class="text-sm font-bold text-gray-800 group-hover:text-lime-600 line-clamp-2 leading-snug transition-colors duration-200">
                                                 {{ $news->title }}
                                             </h4>
                                         </div>
@@ -309,42 +371,51 @@
                         </div>
                     @endif
 
-                    {{-- Latest News Widget (Always show) --}}
-                    <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm ring-1 ring-gray-900/5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
+                    {{-- Latest News Widget --}}
+                    <div class="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow duration-300">
+                        <h3 class="text-base font-bold text-gray-900 mb-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-md bg-blue-100 flex items-center justify-center">
+                                <x-heroicon-o-clock class="w-3.5 h-3.5 text-blue-600" />
+                            </div>
                             Berita Terbaru
                         </h3>
-                        <div class="space-y-6">
-                            @foreach($latestNews as $news)
-                                <a href="{{ route('news.detail', $news->slug) }}" class="group block">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <x-heroicon-o-calendar-days class="w-3.5 h-3.5 text-gray-400" />
-                                        <span class="text-xs text-gray-500">{{ $news->created_at->diffForHumans() }}</span>
+                        <div class="space-y-3">
+                            @foreach($latestNews as $index => $news)
+                                <a href="{{ route('news.detail', $news->slug) }}" class="group flex items-start gap-3 p-2 -mx-2 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+                                    <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-lime-100 text-gray-400 group-hover:text-lime-600 flex items-center justify-center text-xs font-bold transition-colors duration-200">
+                                        {{ $index + 1 }}
+                                    </span>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-semibold text-gray-800 group-hover:text-lime-600 line-clamp-2 leading-snug transition-colors duration-200">
+                                            {{ $news->title }}
+                                        </h4>
+                                        <span class="text-xs text-gray-400 mt-1 block">{{ $news->created_at->diffForHumans() }}</span>
                                     </div>
-                                    <h4 class="text-sm font-bold text-gray-900 group-hover:text-lime-600 line-clamp-2 leading-snug transition-colors mb-2">
-                                        {{ $news->title }}
-                                    </h4>
                                 </a>
                             @endforeach
                         </div>
-                        <div class="mt-6 pt-4 border-t border-gray-50 text-center">
-                            <a href="{{ route('news') }}" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
-                                Indeks Berita
+                        <div class="mt-5 pt-4 border-t border-gray-100">
+                            <a href="{{ route('news') }}" class="group flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold text-gray-600 hover:text-lime-700 bg-gray-50 hover:bg-lime-50 rounded-xl transition-all duration-200 ring-1 ring-gray-200/80 hover:ring-lime-200">
+                                Lihat Semua Berita
+                                <x-heroicon-o-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </a>
                         </div>
                     </div>
 
                     {{-- Categories Widget --}}
-                    <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm ring-1 ring-gray-900/5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm ring-1 ring-gray-900/5 hover:shadow-md transition-shadow duration-300">
+                        <h3 class="text-base font-bold text-gray-900 mb-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-md bg-purple-100 flex items-center justify-center">
+                                <x-heroicon-o-tag class="w-3.5 h-3.5 text-purple-600" />
+                            </div>
                             Kategori
                         </h3>
                         <div class="flex flex-wrap gap-2">
                             @foreach($categories as $cat)
                                 <a href="{{ route('news', ['category' => $cat->slug ?? $cat->id]) }}" 
-                                   class="inline-flex items-center justify-between px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-lime-50 text-xs font-medium text-gray-600 hover:text-lime-700 border border-gray-200 hover:border-lime-200 transition-all group">
+                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-lime-50 text-xs font-medium text-gray-600 hover:text-lime-700 border border-gray-200 hover:border-lime-300 transition-all duration-200 group">
                                     <span>{{ $cat->name }}</span>
-                                    <span class="ml-2 bg-gray-200 group-hover:bg-lime-200 text-gray-500 group-hover:text-lime-700 py-0.5 px-1.5 rounded-md text-[10px]">
+                                    <span class="bg-gray-200/80 group-hover:bg-lime-200 text-gray-500 group-hover:text-lime-700 py-0.5 px-1.5 rounded-md text-[10px] font-bold transition-colors">
                                         {{ $cat->beritas_count }}
                                     </span>
                                 </a>

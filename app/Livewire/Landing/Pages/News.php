@@ -116,16 +116,29 @@ class News extends Component
 
     public function getNewsProperty()
     {
-        return $this->getNewsQuery()->paginate(9);
+        return $this->getNewsQuery()
+            ->where('is_priority', false)
+            ->paginate(9);
     }
 
     public function getFeaturedNewsProperty()
     {
-        // Featured news - latest 1 article when no filters applied
+        // Only admin-designated priority news
         return Berita::with(['kategori', 'creator'])
             ->where('is_active', true)
+            ->where('is_priority', true)
+            ->orderBy('priority_order')
+            ->get();
+    }
+
+    public function getLatestNewsProperty()
+    {
+        // Recent non-priority news for "Berita Terbaru" section
+        return Berita::with(['kategori', 'creator'])
+            ->where('is_active', true)
+            ->where('is_priority', false)
             ->orderByDesc('created_at')
-            ->take(1)
+            ->take(6)
             ->get();
     }
 
@@ -169,6 +182,7 @@ class News extends Component
         return view('livewire.landing.pages.news', [
             'news' => $this->news,
             'featuredNews' => $this->featuredNews,
+            'latestNews' => $this->latestNews,
             'allNews' => $this->allNews, 
             'categories' => $this->categories,
             'stats' => $this->stats,

@@ -12,11 +12,11 @@
                 </span>
                 <br>
                 <span class="bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent">
-                    Lemdiklat Taruna Nusantara?
+                    Lemdiklat Taruna Nusantara Indonesia?
                 </span>
             </h2>
             <p class="text-xs md:text-base lg:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed mt-3 md:mt-4">
-                Bergabunglah dengan lembaga pendidikan dan pelatihan yang telah <span class="text-yellow-400 font-bold">mencetak ribuan pemimpin</span> berkualitas untuk Indonesia.
+                Bergabunglah dengan lembaga pendidikan dan pelatihan yang telah <span class="text-yellow-400 font-bold">mencetak generasi pemimpin</span> berkualitas untuk Indonesia.
             </p>
         </div>
 
