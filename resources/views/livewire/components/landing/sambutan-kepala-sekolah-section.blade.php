@@ -52,11 +52,11 @@
                 @if(isset($greetingData['principal']))
                 <div class="relative">
                     <div class="relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg md:shadow-2xl">
-                        <div class="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-50 to-blue-50 h-64 md:h-96 lg:h-150">
+                        <div class="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-50 to-blue-50 aspect-[3/4] lg:aspect-auto lg:h-[600px]">
                             <img
                                 src="{{ $greetingData['principal']['image'] ?? asset('assets/kepalasekolahsma.png') }}"
                                 alt="{{ $greetingData['principal']['name'] ?? 'Kepala Sekolah' }}"
-                                class="w-full h-full object-cover object-center"
+                                class="w-full h-full object-cover object-top"
                                 onerror="this.onerror=null; this.src='{{ asset('assets/kepalasekolahsma.png') }}';" />
                         </div>
 

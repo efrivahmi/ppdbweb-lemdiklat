@@ -1,5 +1,5 @@
 <section 
-    class="relative w-full h-[calc(100vh-5rem)] overflow-hidden"
+    class="relative w-full overflow-hidden"
     x-data="{
         imageLoaded: true,
         mounted: false,
@@ -11,12 +11,12 @@
     x-init="init()"
 >
     {{-- Background Image Layer --}}
-    <div class="relative w-full h-full flex justify-center">
+    <div class="relative w-full flex justify-center">
         @if($heroData['backgroundImage'])
             <img 
                 src="{{ asset('storage/' . $heroData['backgroundImage']) }}" 
                 alt="Taruna Nusantara"
-                class="w-full h-full object-cover object-center transition-all duration-1000"
+                class="w-full h-auto object-contain transition-all duration-1000"
                 x-bind:class="{
                     'opacity-100 scale-100': imageLoaded && !hasError,
                     'opacity-0 scale-110': !imageLoaded || hasError
@@ -56,22 +56,6 @@
     .animate-fade-in-up {
         animation: fadeInUp 0.8s ease-out;
         opacity: 0;
-    }
-
-    /* gambar proporsional dan full lebar */
-    section img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        object-position: center;
-        display: block;
-    }
-
-    /* untuk jaga di mobile biar nggak kepotong */
-    @media (max-width: 640px) {
-        section {
-            width: 100vw;
-        }
     }
 </style>
 @endpush

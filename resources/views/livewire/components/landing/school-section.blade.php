@@ -102,7 +102,7 @@
                                         <x-slot name="iconSlot">
                                             <x-dynamic-component
                                                 :component="'heroicon-o-' . $contactIconName"
-                                                class="w-5 h-5 text-lime-600"
+                                                class="w-5 h-5 md:w-6 md:h-6 text-lime-600 flex-shrink-0"
                                             />
                                         </x-slot>
                                     </x-atoms.info-item>
@@ -115,11 +115,11 @@
                     <div class="lg:col-span-3" x-data>
                         @if(isset($profileData['image']))
                             <div class="relative rounded-2xl overflow-hidden shadow-2xl h-full">
-                                <div class="min-h-[400px] sm:min-h-[500px] lg:aspect-auto lg:h-full rounded-2xl overflow-hidden">
+                                <div class="aspect-[4/3] lg:aspect-auto lg:h-full rounded-2xl overflow-hidden">
                                     <img
                                         src="{{ $profileData['image']['url'] ?? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80' }}"
                                         alt="{{ $profileData['image']['title'] ?? 'Gedung Sekolah' }}"
-                                        class="w-full h-full object-cover opacity-90"
+                                        class="w-full h-full object-cover"
                                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';"
                                     />
                                 </div>

@@ -1,5 +1,5 @@
 <section 
-    class="relative w-screen overflow-hidden"
+    class="relative w-full overflow-hidden"
     x-data="{
         imageLoaded: true,
         mounted: false,
@@ -57,14 +57,6 @@
         animation: fadeInUp 0.8s ease-out;
         opacity: 0;
     }
-
-    /* Responsif: gambar full width dan proporsional */
-    section img {
-        display: block;
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        object-position: center;
-    }
 </style>
 @endpush
+

@@ -39,7 +39,7 @@
                     <div class="relative order-2 lg:order-1" x-data>
                         <div class="relative">
                             <div class="relative rounded-xl md:rounded-2xl overflow-hidden shadow-lg md:shadow-2xl">
-                                <div class="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-green-50 to-lime-50 h-64 md:h-96 lg:h-150 flex items-center justify-center">
+                                <div class="rounded-xl md:rounded-2xl overflow-hidden bg-gradient-to-br from-green-50 to-lime-50 aspect-[3/4] lg:aspect-auto lg:h-[600px] flex items-center justify-center">
                                     <!-- Border kuning-hijau TNI -->
                                     <div class="relative">
                                         <div class="absolute -inset-3 bg-gradient-to-br from-yellow-400 via-lime-400 to-green-500 rounded-full blur-md"></div>

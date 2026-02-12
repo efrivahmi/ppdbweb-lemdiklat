@@ -1,6 +1,6 @@
-<div>
+<div class="overflow-x-hidden">
     <livewire:components.landing.hero-spmb />
-    <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
+    <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <livewire:components.landing.jalur-pendaftaran-section />
         <livewire:components.landing.alur-pendaftaran-section />
         <livewire:components.landing.requirement />
