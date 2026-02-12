@@ -6,7 +6,7 @@
         ],
         [
             'question' => 'Apa saja tiga model pendidikan yang diterapkan?',
-            'answer' => 'Lemdiklat menerapkan <strong>tiga pilar pendidikan</strong> yang terintegrasi: <br><br>🎖️ <strong>Pendidikan Semi-Militer</strong> — Membentuk kedisiplinan, ketangguhan mental, kepemimpinan, dan jiwa korsa melalui kegiatan baris-berbaris, upacara, latihan fisik, serta pembiasaan pola hidup tertib dan teratur. <br><br>🕌 <strong>Pendidikan Pesantren (Keislaman)</strong> — Menanamkan nilai-nilai keislaman melalui kajian Al-Quran, shalat berjamaah, tahfidz, dan pembinaan akhlakul karimah sehingga siswa memiliki pondasi iman dan taqwa yang kuat. <br><br>📚 <strong>Pendidikan Formal</strong> — Menyelenggarakan pembelajaran akademik sesuai Kurikulum Merdeka yang ditetapkan oleh Kementerian Pendidikan, sehingga siswa tetap kompetitif secara akademis dan siap melanjutkan ke jenjang pendidikan tinggi.',
+            'answer' => 'Lemdiklat menerapkan <strong>tiga pilar pendidikan</strong> yang terintegrasi: <br><br>🎖️ <strong>Pendidikan Kemiliteran</strong> — Membentuk kedisiplinan, ketangguhan mental, kepemimpinan, dan jiwa korsa melalui kegiatan baris-berbaris, upacara, latihan fisik, serta pembiasaan pola hidup tertib dan teratur. <br><br>🕌 <strong>Pendidikan Kepesantrenan (Keislaman)</strong> — Menanamkan nilai-nilai keislaman melalui kajian Al-Quran, shalat berjamaah, tahfidz, dan pembinaan akhlakul karimah sehingga siswa memiliki pondasi iman dan taqwa yang kuat. <br><br>📚 <strong>Pendidikan Formal</strong> — Menyelenggarakan pembelajaran akademik sesuai Kurikulum Merdeka yang ditetapkan oleh Kementerian Pendidikan, sehingga siswa tetap kompetitif secara akademis dan siap melanjutkan ke jenjang pendidikan tinggi.',
         ],
         [
             'question' => 'Kurikulum apa yang digunakan?',
@@ -25,16 +25,20 @@
             'answer' => 'Kegiatan harian siswa terstruktur mulai dari bangun pagi hingga istirahat malam: <br>• <strong>Subuh:</strong> Shalat Subuh berjamaah, tahfidz / kajian pagi <br>• <strong>Pagi:</strong> Olahraga / apel pagi, sarapan <br>• <strong>Siang:</strong> Kegiatan belajar mengajar (KBM) formal <br>• <strong>Sore:</strong> Ekstrakurikuler, latihan fisik, kegiatan pengembangan diri <br>• <strong>Malam:</strong> Belajar mandiri (bimbel), shalat Isya berjamaah, istirahat <br><br>Pola ini memastikan siswa berkembang secara seimbang antara akademik, spiritual, dan fisik.',
         ],
         [
+            'question' => 'Apakah Siswa diperbolehkan membawa Handphone atau HP?',
+            'answer' => 'Siswa <strong>tidak diperbolehkan</strong> membawa Handphone (HP) atau alat komunikasi pribadi lainnya ke dalam lingkungan asrama dan sekolah. <br><br>Hal ini bertujuan melatih kedisiplinan dan fokus siswa. Komunikasi dengan orang tua disediakan melalui fasilitas telepon asrama (Wartelsus) sesuai jadwal yang telah ditentukan.',
+        ],
+        [
             'question' => 'Bagaimana pembinaan keagamaan (keislaman) di Lemdiklat?',
             'answer' => 'Pembinaan keislaman dilaksanakan secara rutin dan terintegrasi dalam kehidupan sehari-hari, meliputi: <br>• Shalat 5 waktu <strong>berjamaah wajib</strong> <br>• Program <strong>tahfidz Al-Quran</strong> <br>• Kajian keislaman dan ceramah rutin <br>• Peringatan hari besar Islam <br>• Pembiasaan adab dan akhlakul karimah <br><br>Tujuannya agar siswa tidak hanya cerdas secara intelektual, tetapi juga memiliki <strong>pondasi iman dan taqwa</strong> yang kokoh.',
         ],
         [
             'question' => 'Apa saja kegiatan ekstrakurikuler yang tersedia?',
-            'answer' => 'Lemdiklat menyediakan berbagai kegiatan pengembangan diri, antara lain: <br>• <strong>Olahraga:</strong> Bela diri, sepak bola, bola voli, atletik <br>• <strong>Seni & Budaya:</strong> Marching band, seni tari, teater <br>• <strong>Kepemimpinan:</strong> Pramuka, LDKS, organisasi siswa <br>• <strong>Akademik:</strong> Kelompok ilmiah, English club, jurnalistik <br>• <strong>Teknologi:</strong> Robotika, desain grafis, programming <br><br>Kegiatan ini dapat dilihat lebih lengkap di halaman website kami.',
+            'answer' => 'Lemdiklat Taruna Nusantara Indonesia menyediakan 5 ekstrakurikuler utama: <br><br>• <strong>PMR (Palang Merah Remaja):</strong> Wadah pembinaan karakter kemanusiaan, keterampilan kesehatan, dan pertolongan pertama. <br>• <strong>OSIS:</strong> Organisasi resmi sekolah sebagai wadah utama aspirasi dan pengembangan diri siswa. <br>• <strong>POLTAR (Polisi Taruna):</strong> Satuan penegak disiplin yang bertugas mengawasi ketertiban, pengamanan kegiatan sekolah, serta pelatihan fisik dan mental. <br>• <strong>TONPARA (Paskibra):</strong> Pasukan Pengibar Bendera yang melatih kepemimpinan, tata upacara, dan persiapan seleksi Paskibraka. <br>• <strong>YUDHA BAHANA NUSANTARA (Drum Band):</strong> Korps musik pengiring upacara yang melatih musikalitas, kedisiplinan, serta kekompakan tim.',
         ],
         [
             'question' => 'Apa saja persyaratan untuk mendaftar?',
-            'answer' => 'Persyaratan umum pendaftaran meliputi: <br>• Lulusan <strong>SMP/MTs</strong> atau sederajat <br>• <strong>Sehat jasmani dan rohani</strong> <br>• Berkelakuan baik (dibuktikan dengan SKCK atau surat keterangan dari sekolah) <br>• Memenuhi ketentuan usia yang berlaku <br>• Mendapat persetujuan orang tua/wali <br><br>Untuk detail persyaratan dan dokumen yang diperlukan, silakan kunjungi halaman <strong>SPMB</strong> di website kami.',
+            'answer' => 'Persyaratan umum pendaftaran meliputi: <br>• Lulusan <strong>SMP/MTs</strong> atau sederajat <br>• <strong>Sehat jasmani dan rohani</strong> <br>• Berkelakuan baik (dibuktikan dengan surat keterangan berkelakuan baik dari sekolah) <br>• Memenuhi ketentuan usia yang berlaku <br>• Mendapat persetujuan orang tua/wali <br><br>Untuk detail persyaratan dan dokumen yang diperlukan, silakan kunjungi halaman <strong>SPMB</strong> di website kami.',
         ],
         [
             'question' => 'Bagaimana proses seleksi penerimaan murid baru (SPMB)?',
