@@ -220,28 +220,29 @@ use Spatie\Sitemap\Tags\Url;
 Route::get('/sitemap.xml', function () {
     $sitemap = Sitemap::create();
     
-    // Landing pages statis
+    // Static landing pages
     $pages = [
-        ['url' => '/', 'priority' => 1.0],
-        ['url' => '/spmb', 'priority' => 0.9],
-        ['url' => '/profile', 'priority' => 0.9],
-        ['url' => '/news', 'priority' => 0.9],
-        ['url' => '/achievement', 'priority' => 0.8],
-        ['url' => '/facility', 'priority' => 0.8],
-        ['url' => '/requirement', 'priority' => 0.8],
-        ['url' => '/structure', 'priority' => 0.8],
-        ['url' => '/alumni', 'priority' => 0.8],
-        ['url' => '/ekstrakurikuler', 'priority' => 0.8],
+        ['url' => '/', 'priority' => 1.0, 'freq' => Url::CHANGE_FREQUENCY_DAILY],
+        ['url' => '/spmb', 'priority' => 0.9, 'freq' => Url::CHANGE_FREQUENCY_WEEKLY],
+        ['url' => '/profile', 'priority' => 0.9, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/profile/sma', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/profile/smk', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/news', 'priority' => 0.9, 'freq' => Url::CHANGE_FREQUENCY_DAILY],
+        ['url' => '/achievement', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_WEEKLY],
+        ['url' => '/facility', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/requirement', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/alumni', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
+        ['url' => '/ekstrakurikuler', 'priority' => 0.8, 'freq' => Url::CHANGE_FREQUENCY_MONTHLY],
     ];
     
     foreach ($pages as $page) {
         $sitemap->add(Url::create($page['url'])
             ->setLastModificationDate(now())
-            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            ->setChangeFrequency($page['freq'])
             ->setPriority($page['priority']));
     }
     
-    // Dynamic berita pages
+    // Dynamic news article pages
     Berita::where('is_active', true)->get()->each(function ($berita) use ($sitemap) {
         $sitemap->add(
             Url::create("/news/{$berita->slug}")
@@ -251,7 +252,11 @@ Route::get('/sitemap.xml', function () {
         );
     });
     
+    // Write the file for caching
     $sitemap->writeToFile(public_path('sitemap.xml'));
     
-    return response('Sitemap generated!', 200)->header('Content-Type', 'text/plain');
+    // Also return the XML directly with proper content type
+    return response($sitemap->render(), 200, [
+        'Content-Type' => 'application/xml',
+    ]);
 });
