@@ -31,81 +31,14 @@
     $shareUrl = route('news.detail', $slug);
 @endphp
 
-<div class="min-h-screen bg-gray-50/50 font-sans" x-data="{
-    showShareMenu: false,
-    shareUrl: {{ json_encode($shareUrl) }},
-    shareTitle: {{ json_encode($title) }},
-    shareExcerpt: {{ json_encode($excerpt) }},
-    copied: false,
-
-    canShareNative: false,
-
-    init() {
-        this.canShareNative = navigator.share ? true : false;
-    },
-
-    async shareNative() {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: this.shareTitle,
-                    text: this.shareExcerpt,
-                    url: this.shareUrl
-                });
-            } catch (err) {
-                // User cancelled or error
-            }
-        }
-    },
-
-    shareToFacebook() {
-        // Facebook Story is best handled by native share on mobile
-        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(this.shareUrl), '_blank', 'width=600,height=400');
-    },
-    shareToTwitter() {
-        const text = this.shareTitle + '\n' + this.shareExcerpt;
-        window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(this.shareUrl) + '&text=' + encodeURIComponent(text), '_blank', 'width=600,height=400');
-    },
-    shareToWhatsApp() {
-        // WhatsApp Status is selectable in the native app when sharing
-        const text = `*${this.shareTitle}*\n\n${this.shareExcerpt}\n\n${this.shareUrl}`;
-        window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-    },
-    async shareToInstagram() {
-        // Instagram doesn't have a web share URL. Best practice is copy link + open app.
-        await this.copyLink();
-        window.open('https://www.instagram.com/', '_blank');
-    },
-    async shareToTikTok() {
-        // TikTok doesn't have a direct "share to story" web URL.
-        await this.copyLink();
-        window.open('https://www.tiktok.com/', '_blank');
-    },
-    async shareToThreads() {
-        // Threads supports web sharing easier than IG
-        const text = this.shareTitle + '\n' + this.shareExcerpt;
-        window.open('https://www.threads.net/intent/post?text=' + encodeURIComponent(text + '\n\n' + this.shareUrl), '_blank', 'width=600,height=600');
-    },
-    shareToLinkedIn() {
-        window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(this.shareUrl), '_blank', 'width=600,height=600');
-    },
-    shareToTelegram() {
-        window.open('https://t.me/share/url?url=' + encodeURIComponent(this.shareUrl) + '&text=' + encodeURIComponent(this.shareTitle), '_blank');
-    },
-    shareToLine() {
-        window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(this.shareUrl), '_blank');
-    },
-    shareToEmail() {
-        window.open('mailto:?subject=' + encodeURIComponent(this.shareTitle) + '&body=' + encodeURIComponent(this.shareTitle + '\n\n' + this.shareExcerpt + '\n\n' + this.shareUrl), '_self');
-    },
-    async copyLink() {
-        try {
-            await navigator.clipboard.writeText(this.shareUrl);
-            this.copied = true;
-            setTimeout(() => this.copied = false, 2000);
-        } catch(e) {}
-    }
-}">
+<div class="min-h-screen bg-gray-50/50 font-sans" 
+     x-data="newsShare(
+        {{ json_encode($shareUrl) }},
+        {{ json_encode($title) }},
+        {{ json_encode($excerpt) }}
+     )">
+     
+    @include('livewire.landing.pages.news-detail-script')
 
     {{-- ==================== HERO SECTION (MODERN) ==================== --}}
     <div class="relative w-full overflow-hidden bg-gray-950">

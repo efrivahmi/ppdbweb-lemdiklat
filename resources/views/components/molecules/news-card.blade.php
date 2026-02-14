@@ -420,7 +420,7 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
 
-            <div class="p-6 md:p-8 max-h-[60vh] overflow-y-auto">
+            <div class="p-6 md:p-8">
                 <div class="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-calendar-days class="w-4 h-4 text-lime-600" />
