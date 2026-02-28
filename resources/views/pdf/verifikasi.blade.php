@@ -400,15 +400,17 @@
 
     <div class="signature-section">
         <div class="signature-box">
-            <div class="signature-title">Menyetujui data diatas<br>Ortu/Wali Siswa Terdaftar</div>
-            <div class="signature-name">(...........................)</div>
+            <div class="signature-title" style="margin-bottom: 5px;">Menyetujui data diatas<br>Ortu/Wali Siswa Terdaftar</div>
+            <div style="height: 60px; margin-bottom: 5px;"></div>
+            <br>
+            <div class="signature-name" style="width: 180px;">.......................</div>
         </div>
 
         <div class="signature-box">
             <div class="signature-title" style="margin-bottom: 5px;">{{ $pdfSetting->jabatan_operator }}<br>{{ $pdfSetting->nama_sekolah }}</div>
             <img src="{{ public_path('assets/ttd-panitia.jpg') }}" alt="Tanda Tangan Panitia" style="height: 60px; width: auto; margin-bottom: 5px;">
             <br>
-            <div class="signature-name">{{ $pdfSetting->nama_operator }}</div>
+            <div class="signature-name" style="width: 180px;">{{ $pdfSetting->nama_operator }}</div>
         </div>
     </div>
 
