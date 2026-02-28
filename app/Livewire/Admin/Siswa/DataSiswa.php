@@ -371,8 +371,14 @@ class DataSiswa extends Component
                             ->orWhereDoesntHave('pendaftaranMurids');
                         });
                         break;
+                    case 'pendaftaran_pending':
+                        $query->whereHas('pendaftaranMurids', fn($q) => $q->where('status', 'pending'));
+                        break;
                     case 'pendaftaran_diterima':
                         $query->whereHas('pendaftaranMurids', fn($q) => $q->where('status', 'diterima'));
+                        break;
+                    case 'pendaftaran_ditolak':
+                        $query->whereHas('pendaftaranMurids', fn($q) => $q->where('status', 'ditolak'));
                         break;
                 }
             })

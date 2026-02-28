@@ -27,7 +27,9 @@
                             ['value' => '', 'label' => 'Semua Status'],
                             ['value' => 'lengkap', 'label' => 'Lengkap'],
                             ['value' => 'belum_lengkap', 'label' => 'Belum Lengkap'],
+                            ['value' => 'pendaftaran_pending', 'label' => 'Pending'],
                             ['value' => 'pendaftaran_diterima', 'label' => 'Diterima'],
+                            ['value' => 'pendaftaran_ditolak', 'label' => 'Ditolak'],
                         ]"
                         className="flex-1 sm:max-w-xs" />
 
@@ -170,6 +172,8 @@
                                 // All complete check
                                 $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete && $pendaftaranComplete;
                                 $pendaftaranDiterima = $siswa->pendaftaranMurids->where('status', 'diterima')->count();
+                                $pendaftaranDitolak = $siswa->pendaftaranMurids->where('status', 'ditolak')->count();
+                                $pendaftaranPending = $siswa->pendaftaranMurids->where('status', 'pending')->count();
                             @endphp
                             <div class="flex flex-col gap-2">
                                 {{-- Unified Status --}}
@@ -194,6 +198,10 @@
 
                                 @if($pendaftaranDiterima > 0)
                                 <x-atoms.badge text="Diterima" variant="emerald" size="sm" />
+                                @elseif($pendaftaranPending > 0)
+                                <x-atoms.badge text="Pending" variant="gold" size="sm" />
+                                @elseif($pendaftaranDitolak > 0)
+                                <x-atoms.badge text="Ditolak" variant="danger" size="sm" />
                                 @endif
                             </div>
                         </td>
@@ -375,6 +383,8 @@
                         // All complete check
                         $allComplete = $dataMuridComplete && $dataOrangTuaComplete && $berkasMuridComplete && $pendaftaranComplete;
                         $pendaftaranDiterima = $siswa->pendaftaranMurids->where('status', 'diterima')->count();
+                        $pendaftaranDitolak = $siswa->pendaftaranMurids->where('status', 'ditolak')->count();
+                        $pendaftaranPending = $siswa->pendaftaranMurids->where('status', 'pending')->count();
                     @endphp
                     <div class="flex flex-wrap gap-2 mb-4">
                         {{-- Unified Status --}}
@@ -399,6 +409,10 @@
 
                         @if($pendaftaranDiterima > 0)
                         <x-atoms.badge text="Diterima" variant="emerald" size="sm" />
+                        @elseif($pendaftaranPending > 0)
+                        <x-atoms.badge text="Pending" variant="gold" size="sm" />
+                        @elseif($pendaftaranDitolak > 0)
+                        <x-atoms.badge text="Ditolak" variant="danger" size="sm" />
                         @endif
                     </div>
 
