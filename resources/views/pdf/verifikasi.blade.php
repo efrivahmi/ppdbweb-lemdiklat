@@ -405,7 +405,9 @@
         </div>
 
         <div class="signature-box">
-            <div class="signature-title">{{ $pdfSetting->jabatan_operator }}<br>{{ $pdfSetting->nama_sekolah }}</div>
+            <div class="signature-title" style="margin-bottom: 5px;">{{ $pdfSetting->jabatan_operator }}<br>{{ $pdfSetting->nama_sekolah }}</div>
+            <img src="{{ public_path('assets/ttd-panitia.jpg') }}" alt="Tanda Tangan Panitia" style="height: 60px; width: auto; margin-bottom: 5px;">
+            <br>
             <div class="signature-name">{{ $pdfSetting->nama_operator }}</div>
         </div>
     </div>

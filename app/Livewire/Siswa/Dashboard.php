@@ -69,8 +69,12 @@ class Dashboard extends Component
     // Onboarding Tour
     public $hasSeenTour = true;
 
+    // Jadwal Ujian Khusus
+    public $activeSchedules = [];
+
     public function mount()
     {
+        $this->activeSchedules = Auth::user()->getActiveUrgentSchedules();
         $this->calculateProgress();
         $this->loadPendaftaranData();
         $this->loadBuktiTransfer();

@@ -48,19 +48,6 @@ class PendaftaranStatusUpdated implements ShouldBroadcastNow
      */
     public function broadcastWith(): array
     {
-        // Persist to database for the user
-        $this->user->notifications()->create([
-            'id' => \Illuminate\Support\Str::uuid(),
-            'type' => 'App\Notifications\PendaftaranStatusUpdated',
-            'data' => [
-                'status' => $this->status,
-                'message' => $this->message,
-                'icon' => 'bell',
-                'type' => 'status',
-            ],
-            'read_at' => null,
-        ]);
-
         return [
             'user_id' => $this->user->id,
             'user_name' => $this->user->name,

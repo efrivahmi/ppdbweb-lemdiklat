@@ -37,6 +37,7 @@ class NotificationBell extends Component
                     'icon' => $notification->data['icon'] ?? 'bell',
                     'title' => $this->getTitleForType($notification->data['type'] ?? 'info'),
                     'message' => $notification->data['message'] ?? 'Notifikasi baru',
+                    'action_url' => $notification->data['action_url'] ?? null,
                     'timestamp' => $notification->created_at->toIso8601String(),
                     'read_at' => $notification->read_at?->toIso8601String(),
                 ];
@@ -96,6 +97,7 @@ class NotificationBell extends Component
             'icon' => 'user-plus',
             'title' => 'Pendaftar Baru',
             'message' => $data['message'] ?? "Pendaftar baru: {$data['user_name']}",
+            'action_url' => $data['action_url'] ?? null,
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);
@@ -118,6 +120,7 @@ class NotificationBell extends Component
             'icon' => $statusIcons[$data['status']] ?? 'credit-card',
             'title' => 'Pembayaran',
             'message' => $data['message'] ?? "Status pembayaran {$data['user_name']} diperbarui",
+            'action_url' => $data['action_url'] ?? null,
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);
@@ -134,6 +137,7 @@ class NotificationBell extends Component
             'icon' => 'bell',
             'title' => 'Status Diperbarui',
             'message' => $data['message'] ?? "Status {$data['user_name']} diperbarui menjadi {$data['status']}",
+            'action_url' => $data['action_url'] ?? null,
             'timestamp' => $data['timestamp'] ?? now()->toIso8601String(),
             'read_at' => null,
         ]);

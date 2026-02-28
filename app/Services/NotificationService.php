@@ -58,8 +58,16 @@ class NotificationService
         PaymentVerified::dispatch($user, $status);
 
         // 2. Save notification to database (for bell icon)
-        $statusText = $status === 'approved' ? 'disetujui' : 'ditolak';
-        $icon = $status === 'approved' ? 'check-circle' : 'x-circle';
+        if ($status === 'success') {
+            $message = 'Pembayaran Anda telah diverifikasi! ✅';
+            $icon = 'check-circle';
+        } elseif ($status === 'decline') {
+            $message = 'Pembayaran Anda ditolak. Silakan upload ulang bukti transfer.';
+            $icon = 'x-circle';
+        } else {
+            $message = 'Bukti transfer Anda sedang diproses.';
+            $icon = 'clock';
+        }
         
         $user->notifications()->create([
             'id' => \Illuminate\Support\Str::uuid(),
@@ -67,7 +75,7 @@ class NotificationService
             'data' => [
                 'type' => 'payment',
                 'icon' => $icon,
-                'message' => "Pembayaran Anda telah {$statusText}.",
+                'message' => $message,
                 'action_url' => route('siswa.dashboard'),
             ],
         ]);
@@ -105,14 +113,39 @@ class NotificationService
     }
 
     /**
-     * Send data completion reminder
+     * Send data completion reminder (WhatsApp)
      */
     public function sendDataReminder(User $user, array $missingData): void
     {
         if ($user->telp && count($missingData) > 0) {
             $this->whatsApp->sendDataReminder($user->telp, $user->name, $missingData);
 
-            Log::info('Data reminder sent', [
+            Log::info('Data reminder sent (WhatsApp)', [
+                'user_id' => $user->id,
+                'missing' => $missingData,
+            ]);
+        }
+    }
+
+    /**
+     * Send data completion reminder (Database Notification Bell)
+     */
+    public function sendBellDataReminder(User $user, array $missingData): void
+    {
+        if (count($missingData) > 0) {
+            $missingList = implode(', ', $missingData);
+            $user->notifications()->create([
+                'id' => \Illuminate\Support\Str::uuid(),
+                'type' => 'App\\Notifications\\DataReminderNotification',
+                'data' => [
+                    'type' => 'reminder',
+                    'icon' => 'information-circle',
+                    'message' => "Pengingat: Anda belum melengkapi data: {$missingList}. Segera lengkapi untuk melanjutkan pendaftaran.",
+                    'action_url' => route('siswa.dashboard'),
+                ],
+            ]);
+
+            Log::info('Data reminder sent (Bell)', [
                 'user_id' => $user->id,
                 'missing' => $missingData,
             ]);
@@ -175,6 +208,26 @@ class NotificationService
         ]);
 
         Log::info('Rejection notification sent', ['user_id' => $user->id]);
+    }
+
+    /**
+     * Notify Jadwal Ujian Khusus
+     */
+    public function notifyJadwalUjianKhusus(User $user, $jadwal): void
+    {
+        // Save notification to database (for bell icon)
+        $user->notifications()->create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'type' => 'App\\Notifications\\JadwalUjianKhususNotification',
+            'data' => [
+                'type' => 'jadwal_ujian_khusus',
+                'icon' => 'calendar-check',
+                'message' => "Anda telah dijadwalkan untuk: {$jadwal->nama}.",
+                'action_url' => route('siswa.informasi-tes'),
+            ],
+        ]);
+
+        Log::info('Jadwal Ujian Khusus notification sent', ['user_id' => $user->id, 'jadwal_id' => $jadwal->id]);
     }
 
     /**

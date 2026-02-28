@@ -132,12 +132,33 @@
                                     </div>
                                 </div>
                             
-                            @if ($gelombangActive)
-                @if (!$gelombangActive->isUjianAktif())
-                    <div class="p-4 mt-2">
-                        <h2 class="text-lg font-semibold text-gray-800 mb-3">
-                            📅 Jadwal Ujian
-                        </h2>
+                            @if ($hasUrgentSchedule)
+                                <div class="p-4 mt-2 bg-red-50 rounded-lg border border-red-200">
+                                    <h2 class="text-lg font-semibold text-red-800 mb-3 flex items-center">
+                                        <i class="ri-timer-flash-line mr-2"></i> 📅 Jadwal Ujian Khusus (Wajib)
+                                    </h2>
+                                    <div class="space-y-3">
+                                        @foreach($activeUrgentSchedules as $schedule)
+                                        <div class="bg-white p-3 rounded-md shadow-sm border border-red-100">
+                                            <p class="font-bold text-red-700">{{ $schedule->nama }}</p>
+                                            @if($schedule->deskripsi)
+                                                <p class="text-sm text-gray-600 mt-1">{{ $schedule->deskripsi }}</p>
+                                            @endif
+                                            <p class="text-sm text-gray-700 mt-2">
+                                                Waktu: <span class="font-semibold text-red-600">{{ \Carbon\Carbon::parse($schedule->waktu_mulai)->format('d M Y H:i') }}</span>
+                                                s/d <span class="font-semibold text-red-600">{{ \Carbon\Carbon::parse($schedule->waktu_selesai)->format('d M Y H:i') }}</span>
+                                            </p>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    <p class="text-sm text-red-600 font-medium mt-3">✅ Silakan masuk ke menu Test untuk memulai ujian.</p>
+                                </div>
+                            @elseif ($gelombangActive)
+                                @if (!$gelombangActive->isUjianAktif())
+                                    <div class="p-4 mt-2">
+                                        <h2 class="text-lg font-semibold text-gray-800 mb-3">
+                                            📅 Jadwal Gelombang Ujian
+                                        </h2>
 
                         <div class="space-y-2">
                             <p class="text-gray-600">

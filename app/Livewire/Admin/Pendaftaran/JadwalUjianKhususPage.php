@@ -111,9 +111,16 @@ class JadwalUjianKhususPage extends Component
 
     public function toggleActive($id)
     {
-        $jadwal = JadwalUjianKhusus::findOrFail($id);
+        $jadwal = JadwalUjianKhusus::with('siswa')->findOrFail($id);
         $jadwal->is_active = !$jadwal->is_active;
         $jadwal->save();
+
+        if ($jadwal->is_active) {
+            $notificationService = app(\App\Services\NotificationService::class);
+            foreach ($jadwal->siswa as $siswa) {
+                $notificationService->notifyJadwalUjianKhusus($siswa, $jadwal);
+            }
+        }
 
         $status = $jadwal->is_active ? 'diaktifkan' : 'dinonaktifkan';
         $this->dispatch('alert', message: "Jadwal berhasil $status", type: 'success');
@@ -143,6 +150,12 @@ class JadwalUjianKhususPage extends Component
             if (!$this->selectedJadwal->siswa()->where('user_id', $userId)->exists()) {
                 $this->selectedJadwal->siswa()->attach($userId);
                 $this->selectedJadwal->load('siswa');
+                
+                $user = User::findOrFail($userId);
+                if ($this->selectedJadwal->is_active) {
+                    app(\App\Services\NotificationService::class)->notifyJadwalUjianKhusus($user, $this->selectedJadwal);
+                }
+
                 $this->dispatch('alert', message: 'Siswa berhasil ditambahkan', type: 'success');
             } else {
                 $this->dispatch('alert', message: 'Siswa sudah terdaftar', type: 'warning');

@@ -30,7 +30,7 @@
                         <h2 class="text-lg font-semibold text-orange-800">Jadwal Ujian Khusus Aktif</h2>
                         @foreach($activeUrgentSchedules as $schedule)
                         <p class="text-sm text-orange-600">
-                            {{ $schedule->nama }} - sampai {{ $schedule->waktu_selesai->format('d M Y H:i') }}
+                            {{ $schedule->nama }} - {{ $schedule->waktu_mulai->format('d M Y H:i') }} sampai {{ $schedule->waktu_selesai->format('d M Y H:i') }}
                         </p>
                         @endforeach
                     </div>

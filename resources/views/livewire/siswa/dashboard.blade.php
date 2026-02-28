@@ -78,6 +78,44 @@
         </div>
     </div>
 
+    <!-- Special Exam Schedule Alert -->
+    @if(count($activeSchedules) > 0)
+    <div class="mt-6">
+        @foreach($activeSchedules as $schedule)
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm mb-4 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <i class="ri-alarm-warning-fill text-6xl text-red-500"></i>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="ri-error-warning-fill text-red-500 text-xl"></i>
+                </div>
+                <div class="ml-3 z-10">
+                    <h3 class="text-sm font-bold text-red-800">
+                        PEMBERITAHUAN PENTING: JADWAL UJIAN KHUSUS
+                    </h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <p>Anda diwajibkan mengikuti <strong>{{ $schedule->nama }}</strong>.</p>
+                        @if($schedule->deskripsi)
+                            <p class="mt-1 text-xs">{{ $schedule->deskripsi }}</p>
+                        @endif
+                        <p class="mt-1 font-semibold">
+                            Waktu: {{ \Carbon\Carbon::parse($schedule->waktu_mulai)->format('d M Y, H:i') }} 
+                            s/d {{ \Carbon\Carbon::parse($schedule->waktu_selesai)->format('d M Y, H:i') }}
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('siswa.informasi-tes') }}" class="text-xs font-bold bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 inline-block">
+                            Lihat Menu Evaluasi / Informasi Tes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @endif
+
     <!-- Progress Cards -->
     <div id="tour-progress-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
         <div id="tour-data-siswa">

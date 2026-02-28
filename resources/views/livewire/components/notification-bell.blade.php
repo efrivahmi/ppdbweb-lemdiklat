@@ -51,9 +51,9 @@
         </div>
 
         {{-- Notifications List --}}
-        <div class="max-h-80 overflow-y-auto">
+        <div class="max-h-[25rem] overflow-y-auto w-full">
             @forelse($notifications as $notification)
-                <div class="px-4 py-3 border-b border-gray-100 hover:bg-lime-50 transition-colors">
+                <div x-data="{ expanded: false }" class="px-4 py-3 border-b border-gray-100 hover:bg-lime-50 transition-colors {{ is_null($notification['read_at']) ? 'bg-blue-50/20' : '' }}">
                     <div class="flex items-start gap-3">
                         {{-- Icon --}}
                         <div @class([
@@ -77,9 +77,26 @@
 
                         {{-- Content --}}
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-medium text-lime-600">{{ $notification['title'] }}</p>
-                            <p class="text-sm text-gray-700 truncate">{{ $notification['message'] }}</p>
-                            <p class="text-xs text-gray-400 mt-1">
+                            <p class="text-xs font-semibold {{ is_null($notification['read_at']) ? 'text-gray-900' : 'text-lime-700' }}">{{ $notification['title'] }}</p>
+                            
+                            <div class="mt-1 text-sm text-gray-700 leading-snug break-words relative">
+                                <p :class="expanded ? '' : 'line-clamp-2'">{{ $notification['message'] }}</p>
+                                @if(strlen($notification['message']) > 90)
+                                    <button @click.prevent="expanded = !expanded" class="text-xs text-blue-600 hover:text-blue-800 font-medium inline-block mt-1 focus:outline-none z-10 relative">
+                                        <span x-show="!expanded">Selengkapnya</span>
+                                        <span x-show="expanded" x-cloak>Tutup</span>
+                                    </button>
+                                @endif
+                            </div>
+
+                            {{-- Action Button --}}
+                            @if(!empty($notification['action_url']))
+                                <a href="{{ $notification['action_url'] }}" class="inline-block mt-2 px-3 py-1 bg-lime-100 text-lime-700 hover:bg-lime-200 text-xs font-medium rounded-md transition-colors w-max">
+                                    Lihat Detail &rarr;
+                                </a>
+                            @endif
+
+                            <p class="text-[11px] text-gray-400 mt-1">
                                 {{ \Carbon\Carbon::parse($notification['timestamp'])->diffForHumans() }}
                             </p>
                         </div>
@@ -94,10 +111,15 @@
             @endforelse
         </div>
 
-        {{-- Footer with Live Indicator --}}
-        <div class="px-4 py-2 bg-gray-50 border-t border-gray-100">
-            <div class="flex items-center justify-center gap-2">
-                <span class="flex h-2 w-2">
+        {{-- Footer with Live Indicator & See All Link --}}
+        <div class="bg-gray-50 border-t border-gray-100 flex flex-col">
+            @if(auth()->user()->isSiswa())
+            <a href="{{ route('siswa.notifications') }}" class="block px-4 py-3 text-center text-sm text-lime-600 hover:text-lime-700 hover:bg-lime-50 font-medium transition-colors cursor-pointer border-b border-gray-100">
+                Lihat Semua Notifikasi
+            </a>
+            @endif
+            <div class="px-4 py-2 flex items-center justify-center gap-2">
+                <span class="flex h-2 w-2 relative">
                     <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-lime-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
                 </span>

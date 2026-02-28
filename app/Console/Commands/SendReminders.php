@@ -28,8 +28,9 @@ class SendReminders extends Command
         $this->info("Type: {$type} | Dry Run: " . ($dryRun ? 'Yes' : 'No'));
         $this->newLine();
 
-        // Get all students with incomplete registrations
+        // Get all students with incomplete registrations and no updates for > 1 day
         $students = User::where('role', 'siswa')
+            ->where('updated_at', '<', now()->subDay())
             ->with(['dataMurid', 'dataOrangTua', 'berkasMurid', 'buktiTransfer'])
             ->get();
 
@@ -72,10 +73,14 @@ class SendReminders extends Command
             $this->line("   Missing: " . implode(', ', $missingData));
 
             if (!$dryRun) {
+                // Send WhatsApp reminder if possible
                 $notificationService->sendDataReminder($student, $missingData);
-                $this->info("   ✅ Reminder sent!");
+                // Send Notification Bell reminder
+                $notificationService->sendBellDataReminder($student, $missingData);
+                
+                $this->info("   ✅ Reminders sent (WA & Bell)!");
             } else {
-                $this->comment("   [DRY RUN] Would send reminder");
+                $this->comment("   [DRY RUN] Would send reminders (WA & Bell)");
             }
 
             $sentCount++;

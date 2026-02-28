@@ -14,9 +14,17 @@ use Livewire\Attributes\Layout;
 class InformasiTes extends Component
 {
     public $jalurData = [];
+    public $hasUrgentSchedule = false;
+    public $activeUrgentSchedules = [];
+    public $gelombangActive = null;
 
     public function mount()
     {
+        $user = Auth::user();
+        $this->hasUrgentSchedule = $user->hasActiveUrgentSchedule();
+        $this->activeUrgentSchedules = $user->getActiveUrgentSchedules();
+        $this->gelombangActive = \App\Models\GelombangPendaftaran::aktif()->first();
+
         $this->loadPendaftaranData();
     }
 
