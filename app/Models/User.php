@@ -177,31 +177,30 @@ class User extends Authenticatable
      */
     public function jadwalUjianKhusus()
     {
-        return $this->belongsToMany(JadwalUjianKhusus::class, 'siswa_jadwal_ujian_khusus');
+        return $this->belongsToMany(JadwalUjianKhusus::class, 'siswa_jadwal_ujian_khusus')
+                    ->withTimestamps();
     }
 
     /**
-     * Check if student has any active urgent schedule right now
+     * Check if student has any active urgent schedule right now or in the future
      */
     public function hasActiveUrgentSchedule(): bool
     {
         $now = now();
         return $this->jadwalUjianKhusus()
             ->where('is_active', true)
-            ->where('waktu_mulai', '<=', $now)
             ->where('waktu_selesai', '>=', $now)
             ->exists();
     }
 
     /**
-     * Get active urgent schedules for this student
+     * Get active urgent schedules for this student (ongoing and upcoming)
      */
     public function getActiveUrgentSchedules()
     {
         $now = now();
         return $this->jadwalUjianKhusus()
             ->where('is_active', true)
-            ->where('waktu_mulai', '<=', $now)
             ->where('waktu_selesai', '>=', $now)
             ->get();
     }

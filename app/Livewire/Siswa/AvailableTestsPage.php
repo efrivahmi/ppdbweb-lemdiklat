@@ -51,8 +51,12 @@ class AvailableTestsPage extends Component
         $this->hasUrgentSchedule = $user->hasActiveUrgentSchedule();
         $this->activeUrgentSchedules = $user->getActiveUrgentSchedules();
 
-        // Can access test if: payment approved AND (regular schedule active OR has urgent schedule)
-        $this->canAccessTest = $this->paymentApproved && ($this->regularScheduleActive || $this->hasUrgentSchedule);
+        $isUrgentScheduleStarted = $this->activeUrgentSchedules->contains(function ($schedule) {
+            return $schedule->waktu_mulai <= now() && $schedule->waktu_selesai >= now();
+        });
+
+        // Can access test if: payment approved AND (regular schedule active OR urgent schedule is ACTIVE now)
+        $this->canAccessTest = $this->paymentApproved && ($this->regularScheduleActive || $isUrgentScheduleStarted);
 
         $this->userRegistration = PendaftaranMurid::with('jalurPendaftaran')
             ->where('user_id', $user->id)

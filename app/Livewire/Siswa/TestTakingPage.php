@@ -61,11 +61,15 @@ class TestTakingPage extends Component
         }
 
         // Schedule check only applies for students who haven't taken the test yet
-        $hasUrgentSchedule = $user->hasActiveUrgentSchedule();
+        $activeUrgentSchedules = $user->getActiveUrgentSchedules();
+        $hasStartedUrgentSchedule = $activeUrgentSchedules->contains(function ($schedule) {
+            return $schedule->waktu_mulai <= now() && $schedule->waktu_selesai >= now();
+        });
+
         $gelombangActive = GelombangPendaftaran::aktif()->first();
         $regularScheduleActive = $gelombangActive?->isUjianAktif() ?? false;
 
-        if (!$regularScheduleActive && !$hasUrgentSchedule) {
+        if (!$regularScheduleActive && !$hasStartedUrgentSchedule) {
             session()->flash('error', 'Waktu ujian belum dimulai. Silakan tunggu jadwal ujian atau hubungi admin.');
             return redirect()->route('siswa.tests.index');
         }
