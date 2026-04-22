@@ -6,7 +6,11 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Pendaftaran\PendaftaranMurid;
 use App\Models\Pendaftaran\Jurusan;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 
+#[Layout('layouts.admin')]
+#[Title('Rekapitulasi PPDB')]
 class Recapitulation extends Component
 {
     public function render()
