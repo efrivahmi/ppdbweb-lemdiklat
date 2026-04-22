@@ -13,32 +13,44 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportController extends Controller
 {
-    public function excel()
+    private function applyDateFilter($query, $period)
     {
-        return Excel::download(new RecapitulationExport, 'rekapitulasi-ppdb.xlsx');
+        $now = now();
+        return match($period) {
+            'this_semester' => $query->where('created_at', '>=', $now->copy()->subMonths(6)),
+            'last_semester' => $query->whereBetween('created_at', [$now->copy()->subMonths(12), $now->copy()->subMonths(6)]),
+            'this_month'    => $query->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year),
+            'last_month'    => $query->whereMonth('created_at', $now->copy()->subMonth()->month)->whereYear('created_at', $now->copy()->subMonth()->year),
+            default         => $query
+        };
     }
 
-    public function pdf()
+    public function excel(Request $request)
     {
-        $totalAccounts = User::where('role', 'calon_siswa')->count();
-        $totalApplicants = PendaftaranMurid::count();
+        return Excel::download(new RecapitulationExport($request->query('period', 'all')), 'rekapitulasi-ppdb.xlsx');
+    }
+
+    public function pdf(Request $request)
+    {
+        $period = $request->query('period', 'all');
+
+        $totalAccounts = $this->applyDateFilter(User::where('role', 'siswa'), $period)->count();
+        $totalApplicants = $this->applyDateFilter(PendaftaranMurid::query(), $period)->count();
         
         $stats = [
-            'account_only' => User::where('role', 'calon_siswa')->doesntHave('pendaftaranMurids')->count(),
-            'pending'      => PendaftaranMurid::where('status', 'pending')->count(),
-            'payment'      => PendaftaranMurid::where('status', 'menunggu_pembayaran')->count(),
-            'accepted'     => PendaftaranMurid::where('status', 'acc')->count(),
-            'rejected'     => PendaftaranMurid::where('status', 'ditolak')->count(),
+            'account_only' => $this->applyDateFilter(User::where('role', 'siswa')->doesntHave('pendaftaranMurids'), $period)->count(),
+            'pending'      => $this->applyDateFilter(PendaftaranMurid::where('status', 'pending'), $period)->count(),
+            'accepted'     => $this->applyDateFilter(PendaftaranMurid::where('status', 'diterima'), $period)->count(),
+            'rejected'     => $this->applyDateFilter(PendaftaranMurid::where('status', 'ditolak'), $period)->count(),
             'total'        => $totalApplicants,
             'conversion'   => $totalAccounts > 0 ? round(($totalApplicants / $totalAccounts) * 100, 1) : 0,
         ];
 
         $majorRecap = Jurusan::withCount([
-            'pendaftaranMurids as total_applicants',
-            'pendaftaranMurids as pending_count' => fn($q) => $q->where('status', 'pending'),
-            'pendaftaranMurids as payment_count' => fn($q) => $q->where('status', 'menunggu_pembayaran'),
-            'pendaftaranMurids as accepted_count' => fn($q) => $q->where('status', 'acc'),
-            'pendaftaranMurids as rejected_count' => fn($q) => $q->where('status', 'ditolak'),
+            'pendaftaranMurids as total_applicants' => fn($q) => $this->applyDateFilter($q, $period),
+            'pendaftaranMurids as pending_count'    => fn($q) => $this->applyDateFilter($q->where('status', 'pending'), $period),
+            'pendaftaranMurids as accepted_count'   => fn($q) => $this->applyDateFilter($q->where('status', 'diterima'), $period),
+            'pendaftaranMurids as rejected_count'   => fn($q) => $this->applyDateFilter($q->where('status', 'ditolak'), $period),
         ])->get();
 
         $pdf = Pdf::loadView('exports.recapitulation', [

@@ -45,11 +45,7 @@
                 <td class="text-right">{{ $stats['pending'] }}</td>
             </tr>
             <tr>
-                <td>Menunggu Pembayaran</td>
-                <td class="text-right">{{ $stats['payment'] }}</td>
-            </tr>
-            <tr>
-                <td>Diterima (ACC)</td>
+                <td>Diterima</td>
                 <td class="text-right">{{ $stats['accepted'] }}</td>
             </tr>
             <tr>
@@ -65,7 +61,6 @@
                 <th>Jurusan</th>
                 <th class="text-center">Total</th>
                 <th class="text-center">Pending</th>
-                <th class="text-center">Payment</th>
                 <th class="text-center">Diterima</th>
                 <th class="text-center">Ditolak</th>
             </tr>
@@ -76,7 +71,6 @@
                 <td>{{ $item->nama_jurusan ?? $item->nama }}</td>
                 <td class="text-center">{{ $item->total_applicants }}</td>
                 <td class="text-center">{{ $item->pending_count }}</td>
-                <td class="text-center">{{ $item->payment_count }}</td>
                 <td class="text-center">{{ $item->accepted_count }}</td>
                 <td class="text-center">{{ $item->rejected_count }}</td>
             </tr>
