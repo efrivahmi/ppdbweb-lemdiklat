@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rekapitulasi PPDB</title>
+    <style>
+        body { font-family: sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-4 { margin-top: 1rem; }
+        .title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .subtitle { font-size: 14px; color: #555; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="title">Laporan Rekapitulasi PPDB</div>
+    <div class="subtitle">Dicetak pada: {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i') }}</div>
+
+    <table class="mb-4">
+        <thead>
+            <tr>
+                <th colspan="2">Statistik Pendaftar Global</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td width="50%">Total Akun (Hanya Akun)</td>
+                <td width="50%" class="text-right">{{ $stats['account_only'] }}</td>
+            </tr>
+            <tr>
+                <td>Total Pendaftar (Telah Isi Form)</td>
+                <td class="text-right">{{ $stats['total'] }}</td>
+            </tr>
+            <tr>
+                <td>Konversi Pendaftar</td>
+                <td class="text-right">{{ $stats['conversion'] }}%</td>
+            </tr>
+            <tr>
+                <td>Pending Verifikasi</td>
+                <td class="text-right">{{ $stats['pending'] }}</td>
+            </tr>
+            <tr>
+                <td>Menunggu Pembayaran</td>
+                <td class="text-right">{{ $stats['payment'] }}</td>
+            </tr>
+            <tr>
+                <td>Diterima (ACC)</td>
+                <td class="text-right">{{ $stats['accepted'] }}</td>
+            </tr>
+            <tr>
+                <td>Ditolak</td>
+                <td class="text-right">{{ $stats['rejected'] }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="mt-4">
+        <thead>
+            <tr>
+                <th>Jurusan</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Pending</th>
+                <th class="text-center">Payment</th>
+                <th class="text-center">Diterima</th>
+                <th class="text-center">Ditolak</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($majorRecap as $item)
+            <tr>
+                <td>{{ $item->nama_jurusan ?? $item->nama }}</td>
+                <td class="text-center">{{ $item->total_applicants }}</td>
+                <td class="text-center">{{ $item->pending_count }}</td>
+                <td class="text-center">{{ $item->payment_count }}</td>
+                <td class="text-center">{{ $item->accepted_count }}</td>
+                <td class="text-center">{{ $item->rejected_count }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+</body>
+</html>

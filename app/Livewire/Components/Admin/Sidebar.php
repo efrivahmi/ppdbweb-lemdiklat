@@ -63,6 +63,11 @@ class Sidebar extends Component
             'type' => 'folder',
             'children' => [
                 [
+                    'name' => 'Rekapitulasi PPDB',
+                    'url' => 'admin.recapitulation',
+                    'icon' => 'ri-bar-chart-box-line'
+                ],
+                [
                     'name' => 'Gelombang Pendaftaran',
                     'url' => 'admin.pendaftaran.gelombang',
                     'icon' => 'ri-calendar-schedule-line'
