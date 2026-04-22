@@ -288,7 +288,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.pendaftaran.detail', $reg->id) }}" class="inline-flex items-center justify-center w-8 h-8 text-white transition-colors bg-indigo-500 rounded-lg hover:bg-indigo-600" title="Lihat Detail Pendaftaran">
+                            <a href="{{ route('admin.siswa.detail', $reg->user_id) }}" class="inline-flex items-center justify-center w-8 h-8 text-white transition-colors bg-indigo-500 rounded-lg hover:bg-indigo-600" title="Lihat Detail Siswa">
                                 <i class="ri-eye-line"></i>
                             </a>
                             @if($reg->user && $reg->user->telp)
