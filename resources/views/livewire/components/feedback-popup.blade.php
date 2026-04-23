@@ -28,17 +28,17 @@
                 <div class="flex justify-between max-w-xs mx-auto mb-8">
                     @php
                         $emojis = [
-                            1 => ['icon' => 'ri-emotion-sad-fill', 'base' => 'text-rose-300', 'active' => 'text-rose-500 bg-rose-50 border-rose-200'],
-                            2 => ['icon' => 'ri-emotion-unhappy-fill', 'base' => 'text-orange-300', 'active' => 'text-orange-500 bg-orange-50 border-orange-200'],
-                            3 => ['icon' => 'ri-emotion-normal-fill', 'base' => 'text-amber-300', 'active' => 'text-amber-500 bg-amber-50 border-amber-200'],
-                            4 => ['icon' => 'ri-emotion-happy-fill', 'base' => 'text-lime-300', 'active' => 'text-lime-500 bg-lime-50 border-lime-200'],
-                            5 => ['icon' => 'ri-emotion-laugh-fill', 'base' => 'text-emerald-300', 'active' => 'text-emerald-500 bg-emerald-50 border-emerald-200'],
+                            1 => ['icon' => 'ri-emotion-sad-fill', 'color' => 'text-rose-500', 'active' => 'scale-110 bg-rose-50 border-rose-200', 'hover' => 'hover:bg-rose-50 hover:border-rose-200'],
+                            2 => ['icon' => 'ri-emotion-unhappy-fill', 'color' => 'text-orange-500', 'active' => 'scale-110 bg-orange-50 border-orange-200', 'hover' => 'hover:bg-orange-50 hover:border-orange-200'],
+                            3 => ['icon' => 'ri-emotion-normal-fill', 'color' => 'text-amber-500', 'active' => 'scale-110 bg-amber-50 border-amber-200', 'hover' => 'hover:bg-amber-50 hover:border-amber-200'],
+                            4 => ['icon' => 'ri-emotion-happy-fill', 'color' => 'text-lime-500', 'active' => 'scale-110 bg-lime-50 border-lime-200', 'hover' => 'hover:bg-lime-50 hover:border-lime-200'],
+                            5 => ['icon' => 'ri-emotion-laugh-fill', 'color' => 'text-emerald-500', 'active' => 'scale-110 bg-emerald-50 border-emerald-200', 'hover' => 'hover:bg-emerald-50 hover:border-emerald-200'],
                         ];
                     @endphp
 
                     @foreach($emojis as $value => $emoji)
-                    <button type="button" wire:click="$set('rating', {{ $value }})" class="flex items-center justify-center w-12 h-12 transition-all duration-300 border-2 rounded-full hover:scale-110 {{ $rating == $value ? $emoji['active'] : 'border-transparent hover:bg-slate-50' }}">
-                        <i class="text-3xl {{ $emoji['icon'] }} {{ $rating == $value ? str_replace('bg-', 'text-', explode(' ', $emoji['active'])[0]) : $emoji['base'] }} hover:opacity-100 transition-opacity"></i>
+                    <button type="button" wire:click="$set('rating', {{ $value }})" class="flex items-center justify-center w-12 h-12 transition-all duration-300 border-2 rounded-full hover:scale-110 {{ $rating == $value ? $emoji['active'] : 'border-transparent ' . $emoji['hover'] }}">
+                        <i class="text-3xl {{ $emoji['icon'] }} {{ $emoji['color'] }} {{ ($rating == 0 || $rating == $value) ? 'opacity-100' : 'opacity-40 hover:opacity-100' }} transition-opacity"></i>
                     </button>
                     @endforeach
                 </div>
