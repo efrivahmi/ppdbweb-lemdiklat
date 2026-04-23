@@ -61,7 +61,7 @@ class ExportController extends Controller
             'stats' => $stats,
             'majorRecap' => $majorRecap,
             'registeredUsers' => $registeredUsers
-        ]);
+        ])->setPaper('A4', 'landscape');
         
         return $pdf->download('rekapitulasi-ppdb.pdf');
     }

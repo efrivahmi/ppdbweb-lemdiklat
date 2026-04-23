@@ -252,7 +252,7 @@
             </div>
             @if ($accountOnlyUsers->hasPages())
             <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
-                {{ $accountOnlyUsers->links('vendor.pagination.tailwind') }}
+                {{ $accountOnlyUsers->links() }}
             </div>
             @endif
         </div>
@@ -325,7 +325,7 @@
         </div>
         @if ($registeredUsers->hasPages())
         <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
-            {{ $registeredUsers->links('vendor.pagination.tailwind') }}
+            {{ $registeredUsers->links() }}
         </div>
         @endif
     </div>

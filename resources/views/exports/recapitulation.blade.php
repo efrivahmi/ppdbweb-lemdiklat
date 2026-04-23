@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <title>Rekapitulasi PPDB</title>
     <style>
-        body { font-family: sans-serif; font-size: 12px; }
+        @page { margin: 25px; }
+        body { font-family: sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
         th { background-color: #f2f2f2; font-weight: bold; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .mb-4 { margin-bottom: 1rem; }
         .mt-4 { margin-top: 1rem; }
-        .title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .subtitle { font-size: 14px; color: #555; margin-bottom: 20px; }
+        .title { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+        .subtitle { font-size: 12px; color: #555; margin-bottom: 20px; }
     </style>
 </head>
 <body>
