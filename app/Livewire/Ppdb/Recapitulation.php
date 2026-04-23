@@ -9,16 +9,20 @@ use App\Models\Pendaftaran\Jurusan;
 use App\Models\Pendaftaran\JalurPendaftaran;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\WithPagination;
 
 #[Layout('layouts.admin')]
 #[Title('Rekapitulasi PPDB')]
 class Recapitulation extends Component
 {
+    use WithPagination;
+
     public $filterPeriod = 'all';
 
     public function updatedFilterPeriod()
     {
-        // Component will re-render automatically
+        $this->resetPage('accountPage');
+        $this->resetPage('registeredPage');
     }
 
     private function applyDateFilter($query)
@@ -89,12 +93,12 @@ class Recapitulation extends Component
         // 5. Account Only Users List
         $accountOnlyUsers = $this->applyDateFilter(
             User::where('role', 'siswa')->doesntHave('pendaftaranMurids')
-        )->latest()->get();
+        )->latest()->paginate(10, ['*'], 'accountPage');
 
         // 6. Registered Users List
         $registeredUsers = $this->applyDateFilter(
             PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran'])
-        )->latest()->get();
+        )->latest()->paginate(10, ['*'], 'registeredPage');
 
         return view('livewire.ppdb.recapitulation', [
             'stats' => $stats,

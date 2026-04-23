@@ -53,9 +53,14 @@ class ExportController extends Controller
             'pendaftaranMurids as rejected_count'   => fn($q) => $this->applyDateFilter($q->where('status', 'ditolak'), $period),
         ])->get();
 
+        $registeredUsers = $this->applyDateFilter(
+            PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran'])
+        )->latest()->get();
+
         $pdf = Pdf::loadView('exports.recapitulation', [
             'stats' => $stats,
-            'majorRecap' => $majorRecap
+            'majorRecap' => $majorRecap,
+            'registeredUsers' => $registeredUsers
         ]);
         
         return $pdf->download('rekapitulasi-ppdb.pdf');

@@ -78,5 +78,41 @@
         </tbody>
     </table>
 
+    <table class="mt-4">
+        <thead>
+            <tr>
+                <th colspan="7">Daftar Siswa Terdaftar</th>
+            </tr>
+            <tr>
+                <th>No</th>
+                <th>Nama Lengkap</th>
+                <th>Tanggal Daftar</th>
+                <th>Email</th>
+                <th>No. Telp</th>
+                <th>Jalur Pendaftaran</th>
+                <th>Jurusan</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($registeredUsers as $index => $reg)
+            <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ $reg->user->name ?? '-' }}</td>
+                <td>{{ $reg->created_at->format('d M Y') }}</td>
+                <td>{{ $reg->user->email ?? '-' }}</td>
+                <td>{{ $reg->user->telp ?? '-' }}</td>
+                <td>{{ $reg->jalurPendaftaran->nama ?? '-' }}</td>
+                <td>{{ $reg->jurusan->nama ?? '-' }}</td>
+                <td class="text-center">{{ ucfirst($reg->status) }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="8" class="text-center">Tidak ada data siswa terdaftar.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
 </body>
 </html>

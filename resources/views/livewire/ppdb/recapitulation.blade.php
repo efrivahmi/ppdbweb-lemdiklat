@@ -21,8 +21,11 @@
                     <option value="this_month">Bulan Ini</option>
                     <option value="last_month">Bulan Lalu</option>
                 </select>
-                <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
+                <div wire:loading.remove wire:target="filterPeriod" class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
                     <i class="ri-calendar-2-line"></i>
+                </div>
+                <div wire:loading wire:target="filterPeriod" class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-indigo-500">
+                    <div class="w-4 h-4 border-2 border-indigo-500 rounded-full border-t-transparent animate-spin"></div>
                 </div>
             </div>
 
@@ -239,6 +242,11 @@
                     </tbody>
                 </table>
             </div>
+            @if ($accountOnlyUsers->hasPages())
+            <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
+                {{ $accountOnlyUsers->links('vendor.pagination.tailwind') }}
+            </div>
+            @endif
         </div>
     </div>
 
@@ -308,6 +316,11 @@
                 </tbody>
             </table>
         </div>
+        @if ($registeredUsers->hasPages())
+        <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
+            {{ $registeredUsers->links('vendor.pagination.tailwind') }}
+        </div>
+        @endif
     </div>
 
     <!-- Chart Script Initialization -->
@@ -370,6 +383,18 @@
         });
     </script>
     @endscript
+
+    <!-- Full Page Loading Overlay -->
+    <div wire:loading wire:target="filterPeriod" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm">
+        <div class="flex flex-col items-center p-8 bg-white shadow-2xl rounded-2xl border border-gray-100">
+            <div class="relative flex items-center justify-center w-16 h-16">
+                <div class="absolute w-16 h-16 border-4 border-indigo-100 rounded-full"></div>
+                <div class="absolute w-16 h-16 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-slate-800">Menyinkronkan Data</h3>
+            <p class="mt-1 text-sm text-slate-500">Memuat statistik terbaru...</p>
+        </div>
+    </div>
 </div>
 
 @push('scripts')

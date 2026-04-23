@@ -53,17 +53,37 @@ class RecapitulationExport implements FromView, ShouldAutoSize, WithStyles
             'pendaftaranMurids as rejected_count'   => fn($q) => $this->applyDateFilter($q->where('status', 'ditolak')),
         ])->get();
 
+        $registeredUsers = $this->applyDateFilter(
+            PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran'])
+        )->latest()->get();
+
         return view('exports.recapitulation', [
             'stats' => $stats,
-            'majorRecap' => $majorRecap
+            'majorRecap' => $majorRecap,
+            'registeredUsers' => $registeredUsers
         ]);
     }
 
     public function styles(Worksheet $sheet)
     {
-        return [
-            // Style the first row as bold text.
-            1    => ['font' => ['bold' => true]],
-        ];
+        // Apply borders to all filled cells
+        $sheet->getStyle($sheet->calculateWorksheetDimension())->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+
+        // Style the Title Row
+        $sheet->getStyle('A1')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 14],
+        ]);
+
+        return [];
     }
 }
