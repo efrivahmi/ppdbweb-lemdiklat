@@ -54,7 +54,7 @@ class ExportController extends Controller
         ])->get();
 
         $registeredUsers = $this->applyDateFilter(
-            PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran'])
+            PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran']), $period
         )->latest()->get();
 
         $pdf = Pdf::loadView('exports.recapitulation', [

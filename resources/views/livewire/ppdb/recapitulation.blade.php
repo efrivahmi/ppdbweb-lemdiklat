@@ -45,7 +45,17 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 gap-5 mb-8 sm:grid-cols-2 lg:grid-cols-5" id="tour-stats">
+    <div class="grid grid-cols-2 gap-5 mb-8 lg:grid-cols-3 xl:grid-cols-6" id="tour-stats">
+        <!-- Card 0: Total Accounts -->
+        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-indigo-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
+                <i class="text-6xl ri-user-star-line text-indigo-500"></i>
+            </div>
+            <p class="text-xs font-bold tracking-wider uppercase text-indigo-600">Total Accounts</p>
+            <p class="mt-3 text-4xl font-extrabold text-indigo-700">{{ $stats['total_accounts'] }}</p>
+            <p class="mt-3 text-xs font-medium text-indigo-500/70">Seluruh Akun Terdaftar</p>
+        </div>
+
         <!-- Card 1 -->
         <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
             <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
@@ -186,18 +196,16 @@
         </div>
     </div>
 
-    <!-- Chart & Account Only Section -->
-    <div class="grid grid-cols-1 gap-8 mt-8 lg:grid-cols-2">
-        <!-- Monthly Trend Chart -->
-        <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-chart">
-            <h3 class="mb-4 text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-bar-chart-2-fill"></i>Monthly Registration Trend</h3>
-            <div class="relative h-72">
-                <canvas id="monthlyTrendChart"></canvas>
-            </div>
+    <!-- Chart Section -->
+    <div class="mt-8 p-6 bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-chart">
+        <h3 class="mb-4 text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-bar-chart-2-fill"></i>Monthly Registration Trend</h3>
+        <div class="relative h-72">
+            <canvas id="monthlyTrendChart"></canvas>
         </div>
+    </div>
 
-        <!-- Account Only Users -->
-        <div class="p-0 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-account-only">
+    <!-- Account Only Section -->
+    <div class="mt-8 p-0 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-account-only">
             <div class="px-6 py-5 border-b border-gray-100 bg-slate-50/50">
                 <h3 class="text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-user-unfollow-line"></i>Account Only Students ({{ $accountOnlyUsers->count() }})</h3>
                 <p class="mt-1 text-sm text-slate-500">Siswa yang sudah mendaftar akun tapi belum mengisi form pendaftaran.</p>
@@ -248,7 +256,6 @@
             </div>
             @endif
         </div>
-    </div>
 
     <!-- Registered Users List -->
     <div class="mt-8 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-registered-users">

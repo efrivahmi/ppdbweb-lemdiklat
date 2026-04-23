@@ -44,6 +44,7 @@ class Recapitulation extends Component
         $totalApplicants = $this->applyDateFilter(PendaftaranMurid::query())->count();
         
         $stats = [
+            'total_accounts' => $totalAccounts,
             'account_only' => $this->applyDateFilter(User::where('role', 'siswa')->doesntHave('pendaftaranMurids'))->count(),
             'pending'      => $this->applyDateFilter(PendaftaranMurid::where('status', 'pending'))->count(),
             'accepted'     => $this->applyDateFilter(PendaftaranMurid::where('status', 'diterima'))->count(),
