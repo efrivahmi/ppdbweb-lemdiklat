@@ -41,8 +41,8 @@
                                     1 => ['icon' => 'ri-emotion-sad-fill', 'color' => 'text-rose-500'],
                                     2 => ['icon' => 'ri-emotion-unhappy-fill', 'color' => 'text-orange-500'],
                                     3 => ['icon' => 'ri-emotion-normal-fill', 'color' => 'text-amber-500'],
-                                    4 => ['icon' => 'ri-emotion-smile-fill', 'color' => 'text-lime-500'],
-                                    5 => ['icon' => 'ri-emotion-happy-fill', 'color' => 'text-emerald-500'],
+                                    4 => ['icon' => 'ri-emotion-happy-fill', 'color' => 'text-lime-500'],
+                                    5 => ['icon' => 'ri-emotion-laugh-fill', 'color' => 'text-emerald-500'],
                                 ];
                                 $emoji = $emojiMap[$feedback->rating] ?? ['icon' => 'ri-question-fill', 'color' => 'text-slate-400'];
                             @endphp

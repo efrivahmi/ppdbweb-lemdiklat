@@ -28,21 +28,18 @@
                 <div class="flex justify-between max-w-xs mx-auto mb-8">
                     @php
                         $emojis = [
-                            1 => ['icon' => 'ri-emotion-sad-line', 'color' => 'text-rose-500', 'bg' => 'peer-checked:bg-rose-50 peer-checked:text-rose-600 peer-checked:border-rose-200'],
-                            2 => ['icon' => 'ri-emotion-unhappy-line', 'color' => 'text-orange-500', 'bg' => 'peer-checked:bg-orange-50 peer-checked:text-orange-600 peer-checked:border-orange-200'],
-                            3 => ['icon' => 'ri-emotion-normal-line', 'color' => 'text-amber-500', 'bg' => 'peer-checked:bg-amber-50 peer-checked:text-amber-600 peer-checked:border-amber-200'],
-                            4 => ['icon' => 'ri-emotion-smile-line', 'color' => 'text-lime-500', 'bg' => 'peer-checked:bg-lime-50 peer-checked:text-lime-600 peer-checked:border-lime-200'],
-                            5 => ['icon' => 'ri-emotion-happy-line', 'color' => 'text-emerald-500', 'bg' => 'peer-checked:bg-emerald-50 peer-checked:text-emerald-600 peer-checked:border-emerald-200'],
+                            1 => ['icon' => 'ri-emotion-sad-fill', 'base' => 'text-rose-300', 'active' => 'text-rose-500 bg-rose-50 border-rose-200'],
+                            2 => ['icon' => 'ri-emotion-unhappy-fill', 'base' => 'text-orange-300', 'active' => 'text-orange-500 bg-orange-50 border-orange-200'],
+                            3 => ['icon' => 'ri-emotion-normal-fill', 'base' => 'text-amber-300', 'active' => 'text-amber-500 bg-amber-50 border-amber-200'],
+                            4 => ['icon' => 'ri-emotion-happy-fill', 'base' => 'text-lime-300', 'active' => 'text-lime-500 bg-lime-50 border-lime-200'],
+                            5 => ['icon' => 'ri-emotion-laugh-fill', 'base' => 'text-emerald-300', 'active' => 'text-emerald-500 bg-emerald-50 border-emerald-200'],
                         ];
                     @endphp
 
                     @foreach($emojis as $value => $emoji)
-                    <label class="relative cursor-pointer group">
-                        <input type="radio" wire:model="rating" value="{{ $value }}" class="sr-only peer">
-                        <div class="flex items-center justify-center w-12 h-12 transition-all duration-300 border-2 border-transparent rounded-full hover:scale-110 peer-checked:scale-110 {{ $emoji['bg'] }} hover:bg-slate-50">
-                            <i class="text-3xl {{ $emoji['icon'] }} {{ $emoji['color'] }} opacity-50 group-hover:opacity-100 peer-checked:opacity-100 transition-opacity"></i>
-                        </div>
-                    </label>
+                    <button type="button" wire:click="$set('rating', {{ $value }})" class="flex items-center justify-center w-12 h-12 transition-all duration-300 border-2 rounded-full hover:scale-110 {{ $rating == $value ? $emoji['active'] : 'border-transparent hover:bg-slate-50' }}">
+                        <i class="text-3xl {{ $emoji['icon'] }} {{ $rating == $value ? str_replace('bg-', 'text-', explode(' ', $emoji['active'])[0]) : $emoji['base'] }} hover:opacity-100 transition-opacity"></i>
+                    </button>
                     @endforeach
                 </div>
                 
