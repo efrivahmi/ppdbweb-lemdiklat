@@ -149,6 +149,9 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/export/excel', [\App\Http\Controllers\ExportController::class, 'excel'])->name('ppdb.export.excel');
     Route::get('/export/pdf', [\App\Http\Controllers\ExportController::class, 'pdf'])->name('ppdb.export.pdf');
 
+    // Feedback
+    Route::get('/feedback', \App\Livewire\Admin\FeedbackList::class)->name('admin.feedback.index');
+
     // Pembayaran
     Route::get('/pembayaran/bukti-transfer', BuktiTransferPage::class)->name('admin.pembayaran.bukti-transfer');
     Route::get('/pembayaran/bank-account', BankAccountPage::class)->name('admin.pembayaran.bank-account');

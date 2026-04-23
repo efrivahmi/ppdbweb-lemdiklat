@@ -25,6 +25,14 @@
         </div>
     </div>
 
+    @livewire('components.feedback-popup')
+    
+    <!-- Floating Feedback Button -->
+    <button onclick="Livewire.dispatch('open-feedback-popup')" class="fixed z-50 flex items-center justify-center p-3.5 text-white transition-all duration-300 shadow-2xl rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 bottom-6 right-6 hover:scale-105 hover:shadow-indigo-500/50 group">
+        <i class="text-2xl ri-chat-smile-3-line"></i>
+        <span class="max-w-0 overflow-hidden text-sm font-bold tracking-wide whitespace-nowrap transition-all duration-500 group-hover:max-w-xs group-hover:pl-2 group-hover:pr-1">Give Feedback</span>
+    </button>
+
     @livewireScripts
     @stack('scripts')
 </body>

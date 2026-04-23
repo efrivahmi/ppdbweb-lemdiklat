@@ -309,6 +309,7 @@ class FormulirPendaftaranPage extends Component
                 ]);
                 
                 $message = 'Program studi berhasil ditambahkan.';
+                session()->flash('show_feedback_popup', true);
             }
 
             // Upload bukti prestasi jika ada dan jalur adalah Prestasi

@@ -103,6 +103,11 @@ class Sidebar extends Component
                     'icon' => 'ri-check-double-line'
                 ],
                 [
+                    'name' => 'Review Feedback',
+                    'url' => 'admin.feedback.index',
+                    'icon' => 'ri-chat-smile-3-line'
+                ],
+                [
                     'name' => 'Akun Bank',
                     'url' => 'admin.pembayaran.bank-account',
                     'icon' => 'ri-bank-line'
@@ -304,7 +309,8 @@ class Sidebar extends Component
             if (
                 str_contains($this->currentPath, 'admin.pendaftaran') ||
                 str_contains($this->currentPath, 'admin.pembayaran') ||
-                str_contains($this->currentPath, 'admin.review-answers')
+                str_contains($this->currentPath, 'admin.review-answers') ||
+                str_contains($this->currentPath, 'admin.feedback')
             ) {
                 $this->expandedItems[] = 'pendaftaran';
             }
