@@ -22,6 +22,8 @@ class ReviewAnswersPage extends Component
     public $selectedTest = null;
     public $selectedUser = null;
     public $searchUser = '';
+    public $selectedUserIds = [];
+    public $selectAll = false;
     
     public function mount()
     {
@@ -34,6 +36,8 @@ class ReviewAnswersPage extends Component
         $this->selectedTestId = $testId;
         $this->selectedTest = CustomTest::findOrFail($testId);
         $this->currentView = 'users';
+        $this->selectedUserIds = [];
+        $this->selectAll = false;
         $this->resetPage();
     }
     
@@ -68,6 +72,43 @@ class ReviewAnswersPage extends Component
     public function updatingSearchUser()
     {
         $this->resetPage();
+        $this->selectedUserIds = [];
+        $this->selectAll = false;
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selectedUserIds = User::whereHas('customTestAnswers', function($q) {
+                $q->where('custom_test_id', $this->selectedTestId);
+            })
+            ->when($this->searchUser, function($q) {
+                $q->where('name', 'like', '%' . $this->searchUser . '%');
+            })
+            ->pluck('id')
+            ->map(fn($id) => (string)$id)
+            ->toArray();
+        } else {
+            $this->selectedUserIds = [];
+        }
+    }
+
+    public function updatedSelectedUserIds()
+    {
+        // If we manually uncheck one, uncheck the select all
+        $totalUsers = User::whereHas('customTestAnswers', function($q) {
+            $q->where('custom_test_id', $this->selectedTestId);
+        })
+        ->when($this->searchUser, function($q) {
+            $q->where('name', 'like', '%' . $this->searchUser . '%');
+        })
+        ->count();
+
+        if (count($this->selectedUserIds) < $totalUsers) {
+            $this->selectAll = false;
+        } elseif (count($this->selectedUserIds) == $totalUsers && $totalUsers > 0) {
+            $this->selectAll = true;
+        }
     }
     
     // Review Actions
@@ -191,7 +232,7 @@ class ReviewAnswersPage extends Component
         return CustomTest::with('mapel')
             ->withCount([
                 'answers as total_participants' => function($query) {
-                    $query->selectRaw('COUNT(DISTINCT user_id)');
+                    $query->select(\Illuminate\Support\Facades\DB::raw('count(distinct(user_id))'));
                 },
                 'answers as essay_pending' => function($query) {
                     $query->whereHas('customTestQuestion', function($q) {
@@ -249,7 +290,7 @@ class ReviewAnswersPage extends Component
             });
         }
         
-        return $query->latest()->paginate(15);
+        return $query->orderBy('name', 'asc')->paginate(15);
     }
     
     private function getUserAnswers()

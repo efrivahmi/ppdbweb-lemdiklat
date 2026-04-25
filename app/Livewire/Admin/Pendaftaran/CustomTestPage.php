@@ -134,6 +134,7 @@ class CustomTestPage extends Component
             $this->questionImages = [];
             foreach ($test->questions as $question) {
                 $this->questions[] = [
+                    'id' => $question->id,
                     'pertanyaan' => $question->pertanyaan,
                     'tipe_soal' => $question->tipe_soal,
                     'options' => $question->options ?? [],
@@ -176,16 +177,13 @@ class CustomTestPage extends Component
             if ($this->editMode) {
                 $test = CustomTest::findOrFail($this->selectedId);
                 $test->update($data);
-                $oldQuestions = $test->questions;
-                $test->questions()->delete();
                 $message = 'Custom test berhasil diperbarui';
             } else {
                 $test = CustomTest::create($data);
-                $oldQuestions = collect();
                 $message = 'Custom test berhasil ditambahkan';
             }
 
-            $this->saveQuestions($test, $oldQuestions);
+            $this->saveQuestions($test);
             $this->closeModal();
             $this->dispatch("alert", message: $message, type: "success");
             $this->resetPage();
@@ -221,8 +219,17 @@ class CustomTestPage extends Component
         }
     }
 
-    private function saveQuestions($test, $oldQuestions = null)
+    private function saveQuestions($test)
     {
+        $currentQuestionIds = collect($this->questions)->pluck('id')->filter()->toArray();
+        
+        // Delete questions that are no longer in the list
+        $questionsToDelete = $test->questions()->whereNotIn('id', $currentQuestionIds)->get();
+        foreach ($questionsToDelete as $q) {
+            if ($q->image) Storage::disk('public')->delete($q->image);
+            $q->delete();
+        }
+
         foreach ($this->questions as $index => $question) {
             $options = null;
             $jawaban_benar = null;
@@ -241,23 +248,17 @@ class CustomTestPage extends Component
                 }
             }
             
-            CustomTestQuestion::create([
-                'custom_test_id' => $test->id,
-                'pertanyaan' => trim($question['pertanyaan']),
-                'tipe_soal' => $question['tipe_soal'],
-                'image' => $imagePath,
-                'options' => $options,
-                'jawaban_benar' => $jawaban_benar,
-                'urutan' => $index + 1
-            ]);
-        }
-        
-        if ($oldQuestions) {
-            foreach ($oldQuestions as $oldQ) {
-                if ($oldQ->image && !collect($this->questions)->pluck('existing_image')->contains($oldQ->image)) {
-                    Storage::disk('public')->delete($oldQ->image);
-                }
-            }
+            $test->questions()->updateOrCreate(
+                ['id' => $question['id'] ?? null],
+                [
+                    'pertanyaan' => trim($question['pertanyaan']),
+                    'tipe_soal' => $question['tipe_soal'],
+                    'image' => $imagePath,
+                    'options' => $options,
+                    'jawaban_benar' => $jawaban_benar,
+                    'urutan' => $index + 1
+                ]
+            );
         }
     }
 

@@ -29,6 +29,11 @@ class CustomTest extends Model
         return $this->hasMany(CustomTestAnswer::class);
     }
 
+    public function participants()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'custom_test_answers', 'custom_test_id', 'user_id')->distinct();
+    }
+
     public function mapel()
     {
         return $this->belongsTo(\App\Models\Mapel::class);

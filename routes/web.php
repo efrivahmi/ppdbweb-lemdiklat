@@ -148,6 +148,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/pendaftaran/recapitulation', \App\Livewire\Ppdb\Recapitulation::class)->name('admin.recapitulation');
     Route::get('/export/excel', [\App\Http\Controllers\ExportController::class, 'excel'])->name('ppdb.export.excel');
     Route::get('/export/pdf', [\App\Http\Controllers\ExportController::class, 'pdf'])->name('ppdb.export.pdf');
+    Route::get('/export/test-results/{testId}', [\App\Http\Controllers\Admin\TestResultExportController::class, 'exportPdf'])->name('admin.export.test-results');
 
     // Feedback
     Route::get('/feedback', \App\Livewire\Admin\FeedbackList::class)->name('admin.feedback.index');

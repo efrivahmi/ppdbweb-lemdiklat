@@ -33,15 +33,31 @@
                 @endif
             </div>
             
-            <!-- Search for users view -->
+            <!-- Search and Export for users view -->
             @if($currentView === 'users')
-            <div class="w-full md:w-64">
-                <x-atoms.input
-                    type="search"
-                    wire:model.live="searchUser"
-                    placeholder="Cari siswa..."
-                    className="w-full"
-                />
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <div class="w-full md:w-64">
+                    <x-atoms.input
+                        type="search"
+                        wire:model.live="searchUser"
+                        placeholder="Cari siswa..."
+                        className="w-full"
+                    />
+                </div>
+                
+                @php
+                    $exportUrl = route('admin.export.test-results', $selectedTestId);
+                    if (count($selectedUserIds) > 0) {
+                        $exportUrl .= '?userIds=' . implode(',', $selectedUserIds);
+                    }
+                @endphp
+
+                <a href="{{ $exportUrl }}" 
+                   target="_blank"
+                   class="w-full sm:w-auto px-4 py-2.5 bg-rose-600 text-white text-sm font-semibold rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-200 flex items-center justify-center gap-2">
+                    <x-heroicon-o-document-arrow-down class="w-5 h-5" />
+                    <span>{{ count($selectedUserIds) > 0 ? 'Export Selected (' . count($selectedUserIds) . ')' : 'Export PDF' }}</span>
+                </a>
             </div>
             @endif
         </div>
@@ -69,6 +85,11 @@
                                         @endif
                                         
                                         <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                                            <div class="flex items-center gap-1">
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ $test->category === 'kuesioner_ortu' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }}">
+                                                    {{ $test->category === 'kuesioner_ortu' ? 'Kuesioner Ortu' : 'Test Murid' }}
+                                                </span>
+                                            </div>
                                             <div class="flex items-center gap-1">
                                                 <x-heroicon-o-users class="w-4 h-4" />
                                                 <span>{{ $test->total_participants }} siswa mengerjakan</span>
@@ -104,7 +125,11 @@
                                     />
                                     @endif
                                     
-                                    @if($test->essay_pending == 0 && $test->essay_reviewed == 0)
+                                    @php
+                                        $hasEssayQuestions = $test->questions()->whereIn('tipe_soal', ['text', 'checkbox'])->exists();
+                                    @endphp
+
+                                    @if($test->essay_pending == 0 && $test->essay_reviewed == 0 && !$hasEssayQuestions)
                                     <x-atoms.badge 
                                         text="Tidak ada essay"
                                         variant="gray" 
@@ -145,10 +170,23 @@
         <!-- Users List View -->
         <div class="space-y-4">
             @if(isset($users) && $users->count() > 0)
+                <div class="flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg border border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" wire:model.live="selectAll" id="select-all" class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        <label for="select-all" class="text-sm font-medium text-gray-700 cursor-pointer">Pilih Semua Siswa</label>
+                    </div>
+                    <div class="text-xs text-gray-500 italic">
+                        Diurutkan berdasarkan nama (A-Z)
+                    </div>
+                </div>
+
                 @foreach($users as $user)
                 <x-atoms.card className="border border-gray-200 hover:shadow-md transition-shadow">
-                    <div class="p-6">
-                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                    <div class="p-6 flex items-start gap-4">
+                        <div class="pt-3">
+                            <input type="checkbox" wire:model.live="selectedUserIds" value="{{ $user->id }}" class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        </div>
+                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 flex-1">
                             <div class="flex items-start gap-4 flex-1" 
                                  wire:click="viewUserAnswers({{ $user->id }})" 
                                  style="cursor: pointer;">
