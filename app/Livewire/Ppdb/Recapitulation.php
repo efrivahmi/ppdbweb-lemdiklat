@@ -18,12 +18,22 @@ class Recapitulation extends Component
     use WithPagination;
 
     public $filterPeriod = 'all';
+    public $startDate;
+    public $endDate;
+
+    public function mount()
+    {
+        $this->startDate = now()->startOfMonth()->format('Y-m-d');
+        $this->endDate = now()->format('Y-m-d');
+    }
 
     public function updatedFilterPeriod()
     {
-        $this->resetPage('accountPage');
         $this->resetPage('registeredPage');
     }
+
+    public function updatedStartDate() { $this->resetPage('registeredPage'); }
+    public function updatedEndDate() { $this->resetPage('registeredPage'); }
 
     private function applyDateFilter($query)
     {
@@ -33,24 +43,21 @@ class Recapitulation extends Component
             'last_semester' => $query->whereBetween('created_at', [$now->copy()->subMonths(12), $now->copy()->subMonths(6)]),
             'this_month'    => $query->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year),
             'last_month'    => $query->whereMonth('created_at', $now->copy()->subMonth()->month)->whereYear('created_at', $now->copy()->subMonth()->year),
+            'custom'        => $query->whereBetween('created_at', [$this->startDate . ' 00:00:00', $this->endDate . ' 23:59:59']),
             default         => $query
         };
     }
 
     public function render()
     {
-        // 1. Global Statistic Recap
-        $totalAccounts = $this->applyDateFilter(User::where('role', 'siswa'))->count();
+        // 1. Global Statistic Recap (Focus ONLY on Applicants)
         $totalApplicants = $this->applyDateFilter(PendaftaranMurid::query())->count();
         
         $stats = [
-            'total_accounts' => $totalAccounts,
-            'account_only' => $this->applyDateFilter(User::where('role', 'siswa')->doesntHave('pendaftaranMurids'))->count(),
+            'total'        => $totalApplicants,
             'pending'      => $this->applyDateFilter(PendaftaranMurid::where('status', 'pending'))->count(),
             'accepted'     => $this->applyDateFilter(PendaftaranMurid::where('status', 'diterima'))->count(),
             'rejected'     => $this->applyDateFilter(PendaftaranMurid::where('status', 'ditolak'))->count(),
-            'total'        => $totalApplicants,
-            'conversion'   => $totalAccounts > 0 ? round(($totalApplicants / $totalAccounts) * 100, 1) : 0,
         ];
 
         // 2. Details Recap per Major
@@ -72,8 +79,7 @@ class Recapitulation extends Component
         // 4. Monthly Chart Data (Last 6 Months Trend)
         $chartData = [
             'labels' => [],
-            'pendaftar' => [],
-            'akun_only' => []
+            'pendaftar' => []
         ];
         
         for ($i = 5; $i >= 0; $i--) {
@@ -83,30 +89,18 @@ class Recapitulation extends Component
             $chartData['pendaftar'][] = PendaftaranMurid::whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month)
                 ->count();
-                
-            $chartData['akun_only'][] = User::where('role', 'siswa')
-                ->doesntHave('pendaftaranMurids')
-                ->whereYear('created_at', $date->year)
-                ->whereMonth('created_at', $date->month)
-                ->count();
         }
 
-        // 5. Account Only Users List
-        $accountOnlyUsers = $this->applyDateFilter(
-            User::where('role', 'siswa')->doesntHave('pendaftaranMurids')
-        )->latest()->paginate(10, ['*'], 'accountPage');
-
-        // 6. Registered Users List
+        // 5. Registered Users List
         $registeredUsers = $this->applyDateFilter(
             PendaftaranMurid::with(['user', 'jurusan', 'jalurPendaftaran'])
-        )->latest()->paginate(10, ['*'], 'registeredPage');
+        )->latest()->paginate(15, ['*'], 'registeredPage');
 
         return view('livewire.ppdb.recapitulation', [
             'stats' => $stats,
             'majorRecap' => $majorRecap,
             'jalurRecap' => $jalurRecap,
             'chartData' => $chartData,
-            'accountOnlyUsers' => $accountOnlyUsers,
             'registeredUsers' => $registeredUsers
         ]);
     }

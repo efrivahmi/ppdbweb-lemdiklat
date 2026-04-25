@@ -1,333 +1,287 @@
-<div class="min-h-screen p-6 bg-transparent">
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="min-h-screen p-4 md:p-8 relative">
+    <!-- Fixed Background Blobs (Global Backdrop) -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] animate-pulse z-0 pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-300/20 rounded-full blur-[120px] animate-pulse z-0 pointer-events-none" style="animation-delay: 2s;"></div>
+    <div class="fixed top-[30%] left-[20%] w-[30%] h-[30%] bg-rose-200/10 rounded-full blur-[100px] animate-pulse z-0 pointer-events-none" style="animation-delay: 4s;"></div>
 
-    <!-- Header Section -->
-    <div class="flex flex-col items-start justify-between gap-4 mb-8 md:flex-row md:items-center">
-        <div>
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500" id="tour-header">
-                Admission Recapitulation
-            </h1>
-            <p class="mt-1 text-sm font-medium text-slate-500">Monitor real-time enrollment statistics and movements.</p>
-        </div>
-        
-        <div class="flex flex-wrap items-center gap-3" id="tour-export-buttons">
-            <!-- Filter Dropdown -->
-            <div class="relative">
-                <select wire:model.live="filterPeriod" class="appearance-none pl-4 pr-10 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer">
-                    <option value="all">Semua Waktu</option>
-                    <option value="this_semester">Semester Ini (6 Bulan Terakhir)</option>
-                    <option value="last_semester">Semester Lalu</option>
-                    <option value="this_month">Bulan Ini</option>
-                    <option value="last_month">Bulan Lalu</option>
-                </select>
-                <div wire:loading.remove wire:target="filterPeriod" class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
-                    <i class="ri-calendar-2-line"></i>
-                </div>
-                <div wire:loading wire:target="filterPeriod" class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-indigo-500">
-                    <div class="w-4 h-4 border-2 border-indigo-500 rounded-full border-t-transparent animate-spin"></div>
-                </div>
-            </div>
+    <div class="relative z-10">
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            <button onclick="startTour()" class="flex items-center justify-center w-10 h-10 transition-all duration-300 bg-white border border-gray-200 rounded-full shadow-sm text-slate-500 hover:bg-slate-50 hover:text-indigo-600 hover:shadow-md hover:-translate-y-0.5" title="Page Tour">
-                <i class="text-xl ri-guide-line"></i>
-            </button>
-
-            <a href="{{ route('ppdb.export.excel', ['period' => $filterPeriod]) }}" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 shadow-lg rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-emerald-500/30 hover:-translate-y-0.5">
-                <i class="text-lg ri-file-excel-2-line"></i>
-                Export Excel
-            </a>
-            <a href="{{ route('ppdb.export.pdf', ['period' => $filterPeriod]) }}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 shadow-lg rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 hover:shadow-rose-500/30 hover:-translate-y-0.5">
-                <i class="text-lg ri-file-pdf-2-line"></i>
-                Print PDF
-            </a>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 gap-5 mb-8 lg:grid-cols-3 xl:grid-cols-6" id="tour-stats">
-        <!-- Card 0: Total Accounts -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-indigo-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-user-star-line text-indigo-500"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-indigo-600">Total Accounts</p>
-            <p class="mt-3 text-4xl font-extrabold text-indigo-700">{{ $stats['total_accounts'] }}</p>
-            <p class="mt-3 text-xs font-medium text-indigo-500/70">Seluruh Akun Terdaftar</p>
-        </div>
-
-        <!-- Card 1 -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-group-line text-slate-800"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-slate-500">Total Applicants</p>
-            <p class="mt-3 text-4xl font-extrabold text-slate-800">{{ $stats['total'] }}</p>
-            <div class="flex items-center mt-3 text-xs font-medium text-emerald-600 bg-emerald-50 w-fit px-2.5 py-1 rounded-full">
-                <i class="mr-1 ri-arrow-up-line"></i> {{ $stats['conversion'] }}% Conversion
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-user-unfollow-line text-slate-500"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-slate-500">Account Only</p>
-            <p class="mt-3 text-4xl font-extrabold text-slate-600">{{ $stats['account_only'] }}</p>
-            <p class="mt-3 text-xs font-medium text-slate-400">Belum isi form</p>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-amber-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-time-line text-amber-500"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-amber-600">Pending</p>
-            <p class="mt-3 text-4xl font-extrabold text-amber-600">{{ $stats['pending'] }}</p>
-            <p class="mt-3 text-xs font-medium text-amber-500/70">Menunggu verifikasi</p>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-emerald-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-checkbox-circle-line text-emerald-500"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-emerald-600">Diterima</p>
-            <p class="mt-3 text-4xl font-extrabold text-emerald-600">{{ $stats['accepted'] }}</p>
-            <p class="mt-3 text-xs font-medium text-emerald-500/70">Telah diverifikasi</p>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-6 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group">
-            <div class="absolute top-0 right-0 p-4 opacity-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                <i class="text-6xl ri-close-circle-line text-rose-500"></i>
-            </div>
-            <p class="text-xs font-bold tracking-wider uppercase text-rose-600">Ditolak</p>
-            <p class="mt-3 text-4xl font-extrabold text-rose-600">{{ $stats['rejected'] }}</p>
-            <p class="mt-3 text-xs font-medium text-rose-500/70">Syarat tidak memenuhi</p>
-        </div>
-    </div>
-
-    <!-- Data Jalur Pendaftaran Section -->
-    <div class="p-6 mb-8 bg-white border border-gray-100 shadow-sm rounded-2xl">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100 text-amber-600">
-                <i class="text-xl ri-route-line"></i>
-            </div>
+        <!-- Header Section -->
+        <div class="flex flex-col items-start justify-between gap-6 mb-10 md:flex-row md:items-center">
             <div>
-                <h2 class="text-lg font-bold text-slate-800">Data Jalur Pendaftaran</h2>
-                <p class="text-sm text-slate-500">Statistik pendaftaran untuk setiap jalur yang tersedia</p>
+                <h1 class="text-4xl font-black tracking-tight text-slate-900 mb-2" id="tour-header">
+                    Admission <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500">Recapitulation</span>
+                </h1>
+                <p class="text-slate-500 font-medium flex items-center gap-2">
+                    <span class="w-2 h-2 bg-indigo-500 rounded-full animate-ping"></span>
+                    Real-time enrollment statistics and trends.
+                </p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4" id="tour-export-buttons">
+                <!-- Filter Dropdown (Glass Style) -->
+                <div class="relative group">
+                    <select wire:model.live="filterPeriod" class="appearance-none pl-5 pr-12 py-3 text-sm font-bold text-slate-700 bg-white/60 backdrop-blur-md border border-white shadow-xl rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all cursor-pointer">
+                        <option value="all">Semua Waktu</option>
+                        <option value="this_semester">Semester Ini</option>
+                        <option value="last_semester">Semester Lalu</option>
+                        <option value="this_month">Bulan Ini</option>
+                        <option value="last_month">Bulan Lalu</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-indigo-500">
+                        <i class="ri-calendar-event-line text-lg"></i>
+                    </div>
+                </div>
+
+                @if($filterPeriod === 'custom')
+                <div class="flex items-center gap-2 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <input type="date" wire:model.live="startDate" class="pl-4 pr-4 py-3 text-sm font-bold text-slate-700 bg-white/60 backdrop-blur-md border border-white shadow-xl rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                    <span class="text-slate-400 font-black">to</span>
+                    <input type="date" wire:model.live="endDate" class="pl-4 pr-4 py-3 text-sm font-bold text-slate-700 bg-white/60 backdrop-blur-md border border-white shadow-xl rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                </div>
+                @endif
+
+                <button onclick="startTour()" class="w-12 h-12 flex items-center justify-center bg-white/60 backdrop-blur-md border border-white rounded-2xl shadow-xl text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:scale-110 active:scale-95" title="Page Tour">
+                    <i class="text-xl ri-magic-line"></i>
+                </button>
+
+                <div class="flex gap-2">
+                    <a href="{{ route('ppdb.export.excel', ['period' => $filterPeriod, 'startDate' => $startDate, 'endDate' => $endDate]) }}" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-emerald-500 rounded-2xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-500/40 transition-all transform hover:-translate-y-1">
+                        <i class="text-lg ri-file-excel-2-fill"></i>
+                        Excel
+                    </a>
+                    <a href="{{ route('ppdb.export.pdf', ['period' => $filterPeriod, 'startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-rose-500 rounded-2xl shadow-lg shadow-rose-500/20 hover:bg-rose-600 hover:shadow-rose-500/40 transition-all transform hover:-translate-y-1">
+                        <i class="text-lg ri-file-pdf-2-fill"></i>
+                        PDF
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-            @foreach($jalurRecap as $jalur)
-            <div class="p-5 border border-gray-100 rounded-xl bg-slate-50/50">
-                <h3 class="mb-2 text-lg font-bold text-slate-800">{{ $jalur->nama }}</h3>
-                <p class="mb-5 text-sm text-slate-500">{{ $jalur->deskripsi ?? 'Pendaftaran siswa baru' }}</p>
-                
-                <div class="grid grid-cols-4 gap-3">
-                    <div class="flex flex-col items-center justify-center py-3 bg-white rounded-lg shadow-sm">
-                        <span class="text-xl font-bold text-slate-800">{{ $jalur->total_applicants }}</span>
-                        <span class="text-xs text-slate-500">Total</span>
+        <!-- Stats Grid (Premium Glass Cards) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12" id="tour-stats">
+            <!-- Card: Total Applicants -->
+            <div class="group relative p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 hover:shadow-indigo-500/10 transition-all duration-500 overflow-hidden hover:-translate-y-2">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-indigo-500/20 transition-all"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
+                        <i class="text-2xl ri-team-fill"></i>
                     </div>
-                    <div class="flex flex-col items-center justify-center py-3 bg-amber-50 rounded-lg shadow-sm">
-                        <span class="text-xl font-bold text-amber-600">{{ $jalur->pending_count }}</span>
-                        <span class="text-xs text-amber-600">Pending</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center py-3 bg-emerald-50 rounded-lg shadow-sm">
-                        <span class="text-xl font-bold text-emerald-600">{{ $jalur->accepted_count }}</span>
-                        <span class="text-xs text-emerald-600">Diterima</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center py-3 bg-rose-50 rounded-lg shadow-sm">
-                        <span class="text-xl font-bold text-rose-600">{{ $jalur->rejected_count }}</span>
-                        <span class="text-xs text-rose-600">Ditolak</span>
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Total Pendaftar</h3>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-5xl font-black text-slate-900">{{ $stats['total'] }}</span>
+                        <span class="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-0.5 rounded-lg">+12%</span>
                     </div>
                 </div>
             </div>
-            @endforeach
-        </div>
-    </div>
 
-    <!-- Table Section -->
-    <div class="overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl" id="tour-table">
-        <div class="px-6 py-5 border-b border-gray-100/50 bg-white/50">
-            <h3 class="text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-bar-chart-horizontal-fill"></i>Applicant Distribution per Major</h3>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="text-xs font-bold tracking-wider uppercase border-b text-slate-500 bg-slate-50/50 border-gray-100">
-                        <th class="px-6 py-4">Major</th>
-                        <th class="px-6 py-4">Total</th>
-                        <th class="px-6 py-4 text-amber-600">Pending</th>
-                        <th class="px-6 py-4 text-emerald-600">Diterima</th>
-                        <th class="px-6 py-4 text-rose-600">Ditolak</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @forelse($majorRecap as $item)
-                    <tr class="transition-colors duration-200 hover:bg-slate-50/80 group">
-                        <td class="px-6 py-4 font-bold text-slate-700 group-hover:text-indigo-600">{{ $item->nama_jurusan ?? $item->nama }}</td>
-                        <td class="px-6 py-4 text-sm font-extrabold text-slate-800">{{ $item->total_applicants }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-amber-600">
-                            <span class="px-2 py-1 bg-amber-50 rounded-md">{{ $item->pending_count }}</span>
-                        </td>
-                        <td class="px-6 py-4 text-sm font-extrabold text-emerald-600">
-                            <span class="px-2 py-1 bg-emerald-50 rounded-md">{{ $item->accepted_count }}</span>
-                        </td>
-                        <td class="px-6 py-4 text-sm font-medium text-rose-600">
-                            <span class="px-2 py-1 bg-rose-50 rounded-md">{{ $item->rejected_count }}</span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center justify-center text-slate-400">
-                                <i class="mb-3 text-4xl ri-inbox-line"></i>
-                                <p class="text-sm font-medium">No applicant data available yet.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Chart Section -->
-    <div class="mt-8 p-6 bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-chart">
-        <h3 class="mb-4 text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-bar-chart-2-fill"></i>Monthly Registration Trend</h3>
-        <div class="relative h-72">
-            <canvas id="monthlyTrendChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Account Only Section -->
-    <div class="mt-8 p-0 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-account-only">
-            <div class="px-6 py-5 border-b border-gray-100 bg-slate-50/50">
-                <h3 class="text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-user-unfollow-line"></i>Account Only Students ({{ $accountOnlyUsers->count() }})</h3>
-                <p class="mt-1 text-sm text-slate-500">Siswa yang sudah mendaftar akun tapi belum mengisi form pendaftaran.</p>
+            <!-- Card: Pending -->
+            <div class="group relative p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 hover:shadow-amber-500/10 transition-all duration-500 overflow-hidden hover:-translate-y-2">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-amber-500/20 transition-all"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 bg-amber-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-200 group-hover:scale-110 transition-transform">
+                        <i class="text-2xl ri-time-fill"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Menunggu Review</h3>
+                    <span class="text-5xl font-black text-slate-900">{{ $stats['pending'] }}</span>
+                </div>
             </div>
-            <div class="overflow-y-auto max-h-72">
-                <table class="w-full text-left border-collapse">
-                    <thead class="sticky top-0 bg-white shadow-sm">
-                        <tr class="text-xs font-bold tracking-wider uppercase border-b text-slate-500 border-gray-100">
-                            <th class="px-6 py-3">Nama Lengkap</th>
-                            <th class="px-6 py-3">Kontak</th>
-                            <th class="px-6 py-3 text-right">Aksi</th>
+
+            <!-- Card: Accepted -->
+            <div class="group relative p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 hover:shadow-emerald-500/10 transition-all duration-500 overflow-hidden hover:-translate-y-2">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-emerald-500/20 transition-all"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-200 group-hover:scale-110 transition-transform">
+                        <i class="text-2xl ri-checkbox-circle-fill"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Diterima</h3>
+                    <span class="text-5xl font-black text-slate-900">{{ $stats['accepted'] }}</span>
+                </div>
+            </div>
+
+            <!-- Card: Rejected -->
+            <div class="group relative p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 hover:shadow-rose-500/10 transition-all duration-500 overflow-hidden hover:-translate-y-2">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-rose-500/20 transition-all"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 bg-rose-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-rose-200 group-hover:scale-110 transition-transform">
+                        <i class="text-2xl ri-close-circle-fill"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Ditolak</h3>
+                    <span class="text-5xl font-black text-slate-900">{{ $stats['rejected'] }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12">
+            <!-- Chart Section (Glass Look) -->
+            <div class="xl:col-span-2 p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50" id="tour-chart">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-xl font-black text-slate-800">Registration Trend</h3>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                        <span class="w-3 h-3 bg-indigo-500 rounded-full"></span>
+                        Last 6 Months
+                    </div>
+                </div>
+                <div class="relative h-80">
+                    <canvas id="monthlyTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Major Recap Section -->
+            <div class="p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden" id="tour-table">
+                <h3 class="text-xl font-black text-slate-800 mb-8">Major Distribution</h3>
+                <div class="space-y-6">
+                    @foreach($majorRecap as $item)
+                    <div class="group">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="font-bold text-slate-700">{{ $item->nama_jurusan ?? $item->nama }}</span>
+                            <span class="text-sm font-black text-indigo-600">{{ $item->total_applicants }}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                            @php
+                                $percentage = $stats['total'] > 0 ? ($item->total_applicants / $stats['total']) * 100 : 0;
+                            @endphp
+                            <div class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-1000 group-hover:scale-x-105 origin-left" style="width: {{ $percentage }}%"></div>
+                        </div>
+                        <div class="flex gap-4 mt-2">
+                            <span class="text-[10px] font-bold text-amber-500 uppercase">{{ $item->pending_count }} Pending</span>
+                            <span class="text-[10px] font-bold text-emerald-500 uppercase">{{ $item->accepted_count }} Accepted</span>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Jalur Pendaftaran Grid -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-black text-slate-800 mb-8 ml-2">Jalur Pendaftaran</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($jalurRecap as $jalur)
+                <div class="p-8 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all group">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                            <i class="text-xl ri-rocket-line"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-slate-800">{{ $jalur->nama }}</h4>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">{{ $jalur->total_applicants }} Pendaftar</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="text-center p-3 bg-amber-50/50 rounded-2xl border border-amber-100">
+                            <span class="block text-lg font-black text-amber-600">{{ $jalur->pending_count }}</span>
+                            <span class="text-[10px] font-bold text-amber-500 uppercase">Wait</span>
+                        </div>
+                        <div class="text-center p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                            <span class="block text-lg font-black text-emerald-600">{{ $jalur->accepted_count }}</span>
+                            <span class="text-[10px] font-bold text-emerald-500 uppercase">Win</span>
+                        </div>
+                        <div class="text-center p-3 bg-rose-50/50 rounded-2xl border border-rose-100">
+                            <span class="block text-lg font-black text-rose-600">{{ $jalur->rejected_count }}</span>
+                            <span class="text-[10px] font-bold text-rose-500 uppercase">Fail</span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Main Applicants Table (Premium Glass Look) -->
+        <div class="bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden" id="tour-registered-users">
+            <div class="p-8 border-b border-white/60 bg-white/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-xl font-black text-slate-800">Daftar Calon Siswa</h3>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Real-time Registration List</p>
+                </div>
+                <div class="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100 text-indigo-600 text-sm font-bold">
+                    {{ $registeredUsers->total() }} Total Applicants
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-white/60 bg-white/10">
+                            <th class="px-8 py-5">Nama Peserta</th>
+                            <th class="px-8 py-5">Kontak</th>
+                            <th class="px-8 py-5">Detail Pendaftaran</th>
+                            <th class="px-8 py-5 text-center">Status</th>
+                            <th class="px-8 py-5 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        @forelse($accountOnlyUsers as $user)
-                        <tr class="transition-colors duration-200 hover:bg-slate-50/80">
-                            <td class="px-6 py-3">
-                                <p class="font-bold text-slate-700">{{ $user->name }}</p>
-                                <p class="text-xs text-slate-400">{{ $user->created_at->format('d M Y') }}</p>
+                    <tbody class="divide-y divide-white/40">
+                        @forelse($registeredUsers as $reg)
+                        <tr class="group transition-colors hover:bg-white/30">
+                            <td class="px-8 py-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-400 group-hover:from-indigo-500 group-hover:to-cyan-400 group-hover:text-white transition-all shadow-sm">
+                                        {{ substr($reg->user->name ?? '?', 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="font-black text-slate-800 group-hover:text-indigo-600 transition-colors">{{ $reg->user->name ?? '-' }}</p>
+                                        <p class="text-xs font-bold text-slate-400">{{ $reg->created_at->format('d M Y, H:i') }}</p>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="px-6 py-3">
-                                <p class="text-sm font-medium text-slate-600"><i class="mr-1 ri-mail-line"></i>{{ $user->email }}</p>
-                                @if($user->telp)
-                                <p class="text-xs text-slate-500"><i class="mr-1 ri-phone-line"></i>{{ $user->telp }}</p>
-                                @endif
+                            <td class="px-8 py-6">
+                                <p class="text-sm font-bold text-slate-600">{{ $reg->user->email ?? '-' }}</p>
+                                <p class="text-xs font-medium text-slate-400 italic">{{ $reg->user->telp ?? '-' }}</p>
                             </td>
-                            <td class="px-6 py-3 text-right">
-                                @if($user->telp)
-                                <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $user->telp)) }}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 text-white transition-colors bg-emerald-500 rounded-lg hover:bg-emerald-600" title="Hubungi via WhatsApp">
-                                    <i class="ri-whatsapp-line"></i>
-                                </a>
-                                @endif
+                            <td class="px-8 py-6">
+                                <span class="block text-sm font-black text-slate-800">{{ $reg->jurusan->nama ?? '-' }}</span>
+                                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider">{{ $reg->jalurPendaftaran->nama ?? '-' }}</span>
+                            </td>
+                            <td class="px-8 py-6 text-center">
+                                @php
+                                    $statusClasses = [
+                                        'pending' => 'bg-amber-100 text-amber-600 ring-amber-500/20',
+                                        'diterima' => 'bg-emerald-100 text-emerald-600 ring-emerald-500/20',
+                                        'ditolak' => 'bg-rose-100 text-rose-600 ring-rose-500/20',
+                                    ];
+                                    $class = $statusClasses[$reg->status] ?? 'bg-slate-100 text-slate-600 ring-slate-500/20';
+                                @endphp
+                                <span class="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full ring-1 {{ $class }}">
+                                    {{ $reg->status }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.siswa.detail', $reg->user_id) }}" class="w-10 h-10 flex items-center justify-center bg-white text-slate-600 rounded-xl border border-slate-100 shadow-sm hover:bg-indigo-600 hover:text-white hover:scale-110 transition-all active:scale-95">
+                                        <i class="ri-eye-line"></i>
+                                    </a>
+                                    @if($reg->user && $reg->user->telp)
+                                    <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $reg->user->telp)) }}" target="_blank" class="w-10 h-10 flex items-center justify-center bg-white text-emerald-500 rounded-xl border border-slate-100 shadow-sm hover:bg-emerald-500 hover:text-white hover:scale-110 transition-all active:scale-95">
+                                        <i class="ri-whatsapp-line"></i>
+                                    </a>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-8 text-center text-slate-400">
-                                <p class="text-sm font-medium">Tidak ada siswa yang belum mengisi form.</p>
+                            <td colspan="5" class="px-8 py-20 text-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                        <i class="text-4xl text-slate-200 ri-inbox-archive-line"></i>
+                                    </div>
+                                    <p class="text-slate-400 font-bold tracking-widest uppercase text-xs">Belum ada data pendaftar</p>
+                                </div>
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            @if ($accountOnlyUsers->hasPages())
-            <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
-                {{ $accountOnlyUsers->links() }}
+            @if ($registeredUsers->hasPages())
+            <div class="px-8 py-6 border-t border-white/60 bg-white/20">
+                {{ $registeredUsers->links() }}
             </div>
             @endif
         </div>
-
-    <!-- Registered Users List -->
-    <div class="mt-8 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-2xl" id="tour-registered-users">
-        <div class="px-6 py-5 border-b border-gray-100 bg-slate-50/50">
-            <h3 class="text-lg font-bold text-slate-800"><i class="mr-2 text-indigo-500 ri-group-2-line"></i>Registered Students ({{ $registeredUsers->count() }})</h3>
-            <p class="mt-1 text-sm text-slate-500">Siswa yang telah mengisi form pendaftaran beserta statusnya.</p>
-        </div>
-        <div class="overflow-y-auto max-h-96">
-            <table class="w-full text-left border-collapse">
-                <thead class="sticky top-0 z-10 bg-white shadow-sm">
-                    <tr class="text-xs font-bold tracking-wider uppercase border-b text-slate-500 border-gray-100">
-                        <th class="px-6 py-3">Nama Lengkap</th>
-                        <th class="px-6 py-3">Kontak</th>
-                        <th class="px-6 py-3">Jalur & Jurusan</th>
-                        <th class="px-6 py-3 text-center">Status</th>
-                        <th class="px-6 py-3 text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @forelse($registeredUsers as $reg)
-                    <tr class="transition-colors duration-200 hover:bg-slate-50/80">
-                        <td class="px-6 py-4">
-                            <p class="font-bold text-slate-700">{{ $reg->user->name ?? '-' }}</p>
-                            <p class="text-xs text-slate-400">Terdaftar: {{ $reg->created_at->format('d M Y') }}</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-medium text-slate-600"><i class="mr-1 ri-mail-line"></i>{{ $reg->user->email ?? '-' }}</p>
-                            @if($reg->user && $reg->user->telp)
-                            <p class="text-xs text-slate-500"><i class="mr-1 ri-phone-line"></i>{{ $reg->user->telp }}</p>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-bold text-slate-700">{{ $reg->jalurPendaftaran->nama ?? '-' }}</p>
-                            <p class="text-xs font-medium text-slate-500">{{ $reg->jurusan->nama ?? '-' }}</p>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            @if($reg->status === 'pending')
-                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-600">Pending</span>
-                            @elseif($reg->status === 'diterima')
-                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-600">Diterima</span>
-                            @elseif($reg->status === 'ditolak')
-                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-rose-100 text-rose-600">Ditolak</span>
-                            @else
-                                <span class="px-3 py-1 text-xs font-bold bg-gray-100 rounded-full text-slate-600">{{ ucfirst($reg->status) }}</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.siswa.detail', $reg->user_id) }}" class="inline-flex items-center justify-center w-8 h-8 text-white transition-colors bg-indigo-500 rounded-lg hover:bg-indigo-600" title="Lihat Detail Siswa">
-                                <i class="ri-eye-line"></i>
-                            </a>
-                            @if($reg->user && $reg->user->telp)
-                            <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $reg->user->telp)) }}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 text-white transition-colors bg-emerald-500 rounded-lg hover:bg-emerald-600" title="Hubungi via WhatsApp">
-                                <i class="ri-whatsapp-line"></i>
-                            </a>
-                            @endif
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-slate-400">
-                            <p class="text-sm font-medium">Tidak ada data siswa terdaftar.</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        @if ($registeredUsers->hasPages())
-        <div class="px-6 py-3 border-t border-gray-100 bg-slate-50/50">
-            {{ $registeredUsers->links() }}
-        </div>
-        @endif
     </div>
 
     <!-- Chart Script Initialization -->
@@ -343,22 +297,28 @@
                 chartInstance.destroy();
             }
 
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.6)');
+            gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+
             chartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: chartData.labels,
                     datasets: [
                         {
-                            label: 'Pendaftar (Isi Form)',
+                            label: 'Jumlah Pendaftar',
                             data: chartData.pendaftar,
-                            backgroundColor: '#10b981', // emerald-500
-                            borderRadius: 4,
-                        },
-                        {
-                            label: 'Account Only',
-                            data: chartData.akun_only,
-                            backgroundColor: '#f59e0b', // amber-500
-                            borderRadius: 4,
+                            backgroundColor: gradient,
+                            borderColor: '#4f46e5',
+                            borderWidth: 4,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
                         }
                     ]
                 },
@@ -368,40 +328,54 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { precision: 0 }
+                            grid: { display: false },
+                            ticks: { font: { weight: 'bold' }, color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { weight: 'bold' }, color: '#94a3b8' }
                         }
                     },
                     plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: { usePointStyle: true, boxWidth: 8 }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 12,
+                            displayColors: false
                         }
                     }
                 }
             });
         }
 
-        // Initialize chart on first load
         initChart(@json($chartData));
 
-        // Re-initialize chart when Livewire updates the component
         Livewire.hook('morph.updated', () => {
             initChart(@json($chartData));
         });
     </script>
     @endscript
 
-    <!-- Full Page Loading Overlay -->
-    <div wire:loading wire:target="filterPeriod" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm">
-        <div class="flex flex-col items-center p-8 bg-white shadow-2xl rounded-2xl border border-gray-100">
-            <div class="relative flex items-center justify-center w-16 h-16">
-                <div class="absolute w-16 h-16 border-4 border-indigo-100 rounded-full"></div>
-                <div class="absolute w-16 h-16 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
-            </div>
-            <h3 class="mt-4 text-lg font-bold text-slate-800">Menyinkronkan Data</h3>
-            <p class="mt-1 text-sm text-slate-500">Memuat statistik terbaru...</p>
+    <!-- Casual Loading Indicator (Forced Center Pill) -->
+    <div wire:loading wire:target="filterPeriod, startDate, endDate" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] animate-in fade-in zoom-in-95 duration-300">
+        <div class="px-6 py-3 bg-white/90 backdrop-blur-3xl border border-white/50 shadow-2xl rounded-full flex items-center gap-3 border-indigo-100/50">
+            <div class="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-black text-slate-800 whitespace-nowrap">Syncing Data...</span>
         </div>
     </div>
+
+    <!-- Minimalist Blur Effect -->
+    <style>
+        [wire\:loading] ~ .relative.z-10 {
+            filter: blur(2px);
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+    </style>
 </div>
 
 @push('scripts')
@@ -412,45 +386,13 @@
         const driverObj = window.driver.js.driver({
             showProgress: true,
             animate: true,
-            nextBtnText: 'Next',
-            prevBtnText: 'Previous',
-            doneBtnText: 'Done',
             steps: [
-                {
-                    element: '#tour-header',
-                    popover: {
-                        title: 'Welcome to Recapitulation',
-                        description: 'This page provides an automatic summary of total applicants without the need for manual calculation.',
-                        side: 'bottom', align: 'start'
-                    }
-                },
-                {
-                    element: '#tour-stats',
-                    popover: {
-                        title: 'Main Metrics',
-                        description: 'The numbers here represent the overall status. "Account Only" means they have not filled out the form yet. You can also see the application conversion percentage.',
-                        side: 'bottom', align: 'center'
-                    }
-                },
-                {
-                    element: '#tour-table',
-                    popover: {
-                        title: 'Major Distribution',
-                        description: 'View the detailed breakdown of students per major. This is useful for monitoring class quotas.',
-                        side: 'top', align: 'center'
-                    }
-                },
-                {
-                    element: '#tour-export-buttons',
-                    popover: {
-                        title: 'Print Reports',
-                        description: 'Use these buttons to download the recapitulation in Excel or PDF format to report to the leadership.',
-                        side: 'left', align: 'center'
-                    }
-                }
+                { element: '#tour-header', popover: { title: 'Dashboard Premium', description: 'Monitor data pendaftaran real-time dengan tampilan modern.' }},
+                { element: '#tour-stats', popover: { title: 'Statistik Utama', description: 'Status pendaftaran (Diterima, Pending, Ditolak) dapat dilihat di sini.' }},
+                { element: '#tour-chart', popover: { title: 'Tren Pendaftaran', description: 'Analisis pertumbuhan pendaftar dalam 6 bulan terakhir.' }},
+                { element: '#tour-registered-users', popover: { title: 'Daftar Pendaftar', description: 'Kelola data calon siswa langsung dari tabel ini.' }},
             ]
         });
-        
         driverObj.drive();
     }
 </script>

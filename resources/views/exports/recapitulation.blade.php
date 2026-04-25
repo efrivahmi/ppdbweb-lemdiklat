@@ -30,16 +30,8 @@
         </thead>
         <tbody>
             <tr>
-                <td width="50%">Total Akun (Hanya Akun)</td>
-                <td width="50%" class="text-right">{{ $stats['account_only'] }}</td>
-            </tr>
-            <tr>
-                <td>Total Pendaftar (Telah Isi Form)</td>
-                <td class="text-right">{{ $stats['total'] }}</td>
-            </tr>
-            <tr>
-                <td>Konversi Pendaftar</td>
-                <td class="text-right">{{ $stats['conversion'] }}%</td>
+                <td width="50%">Total Pendaftar (Telah Isi Form)</td>
+                <td width="50%" class="text-right">{{ $stats['total'] }}</td>
             </tr>
             <tr>
                 <td>Pending Verifikasi</td>
