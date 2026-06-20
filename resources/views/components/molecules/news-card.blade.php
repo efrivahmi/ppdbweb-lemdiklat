@@ -54,12 +54,12 @@
 @if ($berita)
     <div x-data="{
         showShareMenu: false,
-        shareUrl: '{{ $shareUrl }}',
-        shareTitle: '{{ addslashes($shareTitle) }}',
-        shareText: '{{ addslashes($shareText) }}',
+        shareUrl: {{ json_encode($shareUrl) }},
+        shareTitle: {{ json_encode($shareTitle) }},
+        shareText: {{ json_encode($shareText) }},
         copied: false,
-        modalId: '{{ $modalId }}',
-        slug: '{{ $slug }}',
+        modalId: {{ json_encode($modalId) }},
+        slug: {{ json_encode($slug) }},
         
         init() {
             // Cek apakah ini berita yang harus dibuka dari URL
