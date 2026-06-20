@@ -50,8 +50,9 @@ class SuratVerifikasiPage extends Component
 
         // 2. Check Tes Jalur (custom_test) — semua wajib dikerjakan
         $allTestsCompleted = true;
-        if (count($this->availableTests) > 0) {
-            $allTestsCompleted = collect($this->availableTests)->every(fn($test) => $test['has_completed']);
+        $jalurTests = collect($this->availableTests)->filter(fn($test) => $test['test']->category === 'custom_test');
+        if (count($jalurTests) > 0) {
+            $allTestsCompleted = $jalurTests->every(fn($test) => $test['has_completed']);
             if (!$allTestsCompleted) {
                 $this->missingItems[] = 'Tes seleksi belum dikerjakan semua';
             }

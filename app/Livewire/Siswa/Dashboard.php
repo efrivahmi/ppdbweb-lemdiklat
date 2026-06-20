@@ -271,8 +271,9 @@ class Dashboard extends Component
         // 1. Semua data lengkap (dataMurid, dataOrangTua, berkasMurid, pendaftaran)
         // 2. Semua test jalur (custom_test) sudah dikerjakan
         // 3. Minimal 1 kuesioner ortu (kuesioner_ortu) sudah dikerjakan (Islam ATAU non-Islam)
-        $allTestsCompleted = count($this->availableTests) > 0 && 
-            collect($this->availableTests)->every(fn($test) => $test['has_completed']);
+        $jalurTests = collect($this->availableTests)->filter(fn($test) => $test['test']->category === 'custom_test');
+        $allTestsCompleted = count($jalurTests) > 0 && 
+            $jalurTests->every(fn($test) => $test['has_completed']);
 
         // Cek apakah ada kuesioner ortu yang aktif
         $activeKuesioners = CustomTest::where('category', 'kuesioner_ortu')
