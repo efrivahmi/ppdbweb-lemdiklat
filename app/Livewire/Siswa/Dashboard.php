@@ -269,15 +269,33 @@ class Dashboard extends Component
     {
         // Check verifikasi PDF - bisa download jika:
         // 1. Semua data lengkap (dataMurid, dataOrangTua, berkasMurid, pendaftaran)
-        // 2. Semua test jalur sudah dikerjakan (bukan payment)
+        // 2. Semua test jalur (custom_test) sudah dikerjakan
+        // 3. Minimal 1 kuesioner ortu (kuesioner_ortu) sudah dikerjakan (Islam ATAU non-Islam)
         $allTestsCompleted = count($this->availableTests) > 0 && 
             collect($this->availableTests)->every(fn($test) => $test['has_completed']);
+
+        // Cek apakah ada kuesioner ortu yang aktif
+        $activeKuesioners = CustomTest::where('category', 'kuesioner_ortu')
+            ->where('is_active', true)
+            ->exists();
+
+        // Jika ada kuesioner aktif, minimal 1 harus dikerjakan
+        $kuesionerCompleted = true;
+        if ($activeKuesioners) {
+            $kuesionerCompleted = CustomTestAnswer::where('user_id', Auth::id())
+                ->whereHas('customTest', function ($query) {
+                    $query->where('category', 'kuesioner_ortu')
+                          ->where('is_active', true);
+                })
+                ->exists();
+        }
 
         $this->canDownloadVerifikasiPDF = $this->dataMuridProgress >= 100 &&
             $this->dataOrangTuaProgress >= 100 &&
             $this->berkasMuridProgress >= 100 &&
             $this->pendaftaranProgress >= 100 &&
-            $allTestsCompleted;
+            $allTestsCompleted &&
+            $kuesionerCompleted;
 
         // Check penerimaan PDF - bisa download jika ada status diterima
         $this->canDownloadPenerimaanPDF = $this->hasAcceptedRegistration;

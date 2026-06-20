@@ -32,6 +32,7 @@ class AvailableTestsPage extends Component
     
     // Test completion tracking
     public $allTestsCompleted = false;
+    public $kuesionerCompleted = false;
 
     public function mount()
     {
@@ -102,6 +103,12 @@ class AvailableTestsPage extends Component
             $jalurTests = collect($this->availableTests)->where('test.category', 'custom_test');
             if ($jalurTests->count() > 0) {
                 $this->allTestsCompleted = $jalurTests->every(fn($test) => $test['has_completed']);
+            }
+
+            // Check if at least one kuesioner ortu is completed (Islam ATAU non-Islam)
+            $kuesionerTests = collect($this->availableTests)->where('test.category', 'kuesioner_ortu');
+            if ($kuesionerTests->count() > 0) {
+                $this->kuesionerCompleted = $kuesionerTests->contains(fn($test) => $test['has_completed']);
             }
         }
     }

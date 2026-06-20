@@ -8,6 +8,7 @@ use App\Models\Siswa\DataOrangTua;
 use App\Models\Siswa\BerkasMurid;
 use App\Models\Pendaftaran\PendaftaranMurid;
 use App\Models\Pendaftaran\TesJalur;
+use App\Models\Pendaftaran\CustomTest;
 use App\Models\Pendaftaran\CustomTestAnswer;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -47,37 +48,37 @@ class SuratVerifikasiPage extends Component
         if ($this->berkasMuridProgress < 100) $this->missingItems[] = 'Berkas belum diupload semua';
         if ($this->pendaftaranProgress < 100) $this->missingItems[] = 'Belum mendaftar jalur/jurusan';
 
-        // 2. Check Tests
+        // 2. Check Tes Jalur (custom_test) — semua wajib dikerjakan
         $allTestsCompleted = true;
         if (count($this->availableTests) > 0) {
             $allTestsCompleted = collect($this->availableTests)->every(fn($test) => $test['has_completed']);
             if (!$allTestsCompleted) {
                 $this->missingItems[] = 'Tes seleksi belum dikerjakan semua';
             }
-        } elseif ($this->pendaftaranProgress >= 100 && count($this->availableTests) == 0) {
-             // Logic edge case: Registered but no tests available?
-             // Dashboard logic says: count($this->availableTests) > 0 && every...
-             // So if count is 0, $allTestsCompleted is FALSE in dashboard:
-             // $allTestsCompleted = count($this->availableTests) > 0 && ...
-             // This implies tests ARE REQUIRED. 
-             // Let's stick to Dashboard logic.
-             $allTestsCompleted = false;
-             // But wait, what if there are NO tests for a jalur?
-             // If $tesJalurs is empty in loadAvailableTests, then availableTests is empty.
-             // Then allTestsCompleted is false.
-             // This might be a blocker if a jalur has no tests.
-             // But user says "students who have finished...". Usually implies they finished WHAT WAS THERE.
-             // However, duplicating dashboard logic is safer for consistency.
-             // Dashboard: $allTestsCompleted = count > 0 && every...
-             // So yes, tests are mandatory.
-             if (count($this->availableTests) == 0) {
-                 // But wait, if they haven't registered, tests are 0.
-                 // If they registered, and no tests assigned to jalur? 
-                 // Let's assume tests exist.
-             }
+        } elseif ($this->pendaftaranProgress >= 100) {
+            $allTestsCompleted = false;
         }
 
-        $this->canDownloadVerifikasiPDF = empty($this->missingItems) && $allTestsCompleted;
+        // 3. Check Kuesioner Ortu (kuesioner_ortu) — minimal 1 dikerjakan (Islam ATAU non-Islam)
+        $activeKuesioners = CustomTest::where('category', 'kuesioner_ortu')
+            ->where('is_active', true)
+            ->exists();
+
+        $kuesionerCompleted = true;
+        if ($activeKuesioners) {
+            $kuesionerCompleted = CustomTestAnswer::where('user_id', Auth::id())
+                ->whereHas('customTest', function ($query) {
+                    $query->where('category', 'kuesioner_ortu')
+                          ->where('is_active', true);
+                })
+                ->exists();
+            
+            if (!$kuesionerCompleted) {
+                $this->missingItems[] = 'Kuesioner orang tua belum dikerjakan';
+            }
+        }
+
+        $this->canDownloadVerifikasiPDF = empty($this->missingItems) && $allTestsCompleted && $kuesionerCompleted;
         
         $this->verifikasiPDFSettings = PDF::getSettingsByJenis('verifikasi');
     }
