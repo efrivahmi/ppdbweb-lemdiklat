@@ -90,7 +90,7 @@
 
             <!-- Current Question -->
             @if($currentQuestion)
-                <div class="bg-white rounded-lg shadow-sm p-8 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-8 mb-6" wire:key="question-{{ $currentQuestionId }}">
                     <div class="mb-8">
                         <div class="flex items-start gap-4">
                             <div class="flex-shrink-0">
@@ -197,7 +197,7 @@
                         @else
                             <!-- Textarea -->
                             <div class="space-y-3">
-                                <textarea wire:model.blur="answers.{{ $currentQuestionId }}" rows="8"
+                                <textarea wire:model.live.debounce.500ms="answers.{{ $currentQuestionId }}" rows="8"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors resize-none"
                                     placeholder="Tuliskan jawaban Anda di sini dengan lengkap dan jelas..." @if($isCompleted)
                                     readonly disabled @endif></textarea>
