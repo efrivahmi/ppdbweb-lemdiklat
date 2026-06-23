@@ -119,26 +119,29 @@
                     <!-- Answer Input -->
                     <div class="ml-14">
                         @if($currentQuestion['tipe_soal'] === 'radio')
-                            <div class="space-y-3" x-data="{ localAnswer: @entangle('answers.' . $currentQuestionId) }">
+                            <div class="space-y-3">
                                 @foreach($currentQuestion['options'] as $optionIndex => $option)
                                     @php
                                         $optionValue = chr(65 + $optionIndex);
+                                        $isSelected = ($answers[$currentQuestionId] ?? '') === $optionValue;
                                     @endphp
-                                    <div class="flex items-start gap-4 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-sm"
-                                        :class="localAnswer === '{{ $optionValue }}' ? 'border-lime-500 bg-lime-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'"
-                                        @click="localAnswer = '{{ $optionValue }}'">
+                                    <div class="flex items-start gap-4 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-sm
+                                        {{ $isSelected ? 'border-lime-500 bg-lime-50 shadow-sm' : 'border-gray-200 hover:border-gray-300' }}"
+                                        wire:click="selectAnswer({{ $currentQuestionId }}, '{{ $optionValue }}')"
+                                        @if($isCompleted) style="pointer-events: none;" @endif>
                                         <div class="flex items-center">
-                                            <div class="w-5 h-5 border-2 rounded-full flex items-center justify-center"
-                                                :class="localAnswer === '{{ $optionValue }}' ? 'border-lime-500 bg-lime-500' : 'border-gray-300'">
-                                                <div x-show="localAnswer === '{{ $optionValue }}'"
-                                                    class="w-2 h-2 bg-white rounded-full"></div>
+                                            <div class="w-5 h-5 border-2 rounded-full flex items-center justify-center
+                                                {{ $isSelected ? 'border-lime-500 bg-lime-500' : 'border-gray-300' }}">
+                                                @if($isSelected)
+                                                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="flex-1">
                                             <div class="flex items-start gap-3">
                                                 <span
-                                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-medium flex-shrink-0"
-                                                    :class="localAnswer === '{{ $optionValue }}' ? 'bg-lime-100 text-lime-600' : 'bg-gray-100 text-gray-600'">
+                                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-medium flex-shrink-0
+                                                    {{ $isSelected ? 'bg-lime-100 text-lime-600' : 'bg-gray-100 text-gray-600' }}">
                                                     {{ $optionValue }}
                                                 </span>
                                                 <span class="text-gray-900 leading-relaxed">{{ $option }}</span>
@@ -149,7 +152,7 @@
                             </div>
 
                         @elseif($currentQuestion['tipe_soal'] === 'checkbox')
-                            <div class="space-y-3" x-data="{ localAnswers: @entangle('answers.' . $currentQuestionId) }">
+                            <div class="space-y-3">
                                 <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                     <div class="flex items-start gap-2">
                                         <i class="ri-information-line text-blue-600 mt-0.5 flex-shrink-0"></i>
@@ -162,29 +165,26 @@
                                 @foreach($currentQuestion['options'] as $optionIndex => $option)
                                         @php
                                             $optionValue = chr(65 + $optionIndex);
+                                            $currentAnswers = $answers[$currentQuestionId] ?? [];
+                                            $isChecked = is_array($currentAnswers) && in_array($optionValue, $currentAnswers);
                                         @endphp
-                                        <div class="flex items-start gap-4 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-sm"
-                                            :class="localAnswers && localAnswers.includes('{{ $optionValue }}') ? 'border-lime-500 bg-lime-50 shadow-sm' : 'border-gray-200 hover:border-gray-300'"
-                                            @click="
-                                        if (!localAnswers) localAnswers = [];
-                                        if (localAnswers.includes('{{ $optionValue }}')) {
-                                            localAnswers = localAnswers.filter(v => v !== '{{ $optionValue }}');
-                                        } else {
-                                            localAnswers.push('{{ $optionValue }}');
-                                        }
-                                     ">
+                                        <div class="flex items-start gap-4 p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-sm
+                                            {{ $isChecked ? 'border-lime-500 bg-lime-50 shadow-sm' : 'border-gray-200 hover:border-gray-300' }}"
+                                            wire:click="toggleCheckbox({{ $currentQuestionId }}, '{{ $optionValue }}')"
+                                            @if($isCompleted) style="pointer-events: none;" @endif>
                                             <div class="flex items-center">
-                                                <div class="w-5 h-5 border-2 rounded flex items-center justify-center"
-                                                    :class="localAnswers && localAnswers.includes('{{ $optionValue }}') ? 'border-lime-500 bg-lime-500' : 'border-gray-300'">
-                                                    <i x-show="localAnswers && localAnswers.includes('{{ $optionValue }}')"
-                                                        class="ri-check-line text-white text-sm font-bold"></i>
+                                                <div class="w-5 h-5 border-2 rounded flex items-center justify-center
+                                                    {{ $isChecked ? 'border-lime-500 bg-lime-500' : 'border-gray-300' }}">
+                                                    @if($isChecked)
+                                                        <i class="ri-check-line text-white text-sm font-bold"></i>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="flex-1">
                                                 <div class="flex items-start gap-3">
                                                     <span
-                                                        class="inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-medium flex-shrink-0"
-                                                        :class="localAnswers && localAnswers.includes('{{ $optionValue }}') ? 'bg-lime-100 text-lime-600' : 'bg-gray-100 text-gray-600'">
+                                                        class="inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-medium flex-shrink-0
+                                                        {{ $isChecked ? 'bg-lime-100 text-lime-600' : 'bg-gray-100 text-gray-600' }}">
                                                         {{ $optionValue }}
                                                     </span>
                                                     <span class="text-gray-900 leading-relaxed">{{ $option }}</span>
@@ -197,7 +197,7 @@
                         @else
                             <!-- Textarea -->
                             <div class="space-y-3">
-                                <textarea wire:model="answers.{{ $currentQuestionId }}" rows="8"
+                                <textarea wire:model.blur="answers.{{ $currentQuestionId }}" rows="8"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition-colors resize-none"
                                     placeholder="Tuliskan jawaban Anda di sini dengan lengkap dan jelas..." @if($isCompleted)
                                     readonly disabled @endif></textarea>
