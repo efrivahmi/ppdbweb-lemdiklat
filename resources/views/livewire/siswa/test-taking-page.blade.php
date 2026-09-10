@@ -276,45 +276,57 @@
                 </div>
 
                 <div class="bg-gray-50 rounded-xl p-8 mb-8">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-6">Hasil Test</h3>
-
-                    @if($scoreData['total_reviewed'] > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-green-600 mb-2">{{ $scoreData['total_correct'] }}</div>
-                                <div class="text-sm text-gray-500 uppercase tracking-wide">Total Benar</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-red-500 mb-2">
-                                    {{ $scoreData['total_reviewed'] - $scoreData['total_correct'] }}</div>
-                                <div class="text-sm text-gray-500 uppercase tracking-wide">Total Salah</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-lime-600 mb-2">
-                                    {{ number_format($scoreData['percentage'], 1) }}%</div>
-                                <div class="text-sm text-gray-500 uppercase tracking-wide">Persentase</div>
-                            </div>
-                        </div>
-
-                        <!-- Info bahwa test sudah selesai -->
+                    @if($customTest->category === 'kuesioner_ortu')
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Terima Kasih</h3>
+                        <p class="text-gray-600 mb-6">Tanggapan kuesioner Anda telah berhasil kami simpan.</p>
+                        
                         <div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                             <div class="flex items-center justify-center gap-2 text-green-700">
                                 <i class="ri-information-line"></i>
-                                <span class="font-medium">Test sudah selesai dikerjakan</span>
+                                <span class="font-medium">Kuesioner sudah selesai diisi</span>
                             </div>
-                            <p class="text-sm text-green-600 mt-2">
-                                Test hanya bisa dikerjakan sekali. Untuk mengulang, silakan hubungi admin.
-                            </p>
                         </div>
                     @else
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="ri-file-text-line text-2xl text-yellow-600"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">Hasil Test</h3>
+
+                        @if($scoreData['total_reviewed'] > 0)
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-green-600 mb-2">{{ $scoreData['total_correct'] }}</div>
+                                    <div class="text-sm text-gray-500 uppercase tracking-wide">Total Benar</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-red-500 mb-2">
+                                        {{ $scoreData['total_reviewed'] - $scoreData['total_correct'] }}</div>
+                                    <div class="text-sm text-gray-500 uppercase tracking-wide">Total Salah</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-lime-600 mb-2">
+                                        {{ number_format($scoreData['percentage'], 1) }}%</div>
+                                    <div class="text-sm text-gray-500 uppercase tracking-wide">Persentase</div>
+                                </div>
                             </div>
-                            <h4 class="text-lg font-medium text-gray-900 mb-2">Menunggu Review</h4>
-                            <p class="text-gray-600">Test ini hanya berisi soal essay/checkbox yang sedang menunggu review
-                                admin.</p>
-                        </div>
+
+                            <!-- Info bahwa test sudah selesai -->
+                            <div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center justify-center gap-2 text-green-700">
+                                    <i class="ri-information-line"></i>
+                                    <span class="font-medium">Test sudah selesai dikerjakan</span>
+                                </div>
+                                <p class="text-sm text-green-600 mt-2">
+                                    Test hanya bisa dikerjakan sekali. Untuk mengulang, silakan hubungi admin.
+                                </p>
+                            </div>
+                        @else
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="ri-file-text-line text-2xl text-yellow-600"></i>
+                                </div>
+                                <h4 class="text-lg font-medium text-gray-900 mb-2">Menunggu Review</h4>
+                                <p class="text-gray-600">Test ini hanya berisi soal essay/checkbox yang sedang menunggu review
+                                    admin.</p>
+                            </div>
+                        @endif
                     @endif
                 </div>
 

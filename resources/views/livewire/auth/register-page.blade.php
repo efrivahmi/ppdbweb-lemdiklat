@@ -1,4 +1,6 @@
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ capslockOn: false }" 
+     @keydown.window="capslockOn = $event.getModifierState('CapsLock')"
+     @keyup.window="capslockOn = $event.getModifierState('CapsLock')">
   <div class="text-center">
     <x-atoms.title text="Buat Akun Baru" size="2xl" align="center" class="mb-2 text-gray-800" />
     <x-atoms.description align="center" color="gray-600" size="sm">
@@ -7,8 +9,8 @@
   </div>
 
   <form class="grid grid-cols-1 md:grid-cols-2 gap-6" wire:submit.prevent="register">
-    <x-molecules.input-field label="Nama Lengkap" inputType="text" name="name" id="name"
-      placeholder="Masukkan nama lengkap" wire:model.defer="name" :error="$errors->first('name')" required />
+    <x-molecules.input-field label="Nama Siswa Lengkap" inputType="text" name="name" id="name"
+      placeholder="Masukkan nama lengkap siswa" wire:model.defer="name" :error="$errors->first('name')" required />
 
     <x-molecules.input-field label="Alamat Email" inputType="email" name="email" id="email"
       placeholder="contoh@email.com" wire:model.defer="email" :error="$errors->first('email')" required />
@@ -25,6 +27,11 @@
     <x-molecules.input-field label="Konfirmasi Kata Sandi" inputType="password"
       name="password_confirmation" id="password_confirmation"
       placeholder="Ulangi kata sandi" wire:model.defer="password_confirmation" required />
+
+    <div x-show="capslockOn" style="display: none;" class="col-span-1 md:col-span-2 flex items-center gap-2 mt-1 text-yellow-700 bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
+        <i class="ri-error-warning-fill text-lg"></i>
+        <span class="font-medium">Peringatan: Caps Lock Anda sedang aktif!</span>
+    </div>
 
     <div class="col-span-1 md:col-span-2">
       @if (optional($gelombangActive)->isPendaftaranAktif())

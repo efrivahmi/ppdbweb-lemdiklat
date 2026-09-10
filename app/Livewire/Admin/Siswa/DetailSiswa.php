@@ -36,13 +36,12 @@ class DetailSiswa extends Component
     public $nomor_kartu_keluarga, $tempat_lahir, $tgl_lahir, $agama, $whatsapp, $alamat, $asal_sekolah, $berat_badan, $tinggi_badan, $riwayat_penyakit, $jenis_kelamin;
 
     // Data Orang Tua Properties
-    public $nama_ayah, $pendidikan_ayah, $telp_ayah, $pekerjaan_ayah, $penghasilan_ayah, $alamat_ayah;
-    public $nama_ibu, $pendidikan_ibu, $telp_ibu, $pekerjaan_ibu, $penghasilan_ibu, $alamat_ibu;
-    public $nama_wali, $pendidikan_wali, $telp_wali, $pekerjaan_wali, $penghasilan_wali, $alamat_wali;
+    public $nama_ayah, $pendidikan_ayah, $telp_ayah, $pekerjaan_ayah, $status_pekerjaan_ayah, $penghasilan_ayah, $alamat_ayah;
+    public $nama_ibu, $pendidikan_ibu, $telp_ibu, $pekerjaan_ibu, $status_pekerjaan_ibu, $penghasilan_ibu, $alamat_ibu;
+    public $nama_wali, $pendidikan_wali, $telp_wali, $pekerjaan_wali, $status_pekerjaan_wali, $penghasilan_wali, $alamat_wali;
 
     // Berkas Properties
-    public $kartu_keluarga, $akte_kelahiran, $surat_kelakuan_baik, $surat_sehat;
-    public $surat_tidak_buta_warna, $rapor, $foto, $ijazah;
+    public $kk, $ktp_ortu, $akte, $surat_sehat, $pas_foto, $kta_tni_polri;
 
     // Bukti Prestasi
     public $bukti_prestasi;
@@ -99,6 +98,7 @@ class DetailSiswa extends Component
             $this->pendidikan_ayah = $data->pendidikan_ayah;
             $this->telp_ayah = $data->telp_ayah;
             $this->pekerjaan_ayah = $data->pekerjaan_ayah;
+            $this->status_pekerjaan_ayah = $data->status_pekerjaan_ayah;
             $this->penghasilan_ayah = $data->penghasilan_ayah;
             $this->alamat_ayah = $data->alamat_ayah;
             // Ibu
@@ -106,6 +106,7 @@ class DetailSiswa extends Component
             $this->pendidikan_ibu = $data->pendidikan_ibu;
             $this->telp_ibu = $data->telp_ibu;
             $this->pekerjaan_ibu = $data->pekerjaan_ibu;
+            $this->status_pekerjaan_ibu = $data->status_pekerjaan_ibu;
             $this->penghasilan_ibu = $data->penghasilan_ibu;
             $this->alamat_ibu = $data->alamat_ibu;
             // Wali
@@ -113,6 +114,7 @@ class DetailSiswa extends Component
             $this->pendidikan_wali = $data->pendidikan_wali;
             $this->telp_wali = $data->telp_wali;
             $this->pekerjaan_wali = $data->pekerjaan_wali;
+            $this->status_pekerjaan_wali = $data->status_pekerjaan_wali;
             $this->penghasilan_wali = $data->penghasilan_wali;
             $this->alamat_wali = $data->alamat_wali;
         }
@@ -291,18 +293,21 @@ class DetailSiswa extends Component
             'pendidikan_ayah' => 'nullable|string|max:50',
             'telp_ayah' => 'nullable|string|max:255',
             'pekerjaan_ayah' => 'nullable|string|max:50',
+            'status_pekerjaan_ayah' => 'nullable|string|in:aktif,pensiun',
             'penghasilan_ayah' => 'nullable|string|max:50',
             'alamat_ayah' => 'nullable|string|max:255',
             'nama_ibu' => 'nullable|string|max:255',
             'pendidikan_ibu' => 'nullable|string|max:50',
             'telp_ibu' => 'nullable|string|max:255',
             'pekerjaan_ibu' => 'nullable|string|max:50',
+            'status_pekerjaan_ibu' => 'nullable|string|in:aktif,pensiun',
             'penghasilan_ibu' => 'nullable|string|max:50',
             'alamat_ibu' => 'nullable|string|max:255',
             'nama_wali' => 'nullable|string|max:255',
             'pendidikan_wali' => 'nullable|string|max:50',
             'telp_wali' => 'nullable|string|max:255',
             'pekerjaan_wali' => 'nullable|string|max:50',
+            'status_pekerjaan_wali' => 'nullable|string|in:aktif,pensiun',
             'penghasilan_wali' => 'nullable|string|max:50',
             'alamat_wali' => 'nullable|string|max:255',
         ]);
@@ -314,18 +319,21 @@ class DetailSiswa extends Component
                 'pendidikan_ayah' => $this->pendidikan_ayah,
                 'telp_ayah' => $this->telp_ayah,
                 'pekerjaan_ayah' => $this->pekerjaan_ayah,
+                'status_pekerjaan_ayah' => $this->status_pekerjaan_ayah,
                 'penghasilan_ayah' => $this->penghasilan_ayah,
                 'alamat_ayah' => $this->alamat_ayah,
                 'nama_ibu' => $this->nama_ibu,
                 'pendidikan_ibu' => $this->pendidikan_ibu,
                 'telp_ibu' => $this->telp_ibu,
                 'pekerjaan_ibu' => $this->pekerjaan_ibu,
+                'status_pekerjaan_ibu' => $this->status_pekerjaan_ibu,
                 'penghasilan_ibu' => $this->penghasilan_ibu,
                 'alamat_ibu' => $this->alamat_ibu,
                 'nama_wali' => $this->nama_wali,
                 'pendidikan_wali' => $this->pendidikan_wali,
                 'telp_wali' => $this->telp_wali,
                 'pekerjaan_wali' => $this->pekerjaan_wali,
+                'status_pekerjaan_wali' => $this->status_pekerjaan_wali,
                 'penghasilan_wali' => $this->penghasilan_wali,
                 'alamat_wali' => $this->alamat_wali,
             ]
@@ -340,27 +348,23 @@ class DetailSiswa extends Component
     public function uploadBerkas()
     {
         $this->validate([
-            'kartu_keluarga' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'akte_kelahiran' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'surat_kelakuan_baik' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'kk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ktp_ortu' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'akte' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'kta_tni_polri' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'surat_sehat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'surat_tidak_buta_warna' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'rapor' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'foto' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'pas_foto' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $berkas = BerkasMurid::firstOrCreate(['user_id' => $this->user->id]);
 
         $fields = [
-            'kartu_keluarga',
-            'akte_kelahiran',
-            'surat_kelakuan_baik',
+            'kk',
+            'ktp_ortu',
+            'akte',
+            'kta_tni_polri',
             'surat_sehat',
-            'surat_tidak_buta_warna',
-            'rapor',
-            'foto',
-            'ijazah'
+            'pas_foto'
         ];
 
         foreach ($fields as $field) {
@@ -378,8 +382,20 @@ class DetailSiswa extends Component
         }
 
         // Update status proses
-        $proses = collect($fields)->every(fn($f) => $berkas->$f) ? 1 : 0;
-        $berkas->proses = $proses;
+        $ortu = \App\Models\Siswa\DataOrangTua::where('user_id', $this->user->id)->first();
+        $requiresKta = false;
+        if ($ortu) {
+            $requiresKta = \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ayah) 
+                || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ibu) 
+                || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_wali);
+        }
+
+        $checkFields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+        if ($requiresKta) {
+            $checkFields[] = 'kta_tni_polri';
+        }
+
+        $berkas->proses = collect($checkFields)->every(fn($f) => $berkas->$f) ? 1 : 0;
         $berkas->save();
 
         $this->user->refresh();
@@ -400,17 +416,20 @@ class DetailSiswa extends Component
             $berkas->$field = null;
 
             // Update status proses
-            $fields = [
-                'kartu_keluarga',
-                'akte_kelahiran',
-                'surat_kelakuan_baik',
-                'surat_sehat',
-                'surat_tidak_buta_warna',
-                'rapor',
-                'foto',
-                'ijazah'
-            ];
-            $berkas->proses = collect($fields)->every(fn($f) => $berkas->$f) ? 1 : 0;
+            $ortu = \App\Models\Siswa\DataOrangTua::where('user_id', $this->user->id)->first();
+            $requiresKta = false;
+            if ($ortu) {
+                $requiresKta = \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ayah) 
+                    || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ibu) 
+                    || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_wali);
+            }
+
+            $checkFields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+            if ($requiresKta) {
+                $checkFields[] = 'kta_tni_polri';
+            }
+
+            $berkas->proses = collect($checkFields)->every(fn($f) => $berkas->$f) ? 1 : 0;
             $berkas->save();
 
             $this->user->refresh();

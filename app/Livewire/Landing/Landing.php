@@ -12,6 +12,10 @@ class Landing extends Component
 {
     public function render()
     {
-        return view('livewire.landing.landing');
+        $introVideo = \App\Models\Landing\YoutubeVideo::where('is_active', true)
+            ->where('is_intro', true)
+            ->first();
+
+        return view('livewire.landing.landing', compact('introVideo'));
     }
 }

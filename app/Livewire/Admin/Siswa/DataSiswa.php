@@ -22,6 +22,7 @@ class DataSiswa extends Component
     public $search = '';
     public $statusFilter = '';
     public $transferFilter = '';
+    public $tahunAjaranFilter = '';
 
     // Form properties untuk tambah siswa
     public $name, $email, $nisn, $telp, $password, $password_confirmation;
@@ -259,6 +260,49 @@ class DataSiswa extends Component
         $this->resetPage();
     }
 
+    public function updatingTahunAjaranFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function getTahunAjaranOptions(): array
+    {
+        // For MySQL: YEAR(created_at). For SQLite: strftime('%Y', created_at).
+        // Since we are using SQLite in dev but might use MySQL in prod, using Eloquent builder or raw depending on driver is tricky.
+        // The safest cross-database way is to pull dates and map them, or use a DB::raw that works for the current driver.
+        // Let's use simple pluck and map since user count might not be huge, or use specific raw query.
+        $years = User::where('role', 'siswa')
+            ->selectRaw(\Illuminate\Support\Facades\DB::raw('CAST(strftime("%Y", created_at) AS INTEGER) as tahun'))
+            ->distinct()
+            ->orderByDesc('tahun')
+            ->pluck('tahun')
+            ->filter()
+            ->toArray();
+            
+        // Fallback if sqlite function doesn't work well
+        if (empty($years)) {
+            $years = User::where('role', 'siswa')->pluck('created_at')->map(fn($date) => $date->format('Y'))->unique()->sortDesc()->values()->toArray();
+        }
+
+        $options = [
+            ['value' => '', 'label' => 'Semua Tahun Ajaran']
+        ];
+        foreach ($years as $year) {
+            $options[] = ['value' => $year, 'label' => "TA {$year}/" . ((int)$year + 1)];
+        }
+        return $options;
+    }
+
+    public function exportExcel()
+    {
+        return redirect()->route('admin.export.siswa.excel', [
+            'statusFilter' => $this->statusFilter,
+            'transferFilter' => $this->transferFilter,
+            'tahunAjaranFilter' => $this->tahunAjaranFilter,
+            'search' => $this->search,
+        ]);
+    }
+
     // Generate random NISN helper
     public function generateNISN()
     {
@@ -397,6 +441,9 @@ class DataSiswa extends Component
                         $query->whereDoesntHave('buktiTransfer');
                         break;
                 }
+            })
+            ->when($this->tahunAjaranFilter, function ($query) {
+                $query->whereYear('created_at', $this->tahunAjaranFilter);
             })
             ->latest()
             ->paginate(10);

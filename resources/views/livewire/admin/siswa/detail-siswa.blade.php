@@ -22,6 +22,15 @@
                         <i class="ri-user-star-line mr-1"></i> {{ ucfirst($user->role) }}
                     </span>
                 </div>
+                
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4">
+                    <a href="{{ route('admin.export.siswa.profile.excel', $user->id) }}" class="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="ri-file-excel-line mr-2 text-lg"></i> Export Excel
+                    </a>
+                    <a href="{{ route('admin.export.siswa.profile.pdf', $user->id) }}" class="inline-flex items-center justify-center px-4 py-2 bg-rose-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-rose-700 active:bg-rose-900 focus:outline-none focus:border-rose-900 focus:ring ring-rose-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="ri-file-pdf-line mr-2 text-lg"></i> Export PDF
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -747,6 +756,15 @@
                         <input type="text" wire:model="pekerjaan_ayah"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Pekerjaan Ayah</label>
+                        <select wire:model="status_pekerjaan_ayah"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="pensiun">Pensiun</option>
+                        </select>
+                    </div>
                     <x-molecules.select-field label="Penghasilan Ayah" name="penghasilan_ayah"
                         wire:model.defer="penghasilan_ayah" :options="collect($this->getPenghasilanOptions())
                                 ->map(fn($label, $value) => ['value' => $value, 'label' => $label])
@@ -785,6 +803,15 @@
                         <input type="text" wire:model="pekerjaan_ibu"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Pekerjaan Ibu</label>
+                        <select wire:model="status_pekerjaan_ibu"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="pensiun">Pensiun</option>
+                        </select>
+                    </div>
                     <x-molecules.select-field label="Penghasilan Ibu" name="penghasilan_ibu"
                         wire:model.defer="penghasilan_ibu" :options="collect($this->getPenghasilanOptions())
                                 ->map(fn($label, $value) => ['value' => $value, 'label' => $label])
@@ -822,6 +849,15 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pekerjaan Wali</label>
                         <input type="text" wire:model="pekerjaan_wali"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status Pekerjaan Wali</label>
+                        <select wire:model="status_pekerjaan_wali"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="pensiun">Pensiun</option>
+                        </select>
                     </div>
                     <x-molecules.select-field label="Penghasilan Wali" name="penghasilan_wali"
                         wire:model.defer="penghasilan_wali" :options="collect($this->getPenghasilanOptions())
@@ -873,6 +909,10 @@
                         <p class="font-medium">{{ $user->dataOrangTua->pekerjaan_ayah ?? 'Belum diisi' }}</p>
                     </div>
                     <div>
+                        <span class="text-gray-500">Status Pekerjaan:</span>
+                        <p class="font-medium">{{ $user->dataOrangTua->status_pekerjaan_ayah ? ucfirst($user->dataOrangTua->status_pekerjaan_ayah) : 'Belum diisi' }}</p>
+                    </div>
+                    <div>
                         <span class="text-gray-500">Penghasilan:</span>
                         <p class="font-medium">{{ $user->dataOrangTua->penghasilan_ayah ?? 'Belum diisi' }}</p>
                     </div>
@@ -902,6 +942,10 @@
                     <div>
                         <span class="text-gray-500">Pekerjaan:</span>
                         <p class="font-medium">{{ $user->dataOrangTua->pekerjaan_ibu ?? 'Belum diisi' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Status Pekerjaan:</span>
+                        <p class="font-medium">{{ $user->dataOrangTua->status_pekerjaan_ibu ? ucfirst($user->dataOrangTua->status_pekerjaan_ibu) : 'Belum diisi' }}</p>
                     </div>
                     <div>
                         <span class="text-gray-500">Penghasilan:</span>
@@ -934,6 +978,10 @@
                     <div>
                         <span class="text-gray-500">Pekerjaan:</span>
                         <p class="font-medium">{{ $user->dataOrangTua->pekerjaan_wali ?? 'Belum diisi' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Status Pekerjaan:</span>
+                        <p class="font-medium">{{ $user->dataOrangTua->status_pekerjaan_wali ? ucfirst($user->dataOrangTua->status_pekerjaan_wali) : 'Belum diisi' }}</p>
                     </div>
                     <div>
                         <span class="text-gray-500">Penghasilan:</span>
@@ -969,14 +1017,12 @@
         <form wire:submit.prevent="uploadBerkas" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             @php
             $berkasFields = [
-            ['label' => 'Kartu Keluarga', 'name' => 'kartu_kelurga'],
-            ['label' => 'Akte Kelahiran', 'name' => 'akte_kelahiran'],
-            ['label' => 'Surat Kelakuan Baik', 'name' => 'surat_kelakuan_baik'],
+            ['label' => 'Kartu Keluarga', 'name' => 'kk'],
+            ['label' => 'KTP Orang Tua', 'name' => 'ktp_ortu'],
+            ['label' => 'Akte Kelahiran', 'name' => 'akte'],
             ['label' => 'Surat Sehat', 'name' => 'surat_sehat'],
-            ['label' => 'Surat Tidak Buta Warna', 'name' => 'surat_tidak_buta_warna'],
-            ['label' => 'Rapor', 'name' => 'rapor'],
-            ['label' => 'Foto', 'name' => 'foto'],
-            ['label' => 'Ijazah', 'name' => 'ijazah'],
+            ['label' => 'Pas Foto', 'name' => 'pas_foto'],
+            ['label' => 'KTA TNI / Polri', 'name' => 'kta_tni_polri'],
             ];
             @endphp
 
@@ -1023,6 +1069,7 @@
             ['label' => 'Akte Kelahiran', 'name' => 'akte'],
             ['label' => 'Surat Sehat', 'name' => 'surat_sehat'],
             ['label' => 'Pas Foto', 'name' => 'pas_foto'],
+            ['label' => 'KTA TNI / Polri', 'name' => 'kta_tni_polri'],
             ];
             @endphp
 

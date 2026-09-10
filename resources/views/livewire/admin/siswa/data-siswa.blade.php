@@ -45,6 +45,22 @@
                             ['value' => 'no_transfer', 'label' => 'Belum Upload'],
                         ]"
                         className="flex-1 sm:max-w-xs" />
+
+                    <x-molecules.select-field
+                        name="tahunAjaranFilter"
+                        wire:model.live="tahunAjaranFilter"
+                        placeholder="Semua Tahun Ajaran"
+                        :options="$this->getTahunAjaranOptions()"
+                        className="flex-1 sm:max-w-xs" />
+
+                    <div class="flex gap-2 w-full sm:w-auto ml-auto">
+                        <x-atoms.button
+                            wire:click="exportExcel"
+                            variant="secondary"
+                            heroicon="arrow-down-tray"
+                            className="w-full sm:w-auto whitespace-nowrap">
+                            Export Excel
+                        </x-atoms.button>
                         <x-atoms.button
                             wire:click="openCreateModal"
                             variant="success"
@@ -52,6 +68,7 @@
                             className="w-full sm:w-auto whitespace-nowrap">
                             Tambah Siswa
                         </x-atoms.button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -23,6 +23,7 @@ class LinkYoutubeSection extends Component
     public $description = '';
     public $order = 0;
     public $is_active = true;
+    public $is_intro = false;
     public $editMode = false;
 
     protected $paginationTheme = 'tailwind';
@@ -33,6 +34,7 @@ class LinkYoutubeSection extends Component
         'description' => 'nullable|string|max:1000',
         'order' => 'required|integer|min:0',
         'is_active' => 'boolean',
+        'is_intro' => 'boolean',
     ];
 
     protected $messages = [
@@ -70,6 +72,7 @@ class LinkYoutubeSection extends Component
         $this->description = $video->description;
         $this->order = $video->order;
         $this->is_active = $video->is_active;
+        $this->is_intro = $video->is_intro;
 
         $this->dispatch('open-modal', name: 'youtube-video-modal');
     }
@@ -93,6 +96,7 @@ class LinkYoutubeSection extends Component
                     'description' => $this->description,
                     'order' => $this->order,
                     'is_active' => $this->is_active,
+                    'is_intro' => $this->is_intro,
                 ]);
 
                 session()->flash('message', 'Video YouTube berhasil diperbarui!');
@@ -103,6 +107,7 @@ class LinkYoutubeSection extends Component
                     'description' => $this->description,
                     'order' => $this->order,
                     'is_active' => $this->is_active,
+                    'is_intro' => $this->is_intro,
                 ]);
 
                 session()->flash('message', 'Video YouTube berhasil ditambahkan!');

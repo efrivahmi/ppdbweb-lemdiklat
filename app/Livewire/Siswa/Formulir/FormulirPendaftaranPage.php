@@ -362,10 +362,14 @@ class FormulirPendaftaranPage extends Component
                 }
             }
 
+            $isNewRegistration = !$this->editingId;
             $this->resetForm();
             $this->loadPendaftaranList();
             $this->dispatch('alert', type: 'success', message: $message);
             
+            if ($isNewRegistration) {
+                return $this->redirectRoute('siswa.surat-verifikasi');
+            }
         } catch (\Exception $e) {
             $this->dispatch('alert', type: 'error', message: 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }

@@ -12,6 +12,8 @@ class BerkasMurid extends Model
         'kk',
         'ktp_ortu',
         'akte',
+        'kta_tni_polri',
+        'surat_kelakuan_baik',
         'surat_sehat',
         'pas_foto',
         'proses'

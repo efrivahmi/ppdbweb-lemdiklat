@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Pendaftaran\PendaftaranMurid;
 use App\Models\Pendaftaran\Jurusan;
 use App\Exports\RecapitulationExport;
+use App\Exports\SiswaExport;
+use App\Exports\SiswaProfileExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -69,5 +71,27 @@ class ExportController extends Controller
         ])->setPaper('A4', 'landscape');
         
         return $pdf->download('rekapitulasi-ppdb.pdf');
+    }
+
+    public function siswaExcel(Request $request)
+    {
+        $statusFilter = $request->query('statusFilter');
+        $tahunAjaranFilter = $request->query('tahunAjaranFilter');
+        $search = $request->query('search');
+
+        return Excel::download(new SiswaExport($statusFilter, $tahunAjaranFilter, $search), 'data-siswa-' . now()->format('Y-m-d') . '.xlsx');
+    }
+
+    public function siswaProfileExcel($id)
+    {
+        $user = User::findOrFail($id);
+        return Excel::download(new SiswaProfileExport($id), 'profil-siswa-' . $user->nisn . '.xlsx');
+    }
+
+    public function siswaProfilePdf($id)
+    {
+        $user = User::with(['dataMurid', 'dataOrangTua', 'berkasMurid', 'pendaftaranMurids'])->findOrFail($id);
+        $pdf = Pdf::loadView('exports.siswa-profile', compact('user'));
+        return $pdf->download('profil-siswa-' . $user->nisn . '.pdf');
     }
 }

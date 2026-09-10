@@ -287,6 +287,11 @@ class Sidebar extends Component
                     'url' => 'admin.settings.contact',
                     'icon' => 'ri-contacts-book-line'
                 ],
+                [
+                    'name' => 'Running Text',
+                    'url' => 'admin.settings.running-text',
+                    'icon' => 'ri-text-spacing'
+                ],
             ]
         ]
     ];

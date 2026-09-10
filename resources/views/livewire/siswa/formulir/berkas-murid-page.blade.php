@@ -23,9 +23,13 @@
                     ['label' => 'Kartu Keluarga (KK)', 'name' => 'kk', 'heroicon' => 'identification'],
                     ['label' => 'KTP Orang Tua', 'name' => 'ktp_ortu', 'heroicon' => 'identification'],
                     ['label' => 'Akte Kelahiran', 'name' => 'akte', 'heroicon' => 'document-text'],
-                    ['label' => 'Surat Sehat', 'name' => 'surat_sehat', 'heroicon' => 'heart'],
+                    ['label' => 'Surat Sehat Puskesmas/Klinik Terdekat', 'name' => 'surat_sehat', 'heroicon' => 'heart'],
                     ['label' => 'Pas Foto 3x4 (Latar Biru)', 'name' => 'pas_foto', 'heroicon' => 'camera'],
                 ];
+
+                if ($this->requiresKta) {
+                    $fields[] = ['label' => 'KTA TNI/Polri (Wajib)', 'name' => 'kta_tni_polri', 'heroicon' => 'identification'];
+                }
             @endphp
 
             <!-- Grid responsif untuk file fields -->

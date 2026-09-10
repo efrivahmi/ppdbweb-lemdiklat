@@ -287,7 +287,7 @@
         <!-- User Answers Detail View -->
         <div class="space-y-6">
             <!-- User Stats -->
-            @if(isset($userStats))
+            @if(isset($userStats) && $selectedTest->category !== 'kuesioner_ortu')
             <x-atoms.card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
                 <div class="p-6">
                     <x-atoms.title text="Statistik Jawaban" size="lg" className="mb-4" />

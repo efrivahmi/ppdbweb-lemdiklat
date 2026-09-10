@@ -150,6 +150,11 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/export/pdf', [\App\Http\Controllers\ExportController::class, 'pdf'])->name('ppdb.export.pdf');
     Route::get('/export/test-results/{testId}', [\App\Http\Controllers\Admin\TestResultExportController::class, 'exportPdf'])->name('admin.export.test-results');
 
+    // Siswa Exports
+    Route::get('/export/siswa/excel', [\App\Http\Controllers\ExportController::class, 'siswaExcel'])->name('admin.export.siswa.excel');
+    Route::get('/export/siswa/{id}/excel', [\App\Http\Controllers\ExportController::class, 'siswaProfileExcel'])->name('admin.export.siswa.profile.excel');
+    Route::get('/export/siswa/{id}/pdf', [\App\Http\Controllers\ExportController::class, 'siswaProfilePdf'])->name('admin.export.siswa.profile.pdf');
+
     // Feedback
     Route::get('/feedback', \App\Livewire\Admin\FeedbackList::class)->name('admin.feedback.index');
 
@@ -187,6 +192,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     // Settings
     Route::get('/settings/school', App\Livewire\Admin\Settings\SchoolSettingsPage::class)->name('admin.settings.school');
     Route::get('/settings/contact', App\Livewire\Admin\Settings\AdminContactSettings::class)->name('admin.settings.contact');
+    Route::get('/settings/running-text', App\Livewire\Admin\Settings\RunningTextPage::class)->name('admin.settings.running-text');
     
     // Profile Sekolah (SMA & SMK)
     Route::get('/profile-sekolah/sma', App\Livewire\Admin\ProfileSekolah\SmaPage::class)->name('admin.profile-sekolah.sma');

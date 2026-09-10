@@ -19,6 +19,7 @@ class DataOrangTuaPage extends Component
     public ?string $pendidikan_ayah = null;
     public ?string $telp_ayah = null;
     public ?string $pekerjaan_ayah = null;
+    public ?string $status_pekerjaan_ayah = null;
     public ?string $alamat_ayah = null;
     public ?string $penghasilan_ayah = null;
 
@@ -27,6 +28,7 @@ class DataOrangTuaPage extends Component
     public ?string $pendidikan_ibu = null;
     public ?string $telp_ibu = null;
     public ?string $pekerjaan_ibu = null;
+    public ?string $status_pekerjaan_ibu = null;
     public ?string $alamat_ibu = null;
     public ?string $penghasilan_ibu = null;
 
@@ -35,6 +37,7 @@ class DataOrangTuaPage extends Component
     public ?string $pendidikan_wali = null;
     public ?string $telp_wali = null;
     public ?string $pekerjaan_wali = null;
+    public ?string $status_pekerjaan_wali = null;
     public ?string $alamat_wali = null;
     public ?string $penghasilan_wali = null;
 
@@ -58,6 +61,7 @@ class DataOrangTuaPage extends Component
             $this->pendidikan_ayah = $data->pendidikan_ayah;
             $this->telp_ayah = $data->telp_ayah;
             $this->pekerjaan_ayah = $data->pekerjaan_ayah;
+            $this->status_pekerjaan_ayah = $data->status_pekerjaan_ayah;
             $this->alamat_ayah = $data->alamat_ayah;
             $this->penghasilan_ayah = $data->penghasilan_ayah;
 
@@ -66,6 +70,7 @@ class DataOrangTuaPage extends Component
             $this->pendidikan_ibu = $data->pendidikan_ibu;
             $this->telp_ibu = $data->telp_ibu;
             $this->pekerjaan_ibu = $data->pekerjaan_ibu;
+            $this->status_pekerjaan_ibu = $data->status_pekerjaan_ibu;
             $this->alamat_ibu = $data->alamat_ibu;
             $this->penghasilan_ibu = $data->penghasilan_ibu;
 
@@ -74,6 +79,7 @@ class DataOrangTuaPage extends Component
             $this->pendidikan_wali = $data->pendidikan_wali;
             $this->telp_wali = $data->telp_wali;
             $this->pekerjaan_wali = $data->pekerjaan_wali;
+            $this->status_pekerjaan_wali = $data->status_pekerjaan_wali;
             $this->alamat_wali = $data->alamat_wali;
             $this->penghasilan_wali = $data->penghasilan_wali;
         } else {
@@ -81,31 +87,37 @@ class DataOrangTuaPage extends Component
         }
     }
 
-    protected array $rules = [
-        // Ayah (wajib)
-        'nama_ayah' => 'required|string|max:255',
-        'pendidikan_ayah' => 'required|string|max:50',
-        'telp_ayah' => 'required|string|max:20',
-        'pekerjaan_ayah' => 'required|string|max:50',
-        'alamat_ayah' => 'required|string|max:255',
-        'penghasilan_ayah' => 'required|string|max:50',
+    protected function rules()
+    {
+        return [
+            // Ayah (wajib)
+            'nama_ayah' => 'required|string|max:255',
+            'pendidikan_ayah' => 'required|string|max:50',
+            'telp_ayah' => 'required|string|max:20',
+            'pekerjaan_ayah' => 'required|string|max:50',
+            'status_pekerjaan_ayah' => DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ayah) ? 'required|in:aktif,pensiun' : 'nullable',
+            'alamat_ayah' => 'required|string|max:255',
+            'penghasilan_ayah' => 'required|string|max:50',
 
-        // Ibu (wajib)
-        'nama_ibu' => 'required|string|max:255',
-        'pendidikan_ibu' => 'required|string|max:50',
-        'telp_ibu' => 'required|string|max:20',
-        'pekerjaan_ibu' => 'required|string|max:50',
-        'alamat_ibu' => 'required|string|max:255',
-        'penghasilan_ibu' => 'required|string|max:50',
+            // Ibu (wajib)
+            'nama_ibu' => 'required|string|max:255',
+            'pendidikan_ibu' => 'required|string|max:50',
+            'telp_ibu' => 'required|string|max:20',
+            'pekerjaan_ibu' => 'required|string|max:50',
+            'status_pekerjaan_ibu' => DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ibu) ? 'required|in:aktif,pensiun' : 'nullable',
+            'alamat_ibu' => 'required|string|max:255',
+            'penghasilan_ibu' => 'required|string|max:50',
 
-        // Wali (opsional)
-        'nama_wali' => 'nullable|string|max:255',
-        'pendidikan_wali' => 'nullable|string|max:50',
-        'telp_wali' => 'nullable|string|max:20',
-        'pekerjaan_wali' => 'nullable|string|max:50',
-        'alamat_wali' => 'nullable|string|max:255',
-        'penghasilan_wali' => 'nullable|string|max:50',
-    ];
+            // Wali (opsional)
+            'nama_wali' => 'nullable|string|max:255',
+            'pendidikan_wali' => 'nullable|string|max:50',
+            'telp_wali' => 'nullable|string|max:20',
+            'pekerjaan_wali' => 'nullable|string|max:50',
+            'status_pekerjaan_wali' => DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_wali) ? 'required|in:aktif,pensiun' : 'nullable',
+            'alamat_wali' => 'nullable|string|max:255',
+            'penghasilan_wali' => 'nullable|string|max:50',
+        ];
+    }
 
     public function getPenghasilanOptions()
     {
@@ -119,7 +131,7 @@ class DataOrangTuaPage extends Component
 
     public function checkRequiredFilled(): bool
     {
-        return !empty($this->nama_ayah)
+        $baseRequired = !empty($this->nama_ayah)
             && !empty($this->pendidikan_ayah)
             && !empty($this->telp_ayah)
             && !empty($this->pekerjaan_ayah)
@@ -131,6 +143,13 @@ class DataOrangTuaPage extends Component
             && !empty($this->pekerjaan_ibu)
             && !empty($this->alamat_ibu)
             && !empty($this->penghasilan_ibu);
+
+        if (!$baseRequired) return false;
+
+        if (DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ayah) && empty($this->status_pekerjaan_ayah)) return false;
+        if (DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ibu) && empty($this->status_pekerjaan_ibu)) return false;
+
+        return true;
     }
 
     public function getProgress(): int
@@ -149,6 +168,9 @@ class DataOrangTuaPage extends Component
             'alamat_ibu',
             'penghasilan_ibu'
         ];
+
+        if (DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ayah)) $fields[] = 'status_pekerjaan_ayah';
+        if (DataOrangTua::requiresStatusPekerjaan($this->pekerjaan_ibu)) $fields[] = 'status_pekerjaan_ibu';
 
         $filled = collect($fields)->filter(fn($f) => !empty($this->$f))->count();
 
@@ -169,6 +191,7 @@ class DataOrangTuaPage extends Component
                 'pendidikan_ayah' => $this->pendidikan_ayah,
                 'telp_ayah' => $this->telp_ayah,
                 'pekerjaan_ayah' => $this->pekerjaan_ayah,
+                'status_pekerjaan_ayah' => $this->status_pekerjaan_ayah,
                 'alamat_ayah' => $this->alamat_ayah,
                 'penghasilan_ayah' => $this->penghasilan_ayah,
 
@@ -177,6 +200,7 @@ class DataOrangTuaPage extends Component
                 'pendidikan_ibu' => $this->pendidikan_ibu,
                 'telp_ibu' => $this->telp_ibu,
                 'pekerjaan_ibu' => $this->pekerjaan_ibu,
+                'status_pekerjaan_ibu' => $this->status_pekerjaan_ibu,
                 'alamat_ibu' => $this->alamat_ibu,
                 'penghasilan_ibu' => $this->penghasilan_ibu,
 
@@ -185,6 +209,7 @@ class DataOrangTuaPage extends Component
                 'pendidikan_wali' => $this->pendidikan_wali,
                 'telp_wali' => $this->telp_wali,
                 'pekerjaan_wali' => $this->pekerjaan_wali,
+                'status_pekerjaan_wali' => $this->status_pekerjaan_wali,
                 'alamat_wali' => $this->alamat_wali,
                 'penghasilan_wali' => $this->penghasilan_wali,
 

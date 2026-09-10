@@ -22,6 +22,7 @@ class SuratVerifikasiPage extends Component
     public $canDownloadVerifikasiPDF = false;
     public $verifikasiPDFSettings = null;
     public $missingItems = [];
+    public $hasReadSurat = false;
 
     // Progress properties
     public $dataMuridProgress = 0;
@@ -177,6 +178,12 @@ class SuratVerifikasiPage extends Component
                 }
             }
         }
+    }
+
+    public function confirmRead()
+    {
+        $this->hasReadSurat = true;
+        $this->dispatch("alert", message: "Terima kasih telah membaca surat verifikasi.", type: "success");
     }
 
     public function render()

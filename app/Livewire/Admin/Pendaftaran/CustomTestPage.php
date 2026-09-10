@@ -67,7 +67,7 @@ class CustomTestPage extends Component
                 $rules["questions.{$index}.options"] = 'required|array|min:2';
                 $rules["questions.{$index}.options.*"] = 'required|string|max:200';
                 
-                if ($question['tipe_soal'] === 'radio') {
+                if ($question['tipe_soal'] === 'radio' && $this->category !== 'kuesioner_ortu') {
                     $rules["questions.{$index}.jawaban_benar"] = 'required|string|size:1';
                 }
             }
@@ -206,7 +206,7 @@ class CustomTestPage extends Component
                 continue;
             }
             
-            if ($question['tipe_soal'] === 'radio') {
+            if ($question['tipe_soal'] === 'radio' && $this->category !== 'kuesioner_ortu') {
                 if (empty($question['jawaban_benar'])) {
                     $this->addError("questions.{$index}.jawaban_benar", 'Jawaban benar harus dipilih');
                 } else {

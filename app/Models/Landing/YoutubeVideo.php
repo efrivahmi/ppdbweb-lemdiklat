@@ -15,10 +15,12 @@ class YoutubeVideo extends Model
         'description',
         'order',
         'is_active',
+        'is_intro',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_intro' => 'boolean',
         'order' => 'integer',
     ];
 

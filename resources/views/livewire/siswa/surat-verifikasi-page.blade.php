@@ -25,12 +25,36 @@
                 
                 <div class="flex-1">
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">Dokumen Siap Diunduh</h3>
-                    <p class="text-gray-600 mb-6">Seluruh persyaratan administratif telah terpenuhi. Silakan unduh dokumen ini sebagai bukti sah untuk pendaftaran ulang.</p>
+                    <p class="text-gray-600 mb-6">Seluruh persyaratan administratif telah terpenuhi. Silakan baca ketentuan dan unduh dokumen ini sebagai bukti sah untuk pendaftaran ulang.</p>
                     
-                    <a href="{{ route('siswa.pdf.verifikasi') }}" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6 text-left">
+                        <h3 class="font-bold text-blue-800 text-sm">📋 Perhatian untuk Orang Tua/Wali</h3>
+                        <p class="text-blue-700 mt-1 text-sm">Silakan baca dan unduh surat verifikasi ini dengan seksama sebelum melanjutkan.</p>
+                    </div>
+
+                    <div class="mt-4 mb-6 flex items-center justify-center md:justify-start">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model.live="hasReadSurat" wire:click="confirmRead" class="rounded border-gray-300 w-5 h-5 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-700 font-medium">Saya (orang tua/wali) sudah membaca dan memahami surat verifikasi ini</span>
+                        </label>
+                    </div>
+
+                    @if($hasReadSurat)
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                        <a href="{{ route('siswa.pdf.verifikasi') }}" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition">
+                            <svg class="w-5 h-5 mr-3 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download PDF Verifikasi
+                        </a>
+                        <a href="{{ route('siswa.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition">
+                            Lanjut ke Dashboard &rarr;
+                        </a>
+                    </div>
+                    @else
+                    <button disabled class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed shadow-sm transition">
                         <svg class="w-5 h-5 mr-3 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         Download PDF Verifikasi
-                    </a>
+                    </button>
+                    @endif
                 </div>
             </div>
         </div>

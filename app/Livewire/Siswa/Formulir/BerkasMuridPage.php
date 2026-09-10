@@ -20,7 +20,9 @@ class BerkasMuridPage extends Component
     public $user_id, $proses = 0;
 
     // Berkas
-    public $kk, $ktp_ortu, $akte, $surat_sehat, $pas_foto;
+    public $kk, $ktp_ortu, $akte, $kta_tni_polri, $surat_sehat, $pas_foto;
+
+    public bool $requiresKta = false;
 
     public function mount(): void
     {
@@ -28,19 +30,32 @@ class BerkasMuridPage extends Component
         $berkas = BerkasMurid::firstOrCreate(['user_id' => $this->user_id]);
 
         $this->proses = $berkas->proses;
+
+        $ortu = \App\Models\Siswa\DataOrangTua::where('user_id', $this->user_id)->first();
+        if ($ortu) {
+            $this->requiresKta = \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ayah) 
+                || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_ibu) 
+                || \App\Models\Siswa\DataOrangTua::requiresKtaAndStatus($ortu->pekerjaan_wali);
+        }
     }
 
     protected function rules(): array
     {
         $berkas = BerkasMurid::where('user_id', $this->user_id)->first();
 
-        return [
+        $rules = [
             'kk' => ($berkas && $berkas->kk) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'ktp_ortu' => ($berkas && $berkas->ktp_ortu) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'akte' => ($berkas && $berkas->akte) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'surat_sehat' => ($berkas && $berkas->surat_sehat) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'pas_foto' => ($berkas && $berkas->pas_foto) ? 'nullable|file|mimes:jpg,jpeg,png|max:2048' : 'required|file|mimes:jpg,jpeg,png|max:2048',
         ];
+
+        if ($this->requiresKta) {
+            $rules['kta_tni_polri'] = ($berkas && $berkas->kta_tni_polri) ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        }
+
+        return $rules;
     }
 
     protected array $messages = [
@@ -63,6 +78,10 @@ class BerkasMuridPage extends Component
         'pas_foto.required' => 'Pas Foto wajib diupload.',
         'pas_foto.mimes' => 'Format file harus JPG, JPEG, atau PNG.',
         'pas_foto.max' => 'Ukuran file maksimal 2MB.',
+
+        'kta_tni_polri.required' => 'KTA TNI/Polri wajib diupload.',
+        'kta_tni_polri.mimes' => 'Format file harus PDF, JPG, JPEG, atau PNG.',
+        'kta_tni_polri.max' => 'Ukuran file maksimal 2MB.',
     ];
 
     public function update(): void
@@ -72,6 +91,9 @@ class BerkasMuridPage extends Component
         $berkas = BerkasMurid::firstOrCreate(['user_id' => $this->user_id]);
 
         $fields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+        if ($this->requiresKta) {
+            $fields[] = 'kta_tni_polri';
+        }
 
         foreach ($fields as $field) {
             if ($this->$field) {
@@ -87,6 +109,12 @@ class BerkasMuridPage extends Component
         $this->proses = collect($fields)->every(fn($f) => $berkas->$f) ? 1 : 0;
         $berkas->proses = $this->proses;
         $berkas->save();
+
+        if ($this->proses == 1) {
+            session()->flash('alert', ['message' => 'Berkas lengkap! Silakan pilih jalur pendaftaran.', 'type' => 'success']);
+            $this->redirectRoute('siswa.pendaftaran');
+            return;
+        }
 
         $this->dispatch("alert", message: "Berkas berhasil diperbarui", type: "success");
     }
@@ -113,6 +141,9 @@ class BerkasMuridPage extends Component
     public function getIsCompleteProperty(): bool
     {
         $fields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+        if ($this->requiresKta) {
+            $fields[] = 'kta_tni_polri';
+        }
         $berkas = BerkasMurid::where('user_id', $this->user_id)->first();
 
         return collect($fields)->every(
@@ -124,6 +155,9 @@ class BerkasMuridPage extends Component
     public function getProgressProperty(): int
     {
         $fields = ['kk', 'ktp_ortu', 'akte', 'surat_sehat', 'pas_foto'];
+        if ($this->requiresKta) {
+            $fields[] = 'kta_tni_polri';
+        }
         $berkas = BerkasMurid::where('user_id', $this->user_id)->first();
 
         $filled = collect($fields)->filter(

@@ -16,21 +16,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('data_murids', function (Blueprint $table) {
-            // Get the index name - Laravel naming convention: {table}_{column}_unique
-            $indexName = 'data_murids_nomor_kartu_keluarga_unique';
-            
-            // Check if the unique index exists before dropping
-            $indexExists = collect(DB::select("SHOW INDEX FROM data_murids WHERE Key_name = ?", [$indexName]))->isNotEmpty();
-            
-            if ($indexExists) {
-                // Drop the unique constraint
-                $table->dropUnique(['nomor_kartu_keluarga']);
+        $uniqueIndexName = 'data_murids_nomor_kartu_keluarga_unique';
+        $regularIndexName = 'data_murids_nomor_kartu_keluarga_index';
+        
+        // Cek driver yang sedang digunakan (SQLite atau MySQL)
+        if (DB::getDriverName() === 'sqlite') {
+            $indexExists = collect(DB::select("PRAGMA index_list('data_murids')"))
+                            ->where('name', $uniqueIndexName)
+                            ->isNotEmpty();
+        } else {
+            $indexExists = collect(DB::select("SHOW INDEX FROM data_murids WHERE Key_name = ?", [$uniqueIndexName]))->isNotEmpty();
+        }
+        
+        if ($indexExists) {
+            Schema::table('data_murids', function (Blueprint $table) use ($uniqueIndexName, $regularIndexName) {
+                // Gunakan string nama index langsung agar SQLite tidak bingung
+                $table->dropUnique($uniqueIndexName);
                 
-                // Add a regular index for search performance
-                $table->index('nomor_kartu_keluarga', 'data_murids_nomor_kartu_keluarga_index');
-            }
-        });
+                // Tambahkan index biasa
+                $table->index('nomor_kartu_keluarga', $regularIndexName);
+            });
+        }
     }
 
     /**
@@ -39,19 +45,26 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('data_murids', function (Blueprint $table) {
-            $indexName = 'data_murids_nomor_kartu_keluarga_index';
-            
-            // Check if the regular index exists before dropping
-            $indexExists = collect(DB::select("SHOW INDEX FROM data_murids WHERE Key_name = ?", [$indexName]))->isNotEmpty();
-            
-            if ($indexExists) {
-                // Drop the regular index
-                $table->dropIndex(['nomor_kartu_keluarga']);
+        $uniqueIndexName = 'data_murids_nomor_kartu_keluarga_unique';
+        $regularIndexName = 'data_murids_nomor_kartu_keluarga_index';
+        
+        // Cek driver yang sedang digunakan (SQLite atau MySQL)
+        if (DB::getDriverName() === 'sqlite') {
+            $indexExists = collect(DB::select("PRAGMA index_list('data_murids')"))
+                            ->where('name', $regularIndexName)
+                            ->isNotEmpty();
+        } else {
+            $indexExists = collect(DB::select("SHOW INDEX FROM data_murids WHERE Key_name = ?", [$regularIndexName]))->isNotEmpty();
+        }
+        
+        if ($indexExists) {
+            Schema::table('data_murids', function (Blueprint $table) use ($uniqueIndexName, $regularIndexName) {
+                // Hapus index biasa
+                $table->dropIndex($regularIndexName);
                 
-                // Restore the unique constraint
-                $table->unique('nomor_kartu_keluarga', 'data_murids_nomor_kartu_keluarga_unique');
-            }
-        });
+                // Kembalikan ke unique index
+                $table->unique('nomor_kartu_keluarga', $uniqueIndexName);
+            });
+        }
     }
 };

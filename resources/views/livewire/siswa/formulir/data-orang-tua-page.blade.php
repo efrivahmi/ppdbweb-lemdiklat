@@ -17,7 +17,7 @@
             Progress: {{ $this->getProgress() }}%
         </p>
 
-        <form wire:submit.prevent="update" class="flex flex-col">
+        <form wire:submit.prevent="update" class="flex flex-col" x-data="{ requiresStatus(p) { return ['PNS', 'TNI', 'Polri'].includes(p); } }">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div class="md:col-span-2">
                     <x-atoms.title
@@ -73,6 +73,28 @@
                         </div>
                     </div>
                     @error('pekerjaan_ayah')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Status Pekerjaan Ayah -->
+                <div x-show="requiresStatus($wire.pekerjaan_ayah)" x-cloak>
+                    <x-atoms.label for="status_pekerjaan_ayah">Status Pekerjaan Ayah <span class="text-red-500">*</span></x-atoms.label>
+                    <div class="relative">
+                        <select wire:model.live="status_pekerjaan_ayah"
+                            id="status_pekerjaan_ayah"
+                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition duration-200 appearance-none bg-white">
+                            <option value="">-- Pilih Status Pekerjaan --</option>
+                            @foreach(\App\Models\Siswa\DataOrangTua::getStatusPekerjaanOptions() as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <i class="ri-user-star-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="ri-arrow-down-s-line text-gray-400"></i>
+                        </div>
+                    </div>
+                    @error('status_pekerjaan_ayah')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -167,6 +189,28 @@
                     @enderror
                 </div>
 
+                <!-- Status Pekerjaan Ibu -->
+                <div x-show="requiresStatus($wire.pekerjaan_ibu)" x-cloak>
+                    <x-atoms.label for="status_pekerjaan_ibu">Status Pekerjaan Ibu <span class="text-red-500">*</span></x-atoms.label>
+                    <div class="relative">
+                        <select wire:model.live="status_pekerjaan_ibu"
+                            id="status_pekerjaan_ibu"
+                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition duration-200 appearance-none bg-white">
+                            <option value="">-- Pilih Status Pekerjaan --</option>
+                            @foreach(\App\Models\Siswa\DataOrangTua::getStatusPekerjaanOptions() as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <i class="ri-user-star-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="ri-arrow-down-s-line text-gray-400"></i>
+                        </div>
+                    </div>
+                    @error('status_pekerjaan_ibu')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Penghasilan Ibu -->
                 <div>
                     <x-atoms.label for="penghasilan_ibu">Penghasilan Ibu <span class="text-red-500">*</span></x-atoms.label>
@@ -253,6 +297,28 @@
                         </div>
                     </div>
                     @error('pekerjaan_wali')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Status Pekerjaan Wali -->
+                <div x-show="requiresStatus($wire.pekerjaan_wali)" x-cloak>
+                    <x-atoms.label for="status_pekerjaan_wali">Status Pekerjaan Wali</x-atoms.label>
+                    <div class="relative">
+                        <select wire:model.live="status_pekerjaan_wali"
+                            id="status_pekerjaan_wali"
+                            class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition duration-200 appearance-none bg-white">
+                            <option value="">-- Pilih Status Pekerjaan --</option>
+                            @foreach(\App\Models\Siswa\DataOrangTua::getStatusPekerjaanOptions() as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <i class="ri-user-star-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <i class="ri-arrow-down-s-line text-gray-400"></i>
+                        </div>
+                    </div>
+                    @error('status_pekerjaan_wali')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>

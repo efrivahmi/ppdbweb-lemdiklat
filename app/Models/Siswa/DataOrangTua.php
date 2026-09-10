@@ -13,18 +13,21 @@ class DataOrangTua extends Model
         'pendidikan_ayah',
         'telp_ayah',
         'pekerjaan_ayah',
+        'status_pekerjaan_ayah',
         'alamat_ayah',
         'penghasilan_ayah',
         'nama_ibu',
         'pendidikan_ibu',
         'telp_ibu',
         'pekerjaan_ibu',
+        'status_pekerjaan_ibu',
         'alamat_ibu',
         'penghasilan_ibu',
         'nama_wali',
         'pendidikan_wali',
         'telp_wali',
         'pekerjaan_wali',
+        'status_pekerjaan_wali',
         'alamat_wali',
         'penghasilan_wali',
     ];
@@ -58,10 +61,12 @@ class DataOrangTua extends Model
     {
         return [
             'Tidak Bekerja' => 'Tidak Bekerja',
+            'PNS' => 'PNS (Pegawai Negeri Sipil)',
+            'TNI' => 'TNI (Tentara Nasional Indonesia)',
+            'Polri' => 'Polri (Kepolisian RI)',
             'Nelayan' => 'Nelayan',
             'Petani' => 'Petani',
             'Peternak' => 'Peternak',
-            'PNS/TNI/Polri' => 'PNS/TNI/Polri',
             'Karyawan Swasta' => 'Karyawan Swasta',
             'Pedagang Kecil' => 'Pedagang Kecil',
             'Pedagang Besar' => 'Pedagang Besar',
@@ -74,5 +79,25 @@ class DataOrangTua extends Model
             'Tidak Dapat Diterapkan' => 'Tidak Dapat Diterapkan',
             'Sudah Meninggal' => 'Sudah Meninggal',
         ];
+    }
+
+    public static function getStatusPekerjaanOptions(): array
+    {
+        return [
+            'aktif' => 'Aktif',
+            'pensiun' => 'Pensiun',
+        ];
+    }
+
+    // Helper: apakah pekerjaan memerlukan KTA (TNI/Polri)
+    public static function requiresKtaAndStatus(?string $pekerjaan): bool
+    {
+        return in_array($pekerjaan, ['TNI', 'Polri']);
+    }
+
+    // Helper: apakah pekerjaan memerlukan status pekerjaan (PNS/TNI/Polri)
+    public static function requiresStatusPekerjaan(?string $pekerjaan): bool
+    {
+        return in_array($pekerjaan, ['PNS', 'TNI', 'Polri']);
     }
 }

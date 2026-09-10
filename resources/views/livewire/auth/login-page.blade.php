@@ -1,4 +1,7 @@
-<div class="space-y-8" x-data="{ errorMessage: '' }" x-on:error.window="errorMessage = $event.detail.message">
+<div class="space-y-8" x-data="{ errorMessage: '', capslockOn: false }" 
+     x-on:error.window="errorMessage = $event.detail.message"
+     @keydown.window="capslockOn = $event.getModifierState('CapsLock')"
+     @keyup.window="capslockOn = $event.getModifierState('CapsLock')">
 
   <div class="text-center">
     <x-atoms.title text="Selamat Datang" size="2xl" align="center" class="mb-2 text-gray-800" />
@@ -22,6 +25,11 @@
     <x-molecules.input-field label="Kata Sandi" inputType="password" name="password" id="password"
       placeholder="Masukkan kata sandi Anda" wire:model.defer="password" :error="$errors->first('password')"
       required />
+
+    <div x-show="capslockOn" style="display: none;" class="flex items-center gap-2 mt-2 text-yellow-700 bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-sm">
+        <i class="ri-error-warning-fill text-lg"></i>
+        <span class="font-medium">Peringatan: Caps Lock Anda sedang aktif!</span>
+    </div>
 
     <x-atoms.button type="submit" variant="success" size="lg" isFullWidth="true" rounded="full"
       shadow="lg" heroicon="arrow-right-on-rectangle"

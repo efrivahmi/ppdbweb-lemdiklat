@@ -265,7 +265,7 @@
                 {{-- Preview URL --}}
                 @if($url && !$errors->has('url'))
                     @php
-                        $tempVideo = new \App\Models\YoutubeVideo(['url' => $url]);
+                        $tempVideo = new \App\Models\Landing\YoutubeVideo(['url' => $url]);
                     @endphp
                     @if($tempVideo->video_id)
                         <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -332,6 +332,24 @@
                         <x-atoms.label>Status Aktif</x-atoms.label>
                         <x-atoms.description size="xs" class="text-gray-500">
                             Video akan ditampilkan di halaman landing jika aktif
+                        </x-atoms.description>
+                    </div>
+                </div>
+
+                {{-- Intro Field --}}
+                <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            wire:model="is_intro" 
+                            class="sr-only peer"
+                        >
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                    <div>
+                        <x-atoms.label>Jadikan Video Intro (Popup di Awal)</x-atoms.label>
+                        <x-atoms.description size="xs" class="text-gray-500">
+                            Video ini akan muncul sebagai popup saat halaman landing pertama kali diakses.
                         </x-atoms.description>
                     </div>
                 </div>

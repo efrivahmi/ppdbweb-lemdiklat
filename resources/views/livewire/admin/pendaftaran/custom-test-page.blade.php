@@ -385,7 +385,7 @@
                                     @enderror
 
                                     <!-- Correct Answer (Radio Only) -->
-                                    @if($question['tipe_soal'] === 'radio')
+                                    @if($question['tipe_soal'] === 'radio' && $category !== 'kuesioner_ortu')
                                     <div class="mt-4">
                                         <x-atoms.label>Jawaban Benar <span class="text-red-500">*</span></x-atoms.label>
                                         <div class="flex flex-wrap gap-2 mt-2">
