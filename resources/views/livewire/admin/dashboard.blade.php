@@ -21,7 +21,22 @@
                 <p class="text-emerald-100 mt-1">Admin Dashboard - Sistem Penerimaan Peserta Didik Baru</p>
                 <p class="text-emerald-200 text-sm mt-1">{{ now()->format('d F Y, H:i') }} WIB</p>
             </div>
-            <div class="hidden md:block">
+            <div class="hidden md:flex items-center gap-4">
+                <div class="w-64">
+                    <x-molecules.select-field 
+                        name="selectedGelombangId" 
+                        wire:model.live="selectedGelombangId"
+                    >
+                        <option value="">-- Semua Gelombang --</option>
+                        @foreach($gelombangList->groupBy('tahun_ajaran_id') as $tahunId => $gelombangs)
+                            <optgroup label="{{ $gelombangs->first()->tahunAjaran ? $gelombangs->first()->tahunAjaran->nama_tahun : 'Tanpa Tahun Ajaran' }}">
+                                @foreach($gelombangs as $gelombang)
+                                    <option value="{{ $gelombang->id }}">{{ $gelombang->nama_gelombang }} ({{ $gelombang->pendaftaran_mulai->format('d M Y') }} - {{ $gelombang->pendaftaran_selesai->format('d M Y') }})</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </x-molecules.select-field>
+                </div>
                 <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-award-fill text-3xl"></i>
                 </div>

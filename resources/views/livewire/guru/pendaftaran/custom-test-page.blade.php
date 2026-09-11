@@ -144,6 +144,17 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <x-atoms.button
+                                        wire:click="duplicate({{ $test->id }})"
+                                        variant="success"
+                                        theme="dark"
+                                        size="sm"
+                                        heroicon="document-duplicate"
+                                        className="!p-1 !min-h-[28px] transition-all duration-150"
+                                        wire:loading.attr="disabled"
+                                        wire:target="duplicate({{ $test->id }})"
+                                        title="Duplikat Soal"
+                                    />
+                                    <x-atoms.button
                                         wire:click="edit({{ $test->id }})"
                                         variant="primary"
                                         theme="dark"

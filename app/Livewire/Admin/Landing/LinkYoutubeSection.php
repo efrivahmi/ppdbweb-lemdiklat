@@ -113,6 +113,8 @@ class LinkYoutubeSection extends Component
                 session()->flash('message', 'Video YouTube berhasil ditambahkan!');
             }
 
+            \Illuminate\Support\Facades\Cache::forget('landing.introVideo');
+            \Illuminate\Support\Facades\Cache::forget('landing.heroVideo');
             $this->cancel();
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -125,6 +127,9 @@ class LinkYoutubeSection extends Component
             $video = YoutubeVideo::findOrFail($id);
             $video->delete();
 
+            \Illuminate\Support\Facades\Cache::forget('landing.introVideo');
+            \Illuminate\Support\Facades\Cache::forget('landing.heroVideo');
+
             session()->flash('message', 'Video YouTube berhasil dihapus!');
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -136,6 +141,9 @@ class LinkYoutubeSection extends Component
         try {
             $video = YoutubeVideo::findOrFail($id);
             $video->update(['is_active' => !$video->is_active]);
+
+            \Illuminate\Support\Facades\Cache::forget('landing.introVideo');
+            \Illuminate\Support\Facades\Cache::forget('landing.heroVideo');
 
             session()->flash('message', 'Status video berhasil diubah!');
         } catch (\Exception $e) {

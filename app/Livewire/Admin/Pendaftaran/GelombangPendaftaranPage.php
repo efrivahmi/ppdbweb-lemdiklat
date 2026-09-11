@@ -30,9 +30,10 @@ class GelombangPendaftaranPage extends Component
     public $editMode = false;
     public $selectedId = null;
     
-    public $nama_gelombang, $pendaftaran_mulai, $pendaftaran_selesai, $ujian_mulai, $ujian_selesai, $pengumuman_tanggal;
+    public $tahun_ajaran_id, $nama_gelombang, $pendaftaran_mulai, $pendaftaran_selesai, $ujian_mulai, $ujian_selesai, $pengumuman_tanggal;
     
     protected $rules = [
+        'tahun_ajaran_id' => 'required|exists:tahun_ajarans,id',
         'nama_gelombang' => 'required|string|max:100',
         'pendaftaran_mulai' => 'required|date_format:Y-m-d\TH:i',
         'pendaftaran_selesai' => 'required|date_format:Y-m-d\TH:i|after:pendaftaran_mulai',
@@ -42,6 +43,7 @@ class GelombangPendaftaranPage extends Component
     ];
     
     protected $messages = [
+        'tahun_ajaran_id.required' => 'Tahun ajaran wajib dipilih',
         'nama_gelombang.required' => 'Nama gelombang wajib diisi',
         'nama_gelombang.max' => 'Nama maksimal 100 karakter',
         'pendaftaran_mulai.required' => 'Tanggal mulai pendaftaran wajib diisi',
@@ -74,6 +76,7 @@ class GelombangPendaftaranPage extends Component
     public function resetForm()
     {
         $this->reset([
+            'tahun_ajaran_id',
             'nama_gelombang', 
             'pendaftaran_mulai', 
             'pendaftaran_selesai', 
@@ -97,6 +100,7 @@ class GelombangPendaftaranPage extends Component
     {
         $gelombang = GelombangPendaftaran::findOrFail($id);
         $this->selectedId = $id;
+        $this->tahun_ajaran_id = $gelombang->tahun_ajaran_id;
         $this->nama_gelombang = $gelombang->nama_gelombang;
         
         $this->pendaftaran_mulai = $gelombang->pendaftaran_mulai->format('Y-m-d\TH:i');
@@ -115,6 +119,7 @@ class GelombangPendaftaranPage extends Component
         
         $appTimezone = config('app.timezone');
         $data = [
+            'tahun_ajaran_id' => $this->tahun_ajaran_id,
             'nama_gelombang' => $this->nama_gelombang,
             'pendaftaran_mulai' => Carbon::createFromFormat('Y-m-d\TH:i', $this->pendaftaran_mulai)
                                          ->setTimezone($appTimezone)
@@ -201,11 +206,17 @@ class GelombangPendaftaranPage extends Component
     
     public function render()
     {
-        $gelombangs = GelombangPendaftaran::where('nama_gelombang', 'like', '%' . $this->search . '%')
+        $gelombangs = GelombangPendaftaran::with('tahunAjaran')
+            ->where('nama_gelombang', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate(10);
+            
+        $tahunAjarans = \App\Models\TahunAjaran::where('is_active', true)->get();
         
-        return view('livewire.admin.pendaftaran.gelombang-pendaftaran-page', ['gelombangs' => $gelombangs]);
+        return view('livewire.admin.pendaftaran.gelombang-pendaftaran-page', [
+            'gelombangs' => $gelombangs,
+            'tahunAjarans' => $tahunAjarans
+        ]);
     }
 }
 

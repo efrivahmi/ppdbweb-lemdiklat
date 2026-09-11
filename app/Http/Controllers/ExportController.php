@@ -12,6 +12,9 @@ use App\Exports\SiswaExport;
 use App\Exports\SiswaProfileExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Admin\ExportJob;
+use App\Jobs\ProcessExportJob;
+use Illuminate\Support\Str;
 
 class ExportController extends Controller
 {
@@ -33,11 +36,24 @@ class ExportController extends Controller
 
     public function excel(Request $request)
     {
-        return Excel::download(new RecapitulationExport(
+        $filename = 'rekapitulasi-ppdb-' . date('Y-m-d-His') . '.xlsx';
+        $filePath = 'exports/' . $filename;
+        
+        $job = ExportJob::create([
+            'user_id' => auth()->id(),
+            'type' => 'Excel',
+            'filename' => $filename,
+        ]);
+
+        $exportClass = new RecapitulationExport(
             $request->query('period', 'all'),
             $request->query('startDate'),
             $request->query('endDate')
-        ), 'rekapitulasi-ppdb.xlsx');
+        );
+
+        ProcessExportJob::dispatch($job->id, $exportClass, $filePath, false);
+
+        return redirect()->back()->with('success', 'Tugas ekspor telah dimasukkan ke antrean. Silakan periksa menu Hasil Ekspor beberapa saat lagi.');
     }
 
     public function pdf(Request $request)
@@ -79,7 +95,20 @@ class ExportController extends Controller
         $tahunAjaranFilter = $request->query('tahunAjaranFilter');
         $search = $request->query('search');
 
-        return Excel::download(new SiswaExport($statusFilter, $tahunAjaranFilter, $search), 'data-siswa-' . now()->format('Y-m-d') . '.xlsx');
+        $filename = 'data-siswa-' . date('Y-m-d-His') . '.xlsx';
+        $filePath = 'exports/' . $filename;
+
+        $job = ExportJob::create([
+            'user_id' => auth()->id(),
+            'type' => 'Excel',
+            'filename' => $filename,
+        ]);
+
+        $exportClass = new SiswaExport($statusFilter, $tahunAjaranFilter, $search);
+
+        ProcessExportJob::dispatch($job->id, $exportClass, $filePath, false);
+
+        return redirect()->back()->with('success', 'Tugas ekspor telah dimasukkan ke antrean. Silakan periksa menu Hasil Ekspor beberapa saat lagi.');
     }
 
     public function siswaProfileExcel($id)

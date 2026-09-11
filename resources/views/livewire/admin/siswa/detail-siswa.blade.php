@@ -288,16 +288,19 @@
                         </div>
 
                         {{-- Overall Score --}}
+                        @if($result['test']->category !== 'kuesioner_ortu')
                         <div class="text-center bg-white rounded-lg p-3 sm:p-0 sm:bg-transparent">
                             <div class="text-2xl sm:text-3xl font-bold text-indigo-600">
                                 {{ $result['stats']['percentage'] }}%
                             </div>
                             <div class="text-xs sm:text-sm text-gray-500">Skor Keseluruhan</div>
                         </div>
+                        @endif
                     </div>
                 </div>
 
                 {{-- Stats Grid --}}
+                @if($result['test']->category !== 'kuesioner_ortu')
                 <div class="p-4 sm:p-6">
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
                         <div class="text-center p-3 bg-gray-50 rounded-lg">
@@ -332,6 +335,12 @@
                         </div>
                         @endif
                     </div>
+                @else
+                <div class="p-4 sm:p-6">
+                    <div class="mb-4 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+                        Test ini adalah kuesioner, tidak ada penilaian benar atau salah.
+                    </div>
+                @endif
 
                     {{-- Essay Review Section --}}
                     @if ($result['stats']['essay_pending'] > 0)

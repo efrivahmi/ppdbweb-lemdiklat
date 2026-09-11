@@ -5,10 +5,11 @@ namespace App\Models\Pendaftaran;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CustomTestAnswer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -36,6 +37,6 @@ class CustomTestAnswer extends Model
 
     public function customTestQuestion()
     {
-        return $this->belongsTo(CustomTestQuestion::class);
+        return $this->belongsTo(CustomTestQuestion::class)->withTrashed();
     }
 }

@@ -27,6 +27,7 @@
                 <thead class="text-xs text-white uppercase bg-lime-600">
                     <tr>
                         <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">Tahun Ajaran</th>
                         <th scope="col" class="px-6 py-3">Nama Gelombang</th>
                         <th scope="col" class="px-6 py-3">Pendaftaran</th>
                         <th scope="col" class="px-6 py-3">Ujian</th>
@@ -41,6 +42,9 @@
                     <tr class="bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors">
                         <td class="px-6 py-4 font-medium text-gray-900">
                             {{ ($gelombangs->currentPage() - 1) * $gelombangs->perPage() + $index + 1 }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900">
+                            {{ $gelombang->tahunAjaran ? $gelombang->tahunAjaran->nama_tahun : '-' }}
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
@@ -170,6 +174,18 @@
             </div>
 
             <form wire:submit.prevent="save" class="space-y-5">
+                <x-molecules.select-field
+                    label="Tahun Ajaran"
+                    name="tahun_ajaran_id"
+                    wire:model="tahun_ajaran_id"
+                    :required="true"
+                    :error="$errors->first('tahun_ajaran_id')">
+                    <option value="">-- Pilih Tahun Ajaran --</option>
+                    @foreach($tahunAjarans as $ta)
+                        <option value="{{ $ta->id }}">{{ $ta->nama_tahun }}</option>
+                    @endforeach
+                </x-molecules.select-field>
+
                 <x-molecules.input-field
                     label="Nama Gelombang"
                     name="nama_gelombang"

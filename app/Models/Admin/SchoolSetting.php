@@ -21,6 +21,7 @@ class SchoolSetting extends Model
         'maps_embed_link',
         'maps_image_path',
         'social_links',
+        'is_ppdb_open',
     ];
 
     protected $casts = [

@@ -12,10 +12,19 @@ class Landing extends Component
 {
     public function render()
     {
-        $introVideo = \App\Models\Landing\YoutubeVideo::where('is_active', true)
-            ->where('is_intro', true)
-            ->first();
+        $introVideo = \Illuminate\Support\Facades\Cache::remember('landing.introVideo', 3600, function () {
+            return \App\Models\Landing\YoutubeVideo::where('is_active', true)
+                ->where('is_intro', true)
+                ->first();
+        });
 
-        return view('livewire.landing.landing', compact('introVideo'));
+        $heroVideo = \Illuminate\Support\Facades\Cache::remember('landing.heroVideo', 3600, function () {
+            return \App\Models\Landing\YoutubeVideo::where('is_active', true)
+                ->where('is_intro', false)
+                ->orderBy('order', 'asc')
+                ->first();
+        });
+
+        return view('livewire.landing.landing', compact('introVideo', 'heroVideo'));
     }
 }

@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Livewire\Siswa;
+
+use Livewire\Component;
+
+class PpdbClosedPage extends Component
+{
+    public function render()
+    {
+        return view('livewire.siswa.ppdb-closed-page')
+            ->layout('layouts.siswa', ['title' => 'PPDB Ditutup']);
+    }
+}

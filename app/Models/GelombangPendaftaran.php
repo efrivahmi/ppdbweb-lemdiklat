@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class GelombangPendaftaran extends Model
 {
     protected $fillable = [
+        'tahun_ajaran_id',
         'nama_gelombang',
         'pendaftaran_mulai',
         'pendaftaran_selesai',
@@ -14,6 +15,11 @@ class GelombangPendaftaran extends Model
         'ujian_selesai',
         'pengumuman_tanggal',
     ];
+
+    public function tahunAjaran()
+    {
+        return $this->belongsTo(TahunAjaran::class);
+    }
 
     protected $casts = [
         'pendaftaran_mulai' => 'datetime',

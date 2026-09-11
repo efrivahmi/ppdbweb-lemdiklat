@@ -11,6 +11,7 @@ use App\Models\Siswa\BuktiTransfer;
 use App\Models\Siswa\DataMurid;
 use App\Models\Siswa\DataOrangTua;
 use App\Models\Siswa\BerkasMurid;
+use App\Models\GelombangPendaftaran;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -27,6 +28,9 @@ class Dashboard extends Component
         'total_jalur' => 0,
         'total_tests' => 0
     ];
+
+    public $gelombangList = [];
+    public $selectedGelombangId = null;
 
     public $pendaftaranStats = [
         'pending' => 0,
@@ -59,6 +63,36 @@ class Dashboard extends Component
 
     public function mount()
     {
+        $this->gelombangList = GelombangPendaftaran::with('tahunAjaran')->orderBy('created_at', 'desc')->get();
+        if ($this->gelombangList->isNotEmpty()) {
+            $aktif = GelombangPendaftaran::aktif()->first();
+            $this->selectedGelombangId = $aktif ? $aktif->id : $this->gelombangList->first()->id;
+        }
+
+        $this->loadAllData();
+    }
+
+    public function updatedSelectedGelombangId()
+    {
+        $this->loadAllData();
+    }
+
+    private function getGelombangQuery($query, $dateColumn = 'created_at')
+    {
+        if ($this->selectedGelombangId) {
+            $gelombang = GelombangPendaftaran::find($this->selectedGelombangId);
+            if ($gelombang) {
+                return $query->whereBetween($dateColumn, [
+                    $gelombang->pendaftaran_mulai, 
+                    $gelombang->pendaftaran_selesai
+                ]);
+            }
+        }
+        return $query;
+    }
+
+    private function loadAllData()
+    {
         $this->loadTotalStats();
         $this->loadPendaftaranStats();
         $this->loadBuktiTransferStats();
@@ -71,8 +105,8 @@ class Dashboard extends Component
     public function loadTotalStats()
     {
         $this->totalStats = [
-            'total_siswa' => User::where('role', 'siswa')->count(),
-            'total_pendaftaran' => PendaftaranMurid::count(),
+            'total_siswa' => $this->getGelombangQuery(User::where('role', 'siswa'))->count(),
+            'total_pendaftaran' => $this->getGelombangQuery(PendaftaranMurid::query())->count(),
             'total_jalur' => JalurPendaftaran::count(),
             'total_tests' => CustomTest::where('is_active', true)->count()
         ];
@@ -81,18 +115,18 @@ class Dashboard extends Component
     public function loadPendaftaranStats()
     {
         $this->pendaftaranStats = [
-            'pending' => PendaftaranMurid::where('status', 'pending')->count(),
-            'diterima' => PendaftaranMurid::where('status', 'diterima')->count(),
-            'ditolak' => PendaftaranMurid::where('status', 'ditolak')->count()
+            'pending' => $this->getGelombangQuery(PendaftaranMurid::where('status', 'pending'))->count(),
+            'diterima' => $this->getGelombangQuery(PendaftaranMurid::where('status', 'diterima'))->count(),
+            'ditolak' => $this->getGelombangQuery(PendaftaranMurid::where('status', 'ditolak'))->count()
         ];
     }
 
     public function loadBuktiTransferStats()
     {
         $this->buktiTransferStats = [
-            'pending' => BuktiTransfer::where('status', 'pending')->count(),
-            'diterima' => BuktiTransfer::where('status', 'success')->count(),
-            'ditolak' => BuktiTransfer::where('status', 'decline')->count()
+            'pending' => $this->getGelombangQuery(BuktiTransfer::where('status', 'pending'))->count(),
+            'diterima' => $this->getGelombangQuery(BuktiTransfer::where('status', 'success'))->count(),
+            'ditolak' => $this->getGelombangQuery(BuktiTransfer::where('status', 'decline'))->count()
         ];
     }
 
@@ -137,9 +171,8 @@ class Dashboard extends Component
                 ->count();
 
             // Hitung siswa yang sudah melakukan pendaftaran
-            $pendaftaranLengkap = User::where('role', 'siswa')
-                ->whereHas('pendaftaranMurids')
-                ->count();
+            $pendaftaranLengkap = $this->getGelombangQuery(User::where('role', 'siswa')
+                ->whereHas('pendaftaranMurids'))->count();
 
             $this->completionStats = [
                 'data_murid' => round(($dataMuridLengkap / $totalSiswa) * 100, 1),
@@ -173,24 +206,24 @@ class Dashboard extends Component
         $jalurs = JalurPendaftaran::all();
 
         $this->jalurPendaftaranData = $jalurs->map(function($jalur) {
-            // Hitung distinct user per jalur (tidak peduli berapa jurusan yang dipilih)
-            $totalPendaftar = PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
+            // Hitung distinct user per jalur
+            $totalPendaftar = $this->getGelombangQuery(PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id))
                 ->distinct('user_id')
                 ->count();
             
             // Hitung status berdasarkan distinct user juga
-            $pendingUsers = PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
-                ->where('status', 'pending')
+            $pendingUsers = $this->getGelombangQuery(PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
+                ->where('status', 'pending'))
                 ->distinct('user_id')
                 ->count();
                 
-            $diterimaUsers = PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
-                ->where('status', 'diterima')
+            $diterimaUsers = $this->getGelombangQuery(PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
+                ->where('status', 'diterima'))
                 ->distinct('user_id')
                 ->count();
                 
-            $ditolakUsers = PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
-                ->where('status', 'ditolak')
+            $ditolakUsers = $this->getGelombangQuery(PendaftaranMurid::where('jalur_pendaftaran_id', $jalur->id)
+                ->where('status', 'ditolak'))
                 ->distinct('user_id')
                 ->count();
             

@@ -272,11 +272,12 @@ class DataSiswa extends Component
         // The safest cross-database way is to pull dates and map them, or use a DB::raw that works for the current driver.
         // Let's use simple pluck and map since user count might not be huge, or use specific raw query.
         $years = User::where('role', 'siswa')
-            ->selectRaw(\Illuminate\Support\Facades\DB::raw('CAST(strftime("%Y", created_at) AS INTEGER) as tahun'))
-            ->distinct()
-            ->orderByDesc('tahun')
-            ->pluck('tahun')
-            ->filter()
+            ->select('created_at')
+            ->get()
+            ->map(fn($user) => $user->created_at->format('Y'))
+            ->unique()
+            ->sortDesc()
+            ->values()
             ->toArray();
             
         // Fallback if sqlite function doesn't work well

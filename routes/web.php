@@ -80,8 +80,9 @@ Route::post('/logout', function () {
 })->name('logout')->middleware('auth');
 
 Route::prefix('siswa')
-    ->middleware(['auth', 'isSiswa'])
+    ->middleware(['auth', 'isSiswa', \App\Http\Middleware\CheckPpdbOpen::class])
     ->group(function () {
+        Route::get('/ppdb-closed', \App\Livewire\Siswa\PpdbClosedPage::class)->name('siswa.ppdb-closed');
         // Dashboard & Profil
         Route::get('/', action: Dashboard::class)->name('siswa.dashboard');
         Route::get('/profile', Profile::class)->name('siswa.profile');
@@ -193,6 +194,10 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/settings/school', App\Livewire\Admin\Settings\SchoolSettingsPage::class)->name('admin.settings.school');
     Route::get('/settings/contact', App\Livewire\Admin\Settings\AdminContactSettings::class)->name('admin.settings.contact');
     Route::get('/settings/running-text', App\Livewire\Admin\Settings\RunningTextPage::class)->name('admin.settings.running-text');
+    Route::get('/settings/tahun-ajaran', \App\Livewire\Admin\Settings\TahunAjaranPage::class)->name('admin.settings.tahun-ajaran');
+    
+    // Export Jobs
+    Route::get('/export-jobs', \App\Livewire\Admin\ExportListPage::class)->name('admin.exports');
     
     // Profile Sekolah (SMA & SMK)
     Route::get('/profile-sekolah/sma', App\Livewire\Admin\ProfileSekolah\SmaPage::class)->name('admin.profile-sekolah.sma');

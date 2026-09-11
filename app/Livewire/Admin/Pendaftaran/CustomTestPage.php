@@ -153,6 +153,42 @@ class CustomTestPage extends Component
         }
     }
 
+    public function duplicate($id)
+    {
+        try {
+            $this->isLoading = true;
+            $test = CustomTest::with(['questions' => fn($q) => $q->orderBy('urutan')])->findOrFail($id);
+            
+            $this->selectedId = null; // Important: Null so it creates a new record
+            $this->nama_test = $test->nama_test . ' (Copy)';
+            $this->deskripsi = $test->deskripsi ?? '';
+            $this->is_active = false; // Default to inactive when copied
+            $this->mapel_id = $test->mapel_id;
+            $this->category = $test->category;
+
+            $this->questions = [];
+            $this->questionImages = [];
+            foreach ($test->questions as $question) {
+                $this->questions[] = [
+                    'id' => null, // Null so it inserts new question
+                    'pertanyaan' => $question->pertanyaan,
+                    'tipe_soal' => $question->tipe_soal,
+                    'options' => $question->options ?? [],
+                    'jawaban_benar' => $question->jawaban_benar ?? '',
+                    'existing_image' => $question->image // Reference the same image file, if any
+                ];
+                $this->questionImages[] = null;
+            }
+            
+            $this->editMode = false; // It's a new test creation
+            $this->openModal();
+        } catch (\Exception $e) {
+            $this->dispatch("alert", message: "Gagal mengambil data.", type: "error");
+        } finally {
+            $this->isLoading = false;
+        }
+    }
+
     public function save()
     {
         try {

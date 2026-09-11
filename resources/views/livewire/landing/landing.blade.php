@@ -1,5 +1,19 @@
 <div>
     <livewire:components.landing.hero-section />
+
+    @if($heroVideo)
+    <section class="w-full h-[60vh] bg-black relative">
+        <iframe 
+            class="w-full h-full object-cover" 
+            src="{{ str_contains($heroVideo->embed_url, '?') ? $heroVideo->embed_url . '&autoplay=1&mute=1' : $heroVideo->embed_url . '?autoplay=1&mute=1' }}" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+        </iframe>
+    </section>
+    @endif
+
     <livewire:components.landing.stat-section />
     <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <livewire:components.landing.news-section />

@@ -186,6 +186,46 @@ class CustomTestPage extends Component
         }
     }
 
+    public function duplicate($id)
+    {
+        try {
+            $this->isLoading = true;
+            $test = CustomTest::with(['questions' => fn($q) => $q->orderBy('urutan')])->findOrFail($id);
+            
+            if (!auth()->user()->canManageCustomTest($test)) {
+                $this->dispatch("alert", message: "Anda tidak memiliki akses untuk mengelola test ini", type: "error");
+                return;
+            }
+
+            $this->selectedId = null; 
+            $this->nama_test = $test->nama_test . ' (Copy)';
+            $this->deskripsi = $test->deskripsi ?? '';
+            $this->is_active = false; 
+            $this->mapel_id = $test->mapel_id;
+
+            $this->questions = [];
+            $this->questionImages = [];
+            foreach ($test->questions as $question) {
+                $this->questions[] = [
+                    'id' => null, 
+                    'pertanyaan' => $question->pertanyaan,
+                    'tipe_soal' => $question->tipe_soal,
+                    'options' => $question->options ?? [],
+                    'jawaban_benar' => $question->jawaban_benar ?? '',
+                    'existing_image' => $question->image 
+                ];
+                $this->questionImages[] = null;
+            }
+            
+            $this->editMode = false; 
+            $this->openModal();
+        } catch (\Exception $e) {
+            $this->dispatch("alert", message: "Gagal mengambil data test", type: "error");
+        } finally {
+            $this->isLoading = false;
+        }
+    }
+
     public function save()
     {
         try {

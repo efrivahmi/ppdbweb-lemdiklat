@@ -22,6 +22,7 @@ class SchoolSettingsPage extends Component
     public $email = '';
     public $website = '';
     public $tahun_ajaran = '';
+    public $is_ppdb_open = true;
 
     // Maps Settings
     public $maps_embed_link = '';
@@ -51,6 +52,7 @@ class SchoolSettingsPage extends Component
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'tahun_ajaran' => 'required|string|max:20',
+            'is_ppdb_open' => 'boolean',
             'maps_embed_link' => 'nullable|string',
             'maps_image' => 'nullable|image|max:2048',
         ];
@@ -82,6 +84,7 @@ class SchoolSettingsPage extends Component
             $this->maps_embed_link = $settings->maps_embed_link ?? '';
             $this->maps_image_preview = $settings->maps_image_url;
             $this->social_links = $settings->social_links ?? [];
+            $this->is_ppdb_open = $settings->is_ppdb_open;
         } else {
             $this->tahun_ajaran = date('Y') . '/' . (date('Y') + 1);
             $this->social_links = [];
@@ -111,6 +114,7 @@ class SchoolSettingsPage extends Component
                 'email' => $this->email,
                 'website' => $this->website,
                 'tahun_ajaran' => $this->tahun_ajaran,
+                'is_ppdb_open' => $this->is_ppdb_open,
                 'maps_embed_link' => $this->maps_embed_link,
                 'social_links' => $this->social_links,
             ];

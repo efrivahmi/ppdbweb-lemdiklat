@@ -104,12 +104,14 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
+                                    <x-atoms.button wire:click="duplicate({{ $test->id }})" variant="success" theme="dark" 
+                                        size="sm" heroicon="document-duplicate" className="!p-1 !min-h-[28px]" title="Duplikat Soal" />
                                     <x-atoms.button wire:click="edit({{ $test->id }})" variant="primary" theme="dark" 
-                                        size="sm" heroicon="pencil" className="!p-1 !min-h-[28px]" />
+                                        size="sm" heroicon="pencil" className="!p-1 !min-h-[28px]" title="Edit" />
                                     <x-atoms.button wire:click="delete({{ $test->id }})" 
                                         wire:confirm="Yakin ingin menghapus test ini?"
                                         variant="danger" theme="dark" size="sm" heroicon="trash" 
-                                        className="!p-1 !min-h-[28px]" />
+                                        className="!p-1 !min-h-[28px]" title="Hapus" />
                                 </div>
                             </td>
                         </tr>

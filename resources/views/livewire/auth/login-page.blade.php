@@ -3,6 +3,38 @@
      @keydown.window="capslockOn = $event.getModifierState('CapsLock')"
      @keyup.window="capslockOn = $event.getModifierState('CapsLock')">
 
+  @if($runningTexts && $runningTexts->count() > 0)
+  <div class="bg-lime-600 text-white overflow-hidden py-2 px-4 rounded-lg shadow-sm -mt-4 mb-4">
+      <div class="whitespace-nowrap animate-marquee flex gap-8">
+          @foreach($runningTexts as $text)
+              <span class="inline-block font-medium text-sm md:text-base">
+                  {{ $text->text }}
+              </span>
+          @endforeach
+          <!-- Duplikasi untuk efek infinite scroll -->
+          @foreach($runningTexts as $text)
+              <span class="inline-block font-medium text-sm md:text-base" aria-hidden="true">
+                  {{ $text->text }}
+              </span>
+          @endforeach
+      </div>
+  </div>
+  
+  <style>
+      .animate-marquee {
+          display: inline-block;
+          animation: marquee 15s linear infinite;
+      }
+      .animate-marquee:hover {
+          animation-play-state: paused;
+      }
+      @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+      }
+  </style>
+  @endif
+
   <div class="text-center">
     <x-atoms.title text="Selamat Datang" size="2xl" align="center" class="mb-2 text-gray-800" />
     <x-atoms.description align="center" color="gray-600" size="sm">

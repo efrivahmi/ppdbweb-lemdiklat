@@ -26,7 +26,11 @@ class LoginPage extends Component
     ];
     public function render()
     {
-        return view('livewire.auth.login-page');
+        $runningTexts = \App\Models\Settings\RunningText::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->get();
+
+        return view('livewire.auth.login-page', compact('runningTexts'));
     }
 
     public function login()

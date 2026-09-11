@@ -20,6 +20,15 @@ class Sidebar extends Component
             'type' => 'link'
         ],
 
+        // Hasil Ekspor
+        [
+            'key' => 'hasil-ekspor',
+            'name' => 'Hasil Ekspor',
+            'url' => 'admin.exports',
+            'icon' => 'ri-download-cloud-2-line',
+            'type' => 'link'
+        ],
+
         // WhatsApp Message
         [
             'key' => 'whatsapp-message',
@@ -51,6 +60,11 @@ class Sidebar extends Component
                     'name' => 'Siswa',
                     'url' => 'admin.siswa',
                     'icon' => 'ri-user-add-line'
+                ],
+                [
+                    'name' => 'Data Pendaftar (Siswa)',
+                    'url' => 'admin.siswa.pendaftar',
+                    'icon' => 'ri-user-follow-line'
                 ],
             ]
         ],
@@ -281,6 +295,11 @@ class Sidebar extends Component
                     'name' => 'Pengaturan Sekolah',
                     'url' => 'admin.settings.school',
                     'icon' => 'ri-school-line'
+                ],
+                [
+                    'name' => 'Tahun Ajaran',
+                    'url' => 'admin.settings.tahun-ajaran',
+                    'icon' => 'ri-calendar-todo-line'
                 ],
                 [
                     'name' => 'Kontak Admin',
