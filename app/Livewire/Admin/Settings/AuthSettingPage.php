@@ -54,6 +54,7 @@ class AuthSettingPage extends Component
             $this->title = 'Selamat Datang di SPMB';
             $this->subtitle = '2026/2027';
             $this->description = 'Sistem Penerimaan Murid Baru';
+        }
     }
 
     public function openModal()
