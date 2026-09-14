@@ -58,10 +58,6 @@
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Deskripsi</h3>
                         <p class="text-md font-medium text-gray-700">{{ $authSetting->description ?: '-' }}</p>
                     </div>
-                    <div>
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Institusi (Sub Deskripsi)</h3>
-                        <p class="text-md font-medium text-gray-700">{{ $authSetting->sub_description ?: '-' }}</p>
-                    </div>
                 </div>
             </div>
         @else
@@ -106,15 +102,6 @@
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500"
                            placeholder="Contoh: Sistem Penerimaan Murid Baru">
                     @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-                
-                {{-- Sub Description --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Institusi (Sub Deskripsi)</label>
-                    <input type="text" wire:model="sub_description"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500"
-                           placeholder="Contoh: Lemdiklat Taruna Nusantara Indonesia">
-                    @error('sub_description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 {{-- Background Image --}}

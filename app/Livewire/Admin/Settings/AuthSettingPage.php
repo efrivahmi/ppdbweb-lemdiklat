@@ -20,8 +20,6 @@ class AuthSettingPage extends Component
     public $title;
     public $subtitle;
     public $description;
-    public $sub_description;
-    
     public $image;
     public $new_image;
 
@@ -29,7 +27,6 @@ class AuthSettingPage extends Component
         'title' => 'nullable|string|max:255',
         'subtitle' => 'nullable|string|max:255',
         'description' => 'nullable|string|max:255',
-        'sub_description' => 'nullable|string|max:255',
         'new_image' => 'nullable|image|max:5120', // 5MB Max
     ];
 
@@ -51,15 +48,12 @@ class AuthSettingPage extends Component
             $this->title = $this->authSetting->title;
             $this->subtitle = $this->authSetting->subtitle;
             $this->description = $this->authSetting->description;
-            $this->sub_description = $this->authSetting->sub_description;
             $this->image = $this->authSetting->image;
         } else {
             // Set defaults if null
             $this->title = 'Selamat Datang di SPMB';
             $this->subtitle = '2026/2027';
             $this->description = 'Sistem Penerimaan Murid Baru';
-            $this->sub_description = 'Lemdiklat Taruna Nusantara Indonesia';
-        }
     }
 
     public function openModal()
@@ -88,7 +82,6 @@ class AuthSettingPage extends Component
             'title' => $this->title,
             'subtitle' => $this->subtitle,
             'description' => $this->description,
-            'sub_description' => $this->sub_description,
         ];
 
         if ($this->new_image) {

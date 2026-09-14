@@ -28,8 +28,8 @@ class CheckPpdbOpen
 
         // If settings exist and PPDB is closed
         if ($settings && !$settings->is_ppdb_open) {
-            // Allow admin/guru routes, but redirect siswa routes
-            if ($request->is('siswa/*') || $request->is('siswa')) {
+            // Allow admin/guru routes, but redirect siswa and register routes
+            if ($request->is('siswa/*') || $request->is('siswa') || $request->routeIs('register')) {
                 return redirect()->route('siswa.ppdb-closed');
             }
         }

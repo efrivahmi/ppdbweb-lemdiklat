@@ -20,7 +20,6 @@
       $title = $authSetting && $authSetting->title ? $authSetting->title : 'Selamat Datang di SPMB';
       $subtitle = $authSetting && $authSetting->subtitle ? $authSetting->subtitle : '2026/2027';
       $description = $authSetting && $authSetting->description ? $authSetting->description : 'Sistem Penerimaan Murid Baru';
-      $subDesc = $authSetting && $authSetting->sub_description ? $authSetting->sub_description : 'Lemdiklat Taruna Nusantara Indonesia';
   @endphp
 
   <!-- Top Running Text (Ticker) -->
@@ -79,8 +78,7 @@
           </svg>
           
           <p class="mt-4 text-2xl font-bold text-gray-900 border-l-8 border-lime-500 pl-6">
-            {{ $description }} <br/>
-            <span class="text-lg font-black text-gray-800">{{ $subDesc }}</span>
+            {{ $description }}
           </p>
         </div>
       </div>

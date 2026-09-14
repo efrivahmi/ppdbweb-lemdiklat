@@ -1,6 +1,30 @@
 <div>
     <x-atoms.breadcrumb currentPath="Gelombang Pendaftaran" />
 
+    <!-- Section Khusus: Status PPDB -->
+    <x-atoms.card className="mt-3 mb-6 bg-gradient-to-r from-lime-50 to-emerald-50 border border-lime-100">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <x-heroicon-o-power class="w-6 h-6 text-lime-600" />
+                    Status Sistem Penerimaan Murid Baru (PPDB)
+                </h2>
+                <p class="text-sm text-gray-600 mt-1">Mengaktifkan atau menonaktifkan seluruh sistem pendaftaran PPDB. Jika ditutup, calon siswa tidak akan bisa mendaftar.</p>
+            </div>
+            
+            <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-xl shadow-sm border border-gray-100">
+                <span class="text-sm font-bold text-gray-700">Status PPDB:</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" wire:model.live="is_ppdb_open" class="sr-only peer">
+                    <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-lime-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-lime-500"></div>
+                    <span class="ml-3 text-sm font-bold {{ $is_ppdb_open ? 'text-lime-600' : 'text-red-500' }}">
+                        {{ $is_ppdb_open ? 'BUKA' : 'TUTUP' }}
+                    </span>
+                </label>
+            </div>
+        </div>
+    </x-atoms.card>
+
     <x-atoms.card className="mt-3">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <x-atoms.title text="Tabel Gelombang Pendaftaran" size="xl" />

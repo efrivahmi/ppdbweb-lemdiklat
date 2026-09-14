@@ -70,7 +70,7 @@ Route::get('/requirement', Requirement::class)->name('requirement');
 Route::get('/alumni', Alumni::class)->name('alumni');
 Route::get('/ekstrakurikuler', App\Livewire\Landing\Pages\Ekstrakurikuler::class)->name('ekstrakurikuler');
 
-Route::get('/register', RegisterPage::class)->name('register');
+Route::get('/register', RegisterPage::class)->name('register')->middleware(\App\Http\Middleware\CheckPpdbOpen::class);
 Route::get('/login', LoginPage::class)->name('login');
 
 Route::post('/logout', function () {

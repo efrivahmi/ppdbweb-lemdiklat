@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Pendaftaran;
 
 use App\Models\GelombangPendaftaran;
 use App\Models\Pendaftaran\PendaftaranMurid;
+use App\Models\Admin\SchoolSetting;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -25,6 +27,8 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 class GelombangPendaftaranPage extends Component
 {
     use WithPagination;
+    
+    public $is_ppdb_open = true;
     
     public $search = '';
     public $editMode = false;
@@ -61,6 +65,26 @@ class GelombangPendaftaranPage extends Component
         'pengumuman_tanggal.date_format' => 'Format tanggal dan jam tidak valid (contoh: 2023-10-01T14:30)',
         'pengumuman_tanggal.after' => 'Tanggal pengumuman harus setelah selesai ujian',
     ];
+
+    public function mount()
+    {
+        $settings = SchoolSetting::first();
+        if ($settings) {
+            $this->is_ppdb_open = $settings->is_ppdb_open;
+        }
+    }
+
+    public function updatedIsPpdbOpen()
+    {
+        $settings = SchoolSetting::first();
+        if ($settings) {
+            $settings->update(['is_ppdb_open' => $this->is_ppdb_open]);
+            Cache::forget('school_settings');
+            
+            $status = $this->is_ppdb_open ? 'Dibuka' : 'Ditutup';
+            $this->dispatch('alert', message: "Status PPDB berhasil {$status}", type: 'success');
+        }
+    }
     
     public function openModal()
     {
