@@ -34,6 +34,7 @@ class SmaPage extends Component
     public $description = '';
     
     // Akademik section
+    public $kurikulum_description = '';
     // Academic Programs (dynamic - admin can add programs freely)
     public $academic_programs = [];
     
@@ -74,26 +75,26 @@ class SmaPage extends Component
         if ($this->profile) {
             // Load hero data
             $heroData = $this->profile->hero_data ?? [];
-            $this->hero_title_prefix = $heroData['title_prefix'] ?? 'SMA';
-            $this->hero_title_main = $heroData['title_main'] ?? 'Taruna Nusantara Indonesia';
+            $this->hero_title_prefix = !empty($heroData['title_prefix']) ? $heroData['title_prefix'] : 'SMA';
+            $this->hero_title_main = !empty($heroData['title_main']) ? $heroData['title_main'] : 'Taruna Nusantara Indonesia';
             $this->hero_subtitle = $heroData['subtitle'] ?? '';
-            $this->hero_badges = $heroData['badges'] ?? ['Akreditasi: A', 'NPSN: 12345678', 'Berdiri: 2010'];
+            $this->hero_badges = !empty($heroData['badges']) ? $heroData['badges'] : ['Akreditasi: A', 'NPSN: 12345678', 'Berdiri: 2010'];
             
             // Load identity data
             $identityData = $this->profile->identity_data ?? [];
-            $this->school_name = $identityData['school_name'] ?? 'SMA Taruna Nusantara Indonesia';
+            $this->school_name = !empty($identityData['school_name']) ? $identityData['school_name'] : 'SMA Taruna Nusantara Indonesia';
             $this->npsn = $identityData['npsn'] ?? '';
-            $this->accreditation = $identityData['accreditation'] ?? 'A (Unggul)';
+            $this->accreditation = !empty($identityData['accreditation']) ? $identityData['accreditation'] : 'A (Unggul)';
             $this->year_founded = $identityData['year_founded'] ?? '';
-            $this->curriculum = $identityData['curriculum'] ?? 'Kurikulum Merdeka';
+            $this->curriculum = !empty($identityData['curriculum']) ? $identityData['curriculum'] : 'Kurikulum Merdeka';
             $this->students_teachers = $identityData['students_teachers'] ?? '';
             $this->description = $identityData['description'] ?? '';
             
             // Load academic data
             $academicData = $this->profile->academic_data ?? [];
             $this->kurikulum_description = $academicData['kurikulum_description'] ?? '';
-            $this->academic_programs = $academicData['academic_programs'] ?? [];
-            $this->program_unggulan = $academicData['program_unggulan'] ?? $this->program_unggulan;
+            $this->academic_programs = !empty($academicData['academic_programs']) ? $academicData['academic_programs'] : [];
+            $this->program_unggulan = !empty($academicData['program_unggulan']) ? $academicData['program_unggulan'] : $this->program_unggulan;
             
             // Load uniform data
             $uniformData = $this->profile->uniform_data ?? [];
@@ -237,6 +238,8 @@ class SmaPage extends Component
         ProfileSekolah::updateOrCreate(
             ['school_type' => 'sma'],
             [
+                'title' => 'Profile SMA',
+                'content' => '-',
                 'hero_data' => $heroData,
                 'identity_data' => $identityData,
                 'academic_data' => $academicData,
