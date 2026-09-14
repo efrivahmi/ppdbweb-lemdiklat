@@ -72,6 +72,7 @@ Route::get('/ekstrakurikuler', App\Livewire\Landing\Pages\Ekstrakurikuler::class
 
 Route::get('/register', RegisterPage::class)->name('register')->middleware(\App\Http\Middleware\CheckPpdbOpen::class);
 Route::get('/login', LoginPage::class)->name('login');
+Route::get('/ppdb-closed', \App\Livewire\Siswa\PpdbClosedPage::class)->name('siswa.ppdb-closed');
 
 Route::post('/logout', function () {
     \Illuminate\Support\Facades\Auth::logout();
@@ -83,7 +84,7 @@ Route::post('/logout', function () {
 Route::prefix('siswa')
     ->middleware(['auth', 'isSiswa', \App\Http\Middleware\CheckPpdbOpen::class])
     ->group(function () {
-        Route::get('/ppdb-closed', \App\Livewire\Siswa\PpdbClosedPage::class)->name('siswa.ppdb-closed');
+
         // Dashboard & Profil
         Route::get('/', action: Dashboard::class)->name('siswa.dashboard');
         Route::get('/profile', Profile::class)->name('siswa.profile');
