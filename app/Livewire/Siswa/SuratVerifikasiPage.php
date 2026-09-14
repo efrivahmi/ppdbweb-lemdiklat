@@ -155,7 +155,7 @@ class SuratVerifikasiPage extends Component
     public function confirmRead()
     {
         $this->hasReadSurat = true;
-        $this->dispatch("alert", message: "Terima kasih! Silakan kembali ke Beranda untuk upload dan menyelesaikan pembayaran PPDB.", type: "success");
+        $this->dispatch("alert", message: "Terima kasih! Silakan kembali ke Beranda untuk upload dan menyelesaikan pembayaran SPMB.", type: "success");
     }
 
     public function render()

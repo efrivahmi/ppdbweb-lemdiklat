@@ -20,7 +20,7 @@
 <body>
     <div class="header">
         <h1>Profil Data Siswa</h1>
-        <p>PPDB Web Lemdiklat</p>
+        <p>SPMB Web Lemdiklat</p>
     </div>
 
     @php

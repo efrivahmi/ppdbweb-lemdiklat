@@ -77,7 +77,7 @@ class Sidebar extends Component
             'type' => 'folder',
             'children' => [
                 [
-                    'name' => 'Rekapitulasi PPDB',
+                    'name' => 'Rekapitulasi SPMB',
                     'url' => 'admin.recapitulation',
                     'icon' => 'ri-bar-chart-box-line'
                 ],

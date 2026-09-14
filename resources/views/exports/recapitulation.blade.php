@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Rekapitulasi PPDB</title>
+    <title>Rekapitulasi SPMB</title>
     <style>
         @page { margin: 25px; }
         body { font-family: sans-serif; font-size: 11px; }
@@ -19,7 +19,7 @@
 </head>
 <body>
 
-    <div class="title">Laporan Rekapitulasi PPDB</div>
+    <div class="title">Laporan Rekapitulasi SPMB</div>
     <div class="subtitle">Dicetak pada: {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i') }}</div>
 
     <table class="mb-4">

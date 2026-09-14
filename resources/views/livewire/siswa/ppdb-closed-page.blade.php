@@ -3,7 +3,7 @@
     <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-lime-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-50 animate-pulse"></div>
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-50 animate-pulse" style="animation-delay: 2s;"></div>
 
-    <div class="w-full max-w-2xl bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_40px_rgb(0,0,0,0.08)] rounded-[3rem] p-10 lg:p-16 text-center relative z-10" x-data="{ mounted: false }" x-init="setTimeout(() => mounted = true, 50)">
+    <div class="w-full max-w-2xl text-center relative z-10 p-6 lg:p-12" x-data="{ mounted: false }" x-init="setTimeout(() => mounted = true, 50)">
         
         <!-- Mascot Image (Nano Banana) -->
         <div class="flex justify-center mb-8"
@@ -32,7 +32,7 @@
            x-transition:enter="transition-all ease-out duration-700 delay-700"
            x-transition:enter-start="opacity-0 translate-y-4"
            x-transition:enter-end="opacity-100 translate-y-0">
-            Mohon maaf, sistem Penerimaan Peserta Didik Baru (PPDB) saat ini sedang ditutup. 
+            Mohon maaf, Sistem Penerimaan Murid Baru (SPMB) saat ini sedang ditutup. 
             Silakan pantau informasi pendaftaran gelombang selanjutnya melalui halaman utama kami.
         </p>
 
@@ -42,9 +42,9 @@
              x-transition:enter="transition-all ease-out duration-700 delay-1000"
              x-transition:enter-start="opacity-0"
              x-transition:enter-end="opacity-100">
-            <a href="{{ url('/') }}" class="inline-flex items-center justify-center gap-2 px-10 py-4 text-base font-bold text-white transition-all bg-gradient-to-r from-lime-600 to-emerald-600 rounded-full hover:from-lime-500 hover:to-emerald-500 hover:scale-105 hover:shadow-[0_10px_30px_rgba(132,204,22,0.4)] active:scale-95">
-                <x-heroicon-o-home class="w-6 h-6" />
-                Kembali ke Beranda Utama
+            <a href="{{ url('/') }}" class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-base font-bold text-white transition-all bg-gradient-to-r from-lime-600 to-emerald-600 rounded-full hover:from-lime-500 hover:to-emerald-500 hover:scale-105 hover:shadow-[0_10px_30px_rgba(132,204,22,0.4)] active:scale-95 whitespace-nowrap w-auto">
+                <x-heroicon-o-home class="w-5 h-5 flex-shrink-0" />
+                <span>Kembali ke Beranda Utama</span>
             </a>
         </div>
     </div>

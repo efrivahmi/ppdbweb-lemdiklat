@@ -323,7 +323,7 @@
                             label="Nama Operator"
                             name="nama_operator"
                             wire:model="nama_operator"
-                            placeholder="Nama operator PPDB"
+                            placeholder="Nama operator SPMB"
                             :required="true"
                             :error="$errors->first('nama_operator')"
                         />
@@ -332,7 +332,7 @@
                             label="Jabatan Operator"
                             name="jabatan_operator"
                             wire:model="jabatan_operator"
-                            placeholder="Jabatan operator PPDB"
+                            placeholder="Jabatan operator SPMB"
                             :required="true"
                             :error="$errors->first('jabatan_operator')"
                         />

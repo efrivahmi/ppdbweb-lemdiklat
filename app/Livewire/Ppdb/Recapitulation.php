@@ -12,7 +12,7 @@ use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 
 #[Layout('layouts.admin')]
-#[Title('Rekapitulasi PPDB')]
+#[Title('Rekapitulasi SPMB')]
 class Recapitulation extends Component
 {
     use WithPagination;

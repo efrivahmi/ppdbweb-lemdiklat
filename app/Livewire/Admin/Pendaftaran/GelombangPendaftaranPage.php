@@ -82,7 +82,7 @@ class GelombangPendaftaranPage extends Component
             Cache::forget('school_settings');
             
             $status = $this->is_ppdb_open ? 'Dibuka' : 'Ditutup';
-            $this->dispatch('alert', message: "Status PPDB berhasil {$status}", type: 'success');
+            $this->dispatch('alert', message: "Status SPMB berhasil {$status}", type: 'success');
         }
     }
     
