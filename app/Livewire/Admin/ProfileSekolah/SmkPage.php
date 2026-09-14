@@ -265,22 +265,23 @@ class SmkPage extends Component
         ];
         
         // Save or create profile
-        ProfileSekolah::updateOrCreate(
-        ['school_type' => 'smk'],
-        [
-        // TAMBAHKAN DUA BARIS INI:
-        'title' => 'Profile SMK',    // Wajib diisi agar tidak error
-        'content' => '-',            // Wajib diisi agar tidak error
-        
-        // Data yang sudah ada:
-        'hero_data' => $heroData,
-        'identity_data' => $identityData,
-        'academic_data' => $academicData,
-        'activity_data' => $activityData,
-        'uniform_data' => $uniformData,
-        'cta_data' => $ctaData,
-        ]
-    );
+        $profile = ProfileSekolah::where('school_type', 'smk')->first();
+        if (!$profile) {
+            $profile = ProfileSekolah::create([
+                'school_type' => 'smk',
+                'title' => 'Lemdiklat Taruna Nusantara', // fallback title
+                'content' => '-',
+            ]);
+        }
+
+        $profile->update([
+            'hero_data' => $heroData,
+            'identity_data' => $identityData,
+            'academic_data' => $academicData,
+            'activity_data' => $activityData,
+            'uniform_data' => $uniformData,
+            'cta_data' => $ctaData,
+        ]);
         
         session()->flash('message', 'Profile SMK berhasil disimpan!');
     }

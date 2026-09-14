@@ -30,7 +30,6 @@ class SmaPage extends Component
     public $accreditation = 'A (Unggul)';
     public $year_founded = '';
     public $curriculum = 'Kurikulum Merdeka';
-    public $students_teachers = '';
     public $description = '';
     
     // Akademik section
@@ -87,7 +86,6 @@ class SmaPage extends Component
             $this->accreditation = !empty($identityData['accreditation']) ? $identityData['accreditation'] : 'A (Unggul)';
             $this->year_founded = $identityData['year_founded'] ?? '';
             $this->curriculum = !empty($identityData['curriculum']) ? $identityData['curriculum'] : 'Kurikulum Merdeka';
-            $this->students_teachers = $identityData['students_teachers'] ?? '';
             $this->description = $identityData['description'] ?? '';
             
             // Load academic data
@@ -208,7 +206,6 @@ class SmaPage extends Component
             'accreditation' => $this->accreditation,
             'year_founded' => $this->year_founded,
             'curriculum' => $this->curriculum,
-            'students_teachers' => $this->students_teachers,
             'description' => $this->description,
         ];
         
@@ -235,18 +232,22 @@ class SmaPage extends Component
         ];
         
         // Save or create profile
-        ProfileSekolah::updateOrCreate(
-            ['school_type' => 'sma'],
-            [
-                'title' => 'Profile SMA',
+        $profile = ProfileSekolah::where('school_type', 'sma')->first();
+        if (!$profile) {
+            $profile = ProfileSekolah::create([
+                'school_type' => 'sma',
+                'title' => 'Lemdiklat Taruna Nusantara', // fallback title
                 'content' => '-',
-                'hero_data' => $heroData,
-                'identity_data' => $identityData,
-                'academic_data' => $academicData,
-                'uniform_data' => $uniformData,
-                'cta_data' => $ctaData,
-            ]
-        );
+            ]);
+        }
+
+        $profile->update([
+            'hero_data' => $heroData,
+            'identity_data' => $identityData,
+            'academic_data' => $academicData,
+            'uniform_data' => $uniformData,
+            'cta_data' => $ctaData,
+        ]);
         
         session()->flash('message', 'Profile SMA berhasil disimpan!');
     }
