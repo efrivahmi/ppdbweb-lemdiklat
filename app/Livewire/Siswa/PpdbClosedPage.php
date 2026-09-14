@@ -9,6 +9,6 @@ class PpdbClosedPage extends Component
     public function render()
     {
         return view('livewire.siswa.ppdb-closed-page')
-            ->layout('layouts.auth', ['title' => 'PPDB Ditutup']);
+            ->layout('layouts.blank', ['title' => 'PPDB Ditutup']);
     }
 }
