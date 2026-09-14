@@ -38,19 +38,23 @@ $selectClasses = trim(implode(' ', [
             class="{{ $selectClasses }}"
             {{ $attributes->except(['label', 'name', 'id', 'value', 'options', 'error', 'required', 'placeholder', 'disabled', 'className']) }}
         >
-            @if($placeholder)
-                <option value="" disabled @if(!$value) selected @endif>
-                    {{ $placeholder }}
-                </option>
+            @if($slot->isNotEmpty())
+                {{ $slot }}
+            @else
+                @if($placeholder)
+                    <option value="" disabled @if(!$value) selected @endif>
+                        {{ $placeholder }}
+                    </option>
+                @endif
+                @foreach($options as $option)
+                    <option 
+                        value="{{ $option['value'] ?? '' }}" 
+                        @if($value == ($option['value'] ?? '')) selected @endif
+                    >
+                        {{ $option['label'] ?? $option['text'] ?? '' }}
+                    </option>
+                @endforeach
             @endif
-            @foreach($options as $option)
-                <option 
-                    value="{{ $option['value'] ?? '' }}" 
-                    @if($value == ($option['value'] ?? '')) selected @endif
-                >
-                    {{ $option['label'] ?? $option['text'] ?? '' }}
-                </option>
-            @endforeach
         </select>
         
         <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">

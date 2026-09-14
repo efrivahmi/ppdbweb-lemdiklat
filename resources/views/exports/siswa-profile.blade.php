@@ -48,14 +48,14 @@
     <div class="section">
         <div class="section-title">Data Diri Siswa</div>
         <table>
-            <tr><th>No KK</th><td>{{ $user->dataMurid->no_kk ?? '-' }}</td></tr>
+            <tr><th>No KK</th><td>{{ $user->dataMurid->nomor_kartu_keluarga ?? '-' }}</td></tr>
             <tr><th>Tempat, Tgl Lahir</th><td>{{ $user->dataMurid->tempat_lahir ?? '-' }}, {{ $user->dataMurid->tgl_lahir ? date('d M Y', strtotime($user->dataMurid->tgl_lahir)) : '-' }}</td></tr>
             <tr><th>Jenis Kelamin</th><td>{{ $user->dataMurid->jenis_kelamin ?? '-' }}</td></tr>
             <tr><th>Agama</th><td>{{ $user->dataMurid->agama ?? '-' }}</td></tr>
             <tr><th>WhatsApp</th><td>{{ $user->dataMurid->whatsapp ?? '-' }}</td></tr>
             <tr><th>Alamat</th><td>{{ $user->dataMurid->alamat ?? '-' }}</td></tr>
             <tr><th>Asal Sekolah</th><td>{{ $user->dataMurid->asal_sekolah ?? '-' }}</td></tr>
-            <tr><th>Berat / Tinggi Badan</th><td>{{ $user->dataMurid->bb ? $user->dataMurid->bb . ' kg' : '-' }} / {{ $user->dataMurid->tb ? $user->dataMurid->tb . ' cm' : '-' }}</td></tr>
+            <tr><th>Berat / Tinggi Badan</th><td>{{ $user->dataMurid->berat_badan ? $user->dataMurid->berat_badan . ' kg' : '-' }} / {{ $user->dataMurid->tinggi_badan ? $user->dataMurid->tinggi_badan . ' cm' : '-' }}</td></tr>
             <tr><th>Riwayat Penyakit</th><td>{{ $user->dataMurid->riwayat_penyakit ?? '-' }}</td></tr>
         </table>
     </div>

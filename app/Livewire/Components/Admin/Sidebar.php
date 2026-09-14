@@ -61,11 +61,11 @@ class Sidebar extends Component
                     'url' => 'admin.siswa',
                     'icon' => 'ri-user-add-line'
                 ],
-                [
-                    'name' => 'Data Pendaftar (Siswa)',
-                    'url' => 'admin.siswa.pendaftar',
-                    'icon' => 'ri-user-follow-line'
-                ],
+                // [
+                //     'name' => 'Data Pendaftar (Siswa)',
+                //     'url' => 'admin.siswa.pendaftar',
+                //     'icon' => 'ri-user-follow-line'
+                // ],
             ]
         ],
 
@@ -157,6 +157,11 @@ class Sidebar extends Component
                     'icon' => 'ri-user-star-line'
                 ],
                 [
+                    'name' => 'Alur Pendaftaran',
+                    'url' => 'admin.landing.alur-pendaftaran',
+                    'icon' => 'ri-route-line'
+                ],
+                [
                     'name' => 'Berita',
                     'url' => 'admin.landing.berita',
                     'icon' => 'ri-news-line'
@@ -192,7 +197,7 @@ class Sidebar extends Component
                     'icon' => 'ri-gallery-line'
                 ],
                 [
-                    'name' => 'Hero Beranda',
+                    'name' => 'Hero Utama (Teks & Gambar)',
                     'url' => 'admin.landing.profile-sekolah',
                     'icon' => 'ri-home-smile-line'
                 ],
@@ -222,12 +227,17 @@ class Sidebar extends Component
                     'icon' => 'ri-book-2-line'
                 ],
                 [
-                    'name' => 'Link Photo',
+                    'name' => 'Foto (Galeri & Banner)',
                     'url' => 'admin.landing.link-photo',
-                    'icon' => 'ri-link'
+                    'icon' => 'ri-image-line'
                 ],
                 [
-                    'name' => 'Link youtube',
+                    'name' => 'Video Sambutan (Lokal)',
+                    'url' => 'admin.landing.video-sambutan',
+                    'icon' => 'ri-video-upload-line'
+                ],
+                [
+                    'name' => 'Link Youtube (Intro)',
                     'url' => 'admin.landing.link-youtube',
                     'icon' => 'ri-youtube-line'
                 ],
@@ -310,6 +320,11 @@ class Sidebar extends Component
                     'name' => 'Running Text',
                     'url' => 'admin.settings.running-text',
                     'icon' => 'ri-text-spacing'
+                ],
+                [
+                    'name' => 'Halaman Auth',
+                    'url' => 'admin.settings.auth',
+                    'icon' => 'ri-login-box-line'
                 ],
             ]
         ]

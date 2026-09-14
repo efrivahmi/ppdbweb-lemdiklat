@@ -12,6 +12,7 @@ use App\Models\Siswa\DataMurid;
 use App\Models\Siswa\DataOrangTua;
 use App\Models\Siswa\BerkasMurid;
 use App\Models\GelombangPendaftaran;
+use App\Models\TahunAjaran;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -28,6 +29,9 @@ class Dashboard extends Component
         'total_jalur' => 0,
         'total_tests' => 0
     ];
+
+    public $tahunAjaranList = [];
+    public $selectedTahunAjaranId = null;
 
     public $gelombangList = [];
     public $selectedGelombangId = null;
@@ -63,18 +67,48 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->gelombangList = GelombangPendaftaran::with('tahunAjaran')->orderBy('created_at', 'desc')->get();
-        if ($this->gelombangList->isNotEmpty()) {
-            $aktif = GelombangPendaftaran::aktif()->first();
-            $this->selectedGelombangId = $aktif ? $aktif->id : $this->gelombangList->first()->id;
+        $this->tahunAjaranList = TahunAjaran::orderBy('nama_tahun', 'desc')->get();
+        
+        $aktifTahun = $this->tahunAjaranList->where('is_active', true)->first();
+        if ($aktifTahun) {
+            $this->selectedTahunAjaranId = $aktifTahun->id;
         }
 
+        $this->updateGelombangList();
+
+        if ($this->selectedTahunAjaranId) {
+            $aktifGelombang = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)
+                                ->where('pendaftaran_mulai', '<=', now())
+                                ->where('pendaftaran_selesai', '>=', now())
+                                ->first();
+            if ($aktifGelombang) {
+                $this->selectedGelombangId = $aktifGelombang->id;
+            }
+        }
+
+        $this->loadAllData();
+    }
+
+    public function updatedSelectedTahunAjaranId()
+    {
+        $this->selectedGelombangId = null;
+        $this->updateGelombangList();
         $this->loadAllData();
     }
 
     public function updatedSelectedGelombangId()
     {
         $this->loadAllData();
+    }
+
+    private function updateGelombangList()
+    {
+        if ($this->selectedTahunAjaranId) {
+            $this->gelombangList = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)
+                                        ->orderBy('pendaftaran_mulai', 'asc')->get();
+        } else {
+            $this->gelombangList = GelombangPendaftaran::orderBy('pendaftaran_mulai', 'asc')->get();
+        }
     }
 
     private function getGelombangQuery($query, $dateColumn = 'created_at')
@@ -86,6 +120,15 @@ class Dashboard extends Component
                     $gelombang->pendaftaran_mulai, 
                     $gelombang->pendaftaran_selesai
                 ]);
+            }
+        } elseif ($this->selectedTahunAjaranId) {
+            $gelombangs = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)->get();
+            if ($gelombangs->isNotEmpty()) {
+                $minDate = $gelombangs->min('pendaftaran_mulai');
+                $maxDate = $gelombangs->max('pendaftaran_selesai');
+                return $query->whereBetween($dateColumn, [$minDate, $maxDate]);
+            } else {
+                return $query->where($dateColumn, null);
             }
         }
         return $query;

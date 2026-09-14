@@ -34,11 +34,7 @@ class SmaPage extends Component
     public $description = '';
     
     // Akademik section
-    public $kurikulum_description = '';
-    public $program_ipa = ['Matematika Lanjut', 'Fisika', 'Kimia', 'Biologi'];
-    public $program_ips = ['Geografi', 'Sejarah', 'Ekonomi', 'Sosiologi'];
-    
-    // Additional Academic Programs (dynamic - admin can add new programs beyond IPA/IPS)
+    // Academic Programs (dynamic - admin can add programs freely)
     public $academic_programs = [];
     
     // Program Unggulan section
@@ -96,8 +92,6 @@ class SmaPage extends Component
             // Load academic data
             $academicData = $this->profile->academic_data ?? [];
             $this->kurikulum_description = $academicData['kurikulum_description'] ?? '';
-            $this->program_ipa = $academicData['program_ipa'] ?? ['Matematika Lanjut', 'Fisika', 'Kimia', 'Biologi'];
-            $this->program_ips = $academicData['program_ips'] ?? ['Geografi', 'Sejarah', 'Ekonomi', 'Sosiologi'];
             $this->academic_programs = $academicData['academic_programs'] ?? [];
             $this->program_unggulan = $academicData['program_unggulan'] ?? $this->program_unggulan;
             
@@ -130,37 +124,7 @@ class SmaPage extends Component
         $this->hero_badges = array_values($this->hero_badges);
     }
 
-    public function addProgramIpa()
-    {
-        $this->program_ipa[] = '';
-    }
 
-    public function removeProgramIpa($index)
-    {
-        unset($this->program_ipa[$index]);
-        $this->program_ipa = array_values($this->program_ipa);
-    }
-
-    public function clearProgramIpa()
-    {
-        $this->program_ipa = [];
-    }
-
-    public function addProgramIps()
-    {
-        $this->program_ips[] = '';
-    }
-
-    public function removeProgramIps($index)
-    {
-        unset($this->program_ips[$index]);
-        $this->program_ips = array_values($this->program_ips);
-    }
-
-    public function clearProgramIps()
-    {
-        $this->program_ips = [];
-    }
 
     public function addProgramUnggulan()
     {
@@ -247,11 +211,8 @@ class SmaPage extends Component
             'description' => $this->description,
         ];
         
-        // Build academic data
         $academicData = [
             'kurikulum_description' => $this->kurikulum_description,
-            'program_ipa' => array_filter($this->program_ipa),
-            'program_ips' => array_filter($this->program_ips),
             'academic_programs' => $this->academic_programs,
             'program_unggulan' => $this->program_unggulan,
         ];

@@ -16,6 +16,7 @@ use App\Livewire\Admin\Landing\PrestasiPage;
 use App\Livewire\Admin\Landing\ProfileSekolahPage;
 // use App\Livewire\Admin\Landing\StrukturSekolahPage;
 use App\Livewire\Admin\Landing\VisiMisiPage;
+use App\Livewire\Admin\Landing\AlurPendaftaranPage;
 use App\Livewire\Admin\Landing\AlumniSection;
 use App\Livewire\Admin\Landing\EkstrakurikulerPage;
 use App\Livewire\Admin\Landing\EncourageSection;
@@ -186,6 +187,8 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/landing/link-photo', LinkPhotoSection::class)->name('admin.landing.link-photo');
     Route::get('/landing/gallery', GallerySection::class)->name('admin.landing.gallery');
     Route::get('/landing/link-youtube', LinkYoutubeSection::class)->name('admin.landing.link-youtube');
+    Route::get('/landing/video-sambutan', App\Livewire\Admin\Landing\VideoSambutanPage::class)->name('admin.landing.video-sambutan');
+    Route::get('/landing/alur-pendaftaran', AlurPendaftaranPage::class)->name('admin.landing.alur-pendaftaran');
     
     // WhatsApp Message
     Route::get('/whatsapp-message', App\Livewire\Admin\WhatsAppMessagePage::class)->name('admin.whatsapp-message');
@@ -194,6 +197,7 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/settings/school', App\Livewire\Admin\Settings\SchoolSettingsPage::class)->name('admin.settings.school');
     Route::get('/settings/contact', App\Livewire\Admin\Settings\AdminContactSettings::class)->name('admin.settings.contact');
     Route::get('/settings/running-text', App\Livewire\Admin\Settings\RunningTextPage::class)->name('admin.settings.running-text');
+    Route::get('/settings/auth', \App\Livewire\Admin\Settings\AuthSettingPage::class)->name('admin.settings.auth');
     Route::get('/settings/tahun-ajaran', \App\Livewire\Admin\Settings\TahunAjaranPage::class)->name('admin.settings.tahun-ajaran');
     
     // Export Jobs

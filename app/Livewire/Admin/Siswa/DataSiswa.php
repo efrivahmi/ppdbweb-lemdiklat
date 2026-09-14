@@ -7,6 +7,8 @@ use App\Models\Pendaftaran\JalurPendaftaran;
 use App\Models\Pendaftaran\TipeSekolah;
 use App\Models\Pendaftaran\Jurusan;
 use App\Models\Pendaftaran\PendaftaranMurid;
+use App\Models\GelombangPendaftaran;
+use App\Models\TahunAjaran;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +24,12 @@ class DataSiswa extends Component
     public $search = '';
     public $statusFilter = '';
     public $transferFilter = '';
-    public $tahunAjaranFilter = '';
+    
+    public $tahunAjaranList = [];
+    public $selectedTahunAjaranId = '';
+
+    public $gelombangList = [];
+    public $selectedGelombangId = '';
 
     // Form properties untuk tambah siswa
     public $name, $email, $nisn, $telp, $password, $password_confirmation;
@@ -64,6 +71,40 @@ class DataSiswa extends Component
     public function detail($id)
     {
         return redirect()->route('admin.siswa.detail', $id);
+    }
+
+    public function mount()
+    {
+        $this->tahunAjaranList = TahunAjaran::orderBy('nama_tahun', 'desc')->get();
+        
+        $aktifTahun = $this->tahunAjaranList->where('is_active', true)->first();
+        if ($aktifTahun) {
+            $this->selectedTahunAjaranId = $aktifTahun->id;
+        }
+
+        $this->updateGelombangList();
+    }
+
+    public function updatedSelectedTahunAjaranId()
+    {
+        $this->selectedGelombangId = '';
+        $this->updateGelombangList();
+        $this->resetPage();
+    }
+
+    public function updatedSelectedGelombangId()
+    {
+        $this->resetPage();
+    }
+
+    private function updateGelombangList()
+    {
+        if ($this->selectedTahunAjaranId) {
+            $this->gelombangList = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)
+                                        ->orderBy('pendaftaran_mulai', 'asc')->get();
+        } else {
+            $this->gelombangList = GelombangPendaftaran::orderBy('pendaftaran_mulai', 'asc')->get();
+        }
     }
 
     // Modal management methods
@@ -260,46 +301,15 @@ class DataSiswa extends Component
         $this->resetPage();
     }
 
-    public function updatingTahunAjaranFilter()
-    {
-        $this->resetPage();
-    }
 
-    public function getTahunAjaranOptions(): array
-    {
-        // For MySQL: YEAR(created_at). For SQLite: strftime('%Y', created_at).
-        // Since we are using SQLite in dev but might use MySQL in prod, using Eloquent builder or raw depending on driver is tricky.
-        // The safest cross-database way is to pull dates and map them, or use a DB::raw that works for the current driver.
-        // Let's use simple pluck and map since user count might not be huge, or use specific raw query.
-        $years = User::where('role', 'siswa')
-            ->select('created_at')
-            ->get()
-            ->map(fn($user) => $user->created_at->format('Y'))
-            ->unique()
-            ->sortDesc()
-            ->values()
-            ->toArray();
-            
-        // Fallback if sqlite function doesn't work well
-        if (empty($years)) {
-            $years = User::where('role', 'siswa')->pluck('created_at')->map(fn($date) => $date->format('Y'))->unique()->sortDesc()->values()->toArray();
-        }
-
-        $options = [
-            ['value' => '', 'label' => 'Semua Tahun Ajaran']
-        ];
-        foreach ($years as $year) {
-            $options[] = ['value' => $year, 'label' => "TA {$year}/" . ((int)$year + 1)];
-        }
-        return $options;
-    }
 
     public function exportExcel()
     {
         return redirect()->route('admin.export.siswa.excel', [
             'statusFilter' => $this->statusFilter,
             'transferFilter' => $this->transferFilter,
-            'tahunAjaranFilter' => $this->tahunAjaranFilter,
+            'selectedTahunAjaranId' => $this->selectedTahunAjaranId,
+            'selectedGelombangId' => $this->selectedGelombangId,
             'search' => $this->search,
         ]);
     }
@@ -443,8 +453,25 @@ class DataSiswa extends Component
                         break;
                 }
             })
-            ->when($this->tahunAjaranFilter, function ($query) {
-                $query->whereYear('created_at', $this->tahunAjaranFilter);
+            ->when($this->selectedGelombangId, function ($query) {
+                $gelombang = GelombangPendaftaran::find($this->selectedGelombangId);
+                if ($gelombang) {
+                    $query->whereBetween('created_at', [
+                        $gelombang->pendaftaran_mulai, 
+                        $gelombang->pendaftaran_selesai
+                    ]);
+                }
+            }, function ($query) {
+                if ($this->selectedTahunAjaranId) {
+                    $gelombangs = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)->get();
+                    if ($gelombangs->isNotEmpty()) {
+                        $minDate = $gelombangs->min('pendaftaran_mulai');
+                        $maxDate = $gelombangs->max('pendaftaran_selesai');
+                        $query->whereBetween('created_at', [$minDate, $maxDate]);
+                    } else {
+                        $query->where('created_at', null);
+                    }
+                }
             })
             ->latest()
             ->paginate(10);

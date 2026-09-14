@@ -184,46 +184,19 @@
                     <x-atoms.description class="mb-6 leading-relaxed">
                         {{ $academicData['kurikulum_description'] ?? 'SMA Taruna Nusantara Indonesia menerapkan Kurikulum Merdeka yang diperkaya dengan muatan lokal dan pendidikan karakter. Pembelajaran dirancang untuk mengembangkan kompetensi siswa secara holistik.' }}
                     </x-atoms.description>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
-                            <x-atoms.title text="Program IPA (Sains)" size="lg" class="mb-4" />
-                            <div class="space-y-2">
-                                @foreach($academicData['program_ipa'] ?? ['Matematika Lanjut', 'Fisika', 'Kimia', 'Biologi'] as $subject)
-                                    <x-atoms.info-item :text="$subject">
-                                        <x-slot name="iconSlot">
-                                            <x-heroicon-o-check-circle class="w-5 h-5 text-amber-600" />
-                                        </x-slot>
-                                    </x-atoms.info-item>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
-                            <x-atoms.title text="Program IPS (Sosial)" size="lg" class="mb-4" />
-                            <div class="space-y-2">
-                                @foreach($academicData['program_ips'] ?? ['Geografi', 'Sejarah', 'Ekonomi', 'Sosiologi'] as $subject)
-                                    <x-atoms.info-item :text="$subject">
-                                        <x-slot name="iconSlot">
-                                            <x-heroicon-o-check-circle class="w-5 h-5 text-amber-600" />
-                                        </x-slot>
-                                    </x-atoms.info-item>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {{-- Additional Academic Programs (Dynamic) --}}
+                    {{-- Academic Programs (Dynamic) --}}
                     @if(!empty($academicData['academic_programs']))
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
                             @foreach($academicData['academic_programs'] as $program)
                                 @if(!empty($program['title']))
-                                    <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                                         <x-atoms.title :text="$program['title']" size="lg" class="mb-4" />
                                         <div class="space-y-2">
                                             @foreach($program['subjects'] ?? [] as $subject)
                                                 @if($subject)
                                                     <x-atoms.info-item :text="$subject">
                                                         <x-slot name="iconSlot">
-                                                            <x-heroicon-o-check-circle class="w-5 h-5 text-green-600" />
+                                                            <x-heroicon-o-check-circle class="w-5 h-5 text-amber-600" />
                                                         </x-slot>
                                                     </x-atoms.info-item>
                                                 @endif

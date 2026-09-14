@@ -19,6 +19,10 @@ class ProfileSekolah extends Model
         "uniform_data",
         "activity_data",
         "cta_data",
+        "local_video_path",
+        "video_title",
+        "video_description",
+        "video_is_active",
     ];
 
     protected $casts = [

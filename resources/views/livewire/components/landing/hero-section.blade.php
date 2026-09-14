@@ -1,7 +1,8 @@
-<section class="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen max-h-[500px] sm:max-h-[550px] md:max-h-[580px] min-h-[400px] sm:min-h-[450px] overflow-hidden" 
+<section class="sticky top-0 z-0 w-full h-[80vh] lg:h-screen min-h-[500px] overflow-hidden" 
     x-data="{
         imageLoaded: true,
         mounted: false,
+        showVideo: false,
         init() {
             this.$nextTick(() => {
                 this.mounted = true;
@@ -41,8 +42,8 @@
     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent sm:from-black/80 sm:via-black/40"></div>
     
     {{-- Content --}}
-    <div class="relative z-10 flex items-center justify-start h-full text-white px-4 sm:px-6 md:px-12 lg:px-16">
-        <div class="max-w-3xl w-full">
+    <div class="relative z-10 flex items-start justify-start h-full pt-16 lg:pt-24 text-white px-4 sm:px-6 md:px-12 lg:px-16">
+        <div class="max-w-3xl w-full mt-4">
             {{-- Text Content --}}
             <div class="space-y-3 sm:space-y-4 lg:space-y-6" 
                  x-show="mounted" 

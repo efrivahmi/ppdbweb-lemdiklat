@@ -22,24 +22,46 @@
                 <p class="text-emerald-200 text-sm mt-1">{{ now()->format('d F Y, H:i') }} WIB</p>
             </div>
             <div class="hidden md:flex items-center gap-4">
-                <div class="w-64">
-                    <x-molecules.select-field 
-                        name="selectedGelombangId" 
-                        wire:model.live="selectedGelombangId"
-                    >
-                        <option value="">-- Semua Gelombang --</option>
-                        @foreach($gelombangList->groupBy('tahun_ajaran_id') as $tahunId => $gelombangs)
-                            <optgroup label="{{ $gelombangs->first()->tahunAjaran ? $gelombangs->first()->tahunAjaran->nama_tahun : 'Tanpa Tahun Ajaran' }}">
-                                @foreach($gelombangs as $gelombang)
-                                    <option value="{{ $gelombang->id }}">{{ $gelombang->nama_gelombang }} ({{ $gelombang->pendaftaran_mulai->format('d M Y') }} - {{ $gelombang->pendaftaran_selesai->format('d M Y') }})</option>
-                                @endforeach
-                            </optgroup>
-                        @endforeach
-                    </x-molecules.select-field>
-                </div>
                 <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="ri-award-fill text-3xl"></i>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Filter Section --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-lime-100 rounded-lg flex items-center justify-center">
+                <i class="ri-filter-3-line text-lime-600 text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-gray-900">Filter Data</h3>
+                <p class="text-xs text-gray-500">Sesuaikan tampilan data berdasarkan periode</p>
+            </div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <div class="w-full sm:w-48 text-gray-900">
+                <x-molecules.select-field 
+                    name="selectedTahunAjaranId" 
+                    wire:model.live="selectedTahunAjaranId"
+                >
+                    <option value="">-- Semua Tahun Ajaran --</option>
+                    @foreach($tahunAjaranList as $ta)
+                        <option value="{{ $ta->id }}">{{ $ta->nama_tahun }}</option>
+                    @endforeach
+                </x-molecules.select-field>
+            </div>
+            <div class="w-full sm:w-64 text-gray-900">
+                <x-molecules.select-field 
+                    name="selectedGelombangId" 
+                    wire:model.live="selectedGelombangId"
+                >
+                    <option value="">-- Semua Gelombang --</option>
+                    @foreach($gelombangList as $gelombang)
+                        <option value="{{ $gelombang->id }}">{{ $gelombang->nama_gelombang }} ({{ $gelombang->pendaftaran_mulai->format('d M y') }} - {{ $gelombang->pendaftaran_selesai->format('d M y') }})</option>
+                    @endforeach
+                </x-molecules.select-field>
             </div>
         </div>
     </div>

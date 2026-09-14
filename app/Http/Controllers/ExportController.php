@@ -92,7 +92,8 @@ class ExportController extends Controller
     public function siswaExcel(Request $request)
     {
         $statusFilter = $request->query('statusFilter');
-        $tahunAjaranFilter = $request->query('tahunAjaranFilter');
+        $selectedTahunAjaranId = $request->query('selectedTahunAjaranId');
+        $selectedGelombangId = $request->query('selectedGelombangId');
         $search = $request->query('search');
 
         $filename = 'data-siswa-' . date('Y-m-d-His') . '.xlsx';
@@ -104,7 +105,7 @@ class ExportController extends Controller
             'filename' => $filename,
         ]);
 
-        $exportClass = new SiswaExport($statusFilter, $tahunAjaranFilter, $search);
+        $exportClass = new SiswaExport($statusFilter, $selectedTahunAjaranId, $selectedGelombangId, $search);
 
         ProcessExportJob::dispatch($job->id, $exportClass, $filePath, false);
 

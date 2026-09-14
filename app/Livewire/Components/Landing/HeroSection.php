@@ -2,15 +2,22 @@
 namespace App\Livewire\Components\Landing;
 
 use App\Models\Landing\ProfileSekolah;
+use App\Models\Landing\YoutubeVideo;
 use Livewire\Component;
 
 class HeroSection extends Component
 {
     public $heroData;
+    public $introVideo;
 
     public function mount()
     {
         $profile = ProfileSekolah::first(); // Ambil satu-satunya data
+        
+        $this->introVideo = YoutubeVideo::where('is_active', true)
+            ->where('is_intro', true)
+            ->orderBy('order')
+            ->first();
         
         $this->heroData = [
             'badge' => [

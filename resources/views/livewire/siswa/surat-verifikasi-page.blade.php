@@ -46,7 +46,7 @@
                             Download PDF Verifikasi
                         </a>
                         <a href="{{ route('siswa.dashboard') }}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition">
-                            Lanjut ke Dashboard &rarr;
+                            Kembali ke Beranda (Upload Pembayaran) &rarr;
                         </a>
                     </div>
                     @else
@@ -80,6 +80,16 @@
                                 </li>
                                 @endforeach
                             </ul>
+                        </div>
+
+                        <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                            <h4 class="font-bold text-blue-800 text-sm flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Informasi Penting
+                            </h4>
+                            <p class="text-blue-700 mt-1 text-sm leading-relaxed">
+                                Jika semua persyaratan di atas sudah terpenuhi, Anda <strong>diwajibkan untuk mengunduh dan membaca dokumen verifikasi</strong> ini. Di dalam dokumen tersebut terlampir surat resmi yang memuat instruksi untuk lanjut ke proses <strong>Registrasi Tahap 1 dan Pembayaran</strong>.
+                            </p>
                         </div>
 
                         <div class="mt-6 flex justify-end">

@@ -18,11 +18,11 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3">
                     <x-molecules.select-field
                         name="statusFilter"
                         wire:model.live="statusFilter"
-                        placeholder="Semua Status"
+                        placeholder=""
                         :options="[
                             ['value' => '', 'label' => 'Semua Status'],
                             ['value' => 'lengkap', 'label' => 'Lengkap'],
@@ -36,7 +36,7 @@
                     <x-molecules.select-field
                         name="transferFilter"
                         wire:model.live="transferFilter"
-                        placeholder="Semua Transfer"
+                        placeholder=""
                         :options="[
                             ['value' => '', 'label' => 'Semua Transfer'],
                             ['value' => 'pending', 'label' => 'Transfer Pending'],
@@ -46,12 +46,27 @@
                         ]"
                         className="flex-1 sm:max-w-xs" />
 
-                    <x-molecules.select-field
-                        name="tahunAjaranFilter"
-                        wire:model.live="tahunAjaranFilter"
-                        placeholder="Semua Tahun Ajaran"
-                        :options="$this->getTahunAjaranOptions()"
-                        className="flex-1 sm:max-w-xs" />
+                    <x-molecules.select-field 
+                        name="selectedTahunAjaranId" 
+                        wire:model.live="selectedTahunAjaranId"
+                        className="flex-1 sm:max-w-xs"
+                    >
+                        <option value="">Semua Tahun Ajaran</option>
+                        @foreach($tahunAjaranList as $ta)
+                            <option value="{{ $ta->id }}">{{ $ta->nama_tahun }}</option>
+                        @endforeach
+                    </x-molecules.select-field>
+
+                    <x-molecules.select-field 
+                        name="selectedGelombangId" 
+                        wire:model.live="selectedGelombangId"
+                        className="flex-1 sm:max-w-xs"
+                    >
+                        <option value="">Semua Gelombang</option>
+                        @foreach($gelombangList as $gelombang)
+                            <option value="{{ $gelombang->id }}">{{ $gelombang->nama_gelombang }}</option>
+                        @endforeach
+                    </x-molecules.select-field>
 
                     <div class="flex gap-2 w-full sm:w-auto ml-auto">
                         <x-atoms.button

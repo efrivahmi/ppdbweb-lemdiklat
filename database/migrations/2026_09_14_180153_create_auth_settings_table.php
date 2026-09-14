@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('running_texts', function (Blueprint $table) {
+        Schema::create('auth_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('text');
-            $table->boolean('is_active')->default(true);
-            $table->integer('order')->default(0);
+            $table->string('title')->nullable();
+            $table->string('subtitle')->nullable();
+            $table->text('description')->nullable();
+            $table->text('sub_description')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('running_texts');
+        Schema::dropIfExists('auth_settings');
     }
 };

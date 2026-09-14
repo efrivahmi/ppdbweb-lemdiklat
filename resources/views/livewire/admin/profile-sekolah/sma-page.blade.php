@@ -148,76 +148,12 @@
                               placeholder="SMA Taruna Nusantara Indonesia menerapkan Kurikulum Merdeka yang diperkaya dengan muatan lokal dan pendidikan karakter..."></textarea>
                 </div>
 
-                {{-- Program IPA --}}
-                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 relative">
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="block text-sm font-medium text-gray-700">Program IPA (Sains)</label>
-                        <button type="button" wire:click="clearProgramIpa"
-                                wire:confirm="Yakin ingin menghapus seluruh Program IPA?"
-                                class="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
-                            <i class="ri-delete-bin-line mr-1"></i> Hapus Program
-                        </button>
-                    </div>
-                    <div class="space-y-2">
-                        @foreach($program_ipa as $index => $subject)
-                            <div class="flex gap-2">
-                                <input type="text" wire:model="program_ipa.{{ $index }}"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                                       placeholder="Mata Pelajaran">
-                                <button type="button" wire:click="removeProgramIpa({{ $index }})"
-                                        class="px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
-                                    <i class="ri-close-line"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                    <button type="button" wire:click="addProgramIpa"
-                            class="mt-2 px-3 py-1.5 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors">
-                        <i class="ri-add-line mr-1"></i> Tambah Mata Pelajaran IPA
-                    </button>
-                    @if(count($program_ipa) === 0)
-                        <p class="text-sm text-gray-500 mt-2 italic">Program IPA kosong. Klik "Tambah Mata Pelajaran IPA" untuk menambahkan.</p>
-                    @endif
-                </div>
-
-                {{-- Program IPS --}}
-                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 relative">
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="block text-sm font-medium text-gray-700">Program IPS (Sosial)</label>
-                        <button type="button" wire:click="clearProgramIps"
-                                wire:confirm="Yakin ingin menghapus seluruh Program IPS?"
-                                class="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
-                            <i class="ri-delete-bin-line mr-1"></i> Hapus Program
-                        </button>
-                    </div>
-                    <div class="space-y-2">
-                        @foreach($program_ips as $index => $subject)
-                            <div class="flex gap-2">
-                                <input type="text" wire:model="program_ips.{{ $index }}"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                                       placeholder="Mata Pelajaran">
-                                <button type="button" wire:click="removeProgramIps({{ $index }})"
-                                        class="px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
-                                    <i class="ri-close-line"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                    <button type="button" wire:click="addProgramIps"
-                            class="mt-2 px-3 py-1.5 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors">
-                        <i class="ri-add-line mr-1"></i> Tambah Mata Pelajaran IPS
-                    </button>
-                    @if(count($program_ips) === 0)
-                        <p class="text-sm text-gray-500 mt-2 italic">Program IPS kosong. Klik "Tambah Mata Pelajaran IPS" untuk menambahkan.</p>
-                    @endif
-                </div>
-
-                {{-- Additional Academic Programs (Dynamic) --}}
-                <div class="border-t border-gray-200 pt-4">
+                {{-- Academic Programs (Dynamic) --}}
+                <div class="pt-2">
                     <div class="flex items-center justify-between mb-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Program Akademik Tambahan</label>
-                            <p class="text-xs text-gray-500">Tambahkan program akademik selain IPA/IPS</p>
+                            <label class="block text-sm font-medium text-gray-700">Program Akademik</label>
+                            <p class="text-xs text-gray-500">Tambahkan program akademik yang ada (misal: IPA, IPS, Bahasa, dll)</p>
                         </div>
                         <button type="button" wire:click="addAcademicProgram"
                                 class="px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">

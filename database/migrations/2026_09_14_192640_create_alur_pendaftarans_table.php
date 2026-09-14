@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('running_texts', function (Blueprint $table) {
+        Schema::create('alur_pendaftarans', function (Blueprint $table) {
             $table->id();
-            $table->string('text');
-            $table->boolean('is_active')->default(true);
-            $table->integer('order')->default(0);
+            $table->string('title');
+            $table->text('description');
+            $table->string('icon')->default('check-circle');
+            $table->integer('order_num')->default(0);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('running_texts');
+        Schema::dropIfExists('alur_pendaftarans');
     }
 };

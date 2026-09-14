@@ -217,53 +217,7 @@
         // Could add additional client-side validations here if needed
     });
 
-    // Success/Error alerts
-    window.addEventListener('alert', event => {
-        const {
-            type,
-            message
-        } = event.detail;
 
-        // Replace with your preferred notification system
-        if (type === 'success') {
-            // Success notification
-            console.log('Success:', message);
-
-            // Show success toast (you can replace this with your toast library)
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            toast.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <i class="ri-check-circle-line"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-
-        } else if (type === 'error') {
-            // Error notification  
-            console.log('Error:', message);
-
-            // Show error toast
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            toast.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <i class="ri-error-warning-line"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-    });
 
     // Prevent form submission on Enter key in number inputs
     document.addEventListener('keydown', function(e) {

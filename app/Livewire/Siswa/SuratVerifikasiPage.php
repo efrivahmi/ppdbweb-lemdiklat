@@ -49,38 +49,10 @@ class SuratVerifikasiPage extends Component
         if ($this->berkasMuridProgress < 100) $this->missingItems[] = 'Berkas belum diupload semua';
         if ($this->pendaftaranProgress < 100) $this->missingItems[] = 'Belum mendaftar jalur/jurusan';
 
-        // 2. Check Tes Jalur (custom_test) — semua wajib dikerjakan
-        $allTestsCompleted = true;
-        $jalurTests = collect($this->availableTests)->filter(fn($test) => $test['test']->category === 'custom_test');
-        if (count($jalurTests) > 0) {
-            $allTestsCompleted = $jalurTests->every(fn($test) => $test['has_completed']);
-            if (!$allTestsCompleted) {
-                $this->missingItems[] = 'Tes seleksi belum dikerjakan semua';
-            }
-        } elseif ($this->pendaftaranProgress >= 100) {
-            $allTestsCompleted = false;
-        }
+        // 2. Persyaratan Tes dan Kuesioner dihapus sesuai permintaan
+        // Surat verifikasi terbuka hanya jika semua administrasi selesai.
 
-        // 3. Check Kuesioner Ortu (kuesioner_ortu) — minimal 1 dikerjakan (Islam ATAU non-Islam)
-        $activeKuesioners = CustomTest::where('category', 'kuesioner_ortu')
-            ->where('is_active', true)
-            ->exists();
-
-        $kuesionerCompleted = true;
-        if ($activeKuesioners) {
-            $kuesionerCompleted = CustomTestAnswer::where('user_id', Auth::id())
-                ->whereHas('customTest', function ($query) {
-                    $query->where('category', 'kuesioner_ortu')
-                          ->where('is_active', true);
-                })
-                ->exists();
-            
-            if (!$kuesionerCompleted) {
-                $this->missingItems[] = 'Kuesioner orang tua belum dikerjakan';
-            }
-        }
-
-        $this->canDownloadVerifikasiPDF = empty($this->missingItems) && $allTestsCompleted && $kuesionerCompleted;
+        $this->canDownloadVerifikasiPDF = empty($this->missingItems);
         
         $this->verifikasiPDFSettings = PDF::getSettingsByJenis('verifikasi');
     }
@@ -183,7 +155,7 @@ class SuratVerifikasiPage extends Component
     public function confirmRead()
     {
         $this->hasReadSurat = true;
-        $this->dispatch("alert", message: "Terima kasih telah membaca surat verifikasi.", type: "success");
+        $this->dispatch("alert", message: "Terima kasih! Silakan kembali ke Beranda untuk upload dan menyelesaikan pembayaran PPDB.", type: "success");
     }
 
     public function render()

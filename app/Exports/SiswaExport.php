@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\User;
+use App\Models\GelombangPendaftaran;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -14,13 +15,15 @@ use Illuminate\Database\Eloquent\Builder;
 class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     protected $statusFilter;
-    protected $tahunAjaranFilter;
+    protected $selectedTahunAjaranId;
+    protected $selectedGelombangId;
     protected $search;
 
-    public function __construct($statusFilter, $tahunAjaranFilter, $search)
+    public function __construct($statusFilter, $selectedTahunAjaranId, $selectedGelombangId, $search)
     {
         $this->statusFilter = $statusFilter;
-        $this->tahunAjaranFilter = $tahunAjaranFilter;
+        $this->selectedTahunAjaranId = $selectedTahunAjaranId;
+        $this->selectedGelombangId = $selectedGelombangId;
         $this->search = $search;
     }
 
@@ -61,8 +64,25 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
                         break;
                 }
             })
-            ->when($this->tahunAjaranFilter, function ($query) {
-                $query->whereYear('created_at', $this->tahunAjaranFilter);
+            ->when($this->selectedGelombangId, function ($query) {
+                $gelombang = GelombangPendaftaran::find($this->selectedGelombangId);
+                if ($gelombang) {
+                    $query->whereBetween('created_at', [
+                        $gelombang->pendaftaran_mulai, 
+                        $gelombang->pendaftaran_selesai
+                    ]);
+                }
+            }, function ($query) {
+                if ($this->selectedTahunAjaranId) {
+                    $gelombangs = GelombangPendaftaran::where('tahun_ajaran_id', $this->selectedTahunAjaranId)->get();
+                    if ($gelombangs->isNotEmpty()) {
+                        $minDate = $gelombangs->min('pendaftaran_mulai');
+                        $maxDate = $gelombangs->max('pendaftaran_selesai');
+                        $query->whereBetween('created_at', [$minDate, $maxDate]);
+                    } else {
+                        $query->where('created_at', null);
+                    }
+                }
             })
             ->latest()
             ->get();

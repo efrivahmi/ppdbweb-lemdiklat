@@ -1,20 +1,78 @@
 <div>
     <livewire:components.landing.hero-section />
 
-    @if($heroVideo)
-    <section class="w-full h-[60vh] bg-black relative">
-        <iframe 
-            class="w-full h-full object-cover" 
-            src="{{ str_contains($heroVideo->embed_url, '?') ? $heroVideo->embed_url . '&autoplay=1&mute=1' : $heroVideo->embed_url . '?autoplay=1&mute=1' }}" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
-    </section>
-    @endif
+    <div class="relative z-10 bg-zinc-50 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+        {{-- Video Sambutan Section - Cinematic Edition --}}
+        @if($localVideo)
+        <section class="relative w-full h-screen min-h-[600px] overflow-hidden flex items-center justify-center bg-black"
+                 x-data="{ hasInteracted: false }" 
+                 x-init="$watch('hasInteracted', value => { if(value) { $refs.heroVideo.muted = false; $refs.heroVideo.currentTime = 0; $refs.heroVideo.play(); } })">
+                 
+            {{-- Cinematic Background Video --}}
+            <video 
+                x-ref="heroVideo"
+                class="absolute inset-0 w-full h-full object-cover"
+                autoplay 
+                muted 
+                loop 
+                playsinline>
+                <source src="{{ asset('storage/' . $localVideo['path']) }}" type="video/mp4">
+            </video>
 
-    <livewire:components.landing.stat-section />
+            {{-- Gradient Overlays for Readability --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/90 pointer-events-none transition-opacity duration-1000" :class="hasInteracted ? 'opacity-80' : 'opacity-100'"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent pointer-events-none transition-opacity duration-1000 w-2/3" :class="hasInteracted ? 'opacity-40' : 'opacity-100'"></div>
+            
+            {{-- Interactive Play Button Overlay (Centered) --}}
+            <div class="absolute inset-0 z-20 flex flex-col items-center justify-center transition-all duration-700"
+                 :class="hasInteracted ? 'opacity-0 scale-125 pointer-events-none' : 'opacity-100 scale-100'"
+                 @click="hasInteracted = true">
+                
+                <button class="group/btn flex flex-col items-center gap-6 focus:outline-none cursor-pointer transform hover:scale-105 transition-all duration-500">
+                    <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-full border-2 border-white/20 flex items-center justify-center shadow-[0_0_40px_rgba(0,0,0,0.5)] group-hover/btn:shadow-[0_0_60px_rgba(255,255,255,0.3)] group-hover/btn:bg-white/20 group-hover/btn:border-white/40 transition-all">
+                        <svg class="w-10 h-10 md:w-14 md:h-14 text-white ml-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                    </div>
+                    <div class="flex items-center gap-3 bg-black/50 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/10 shadow-xl group-hover/btn:bg-black/60 transition-colors">
+                        <svg class="w-5 h-5 text-lime-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                        <span class="text-white font-bold tracking-widest uppercase text-sm md:text-base">Tonton dengan Suara</span>
+                    </div>
+                </button>
+            </div>
+
+            {{-- Text Content (Bottom Left) --}}
+            <div class="absolute bottom-0 left-0 w-full p-6 pb-12 md:p-16 lg:p-24 z-10 pointer-events-none">
+                <div class="max-w-4xl transition-all duration-1000 transform pointer-events-auto" :class="hasInteracted ? 'opacity-40 hover:opacity-100 translate-y-4 hover:translate-y-0' : 'opacity-100 translate-y-0'">
+                    {{-- Badge --}}
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 mb-5">
+                        <span class="text-xs md:text-sm font-bold text-lime-400 uppercase tracking-widest">
+                            Seputar Sekolah
+                        </span>
+                    </div>
+                    
+                    {{-- Title --}}
+                    <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] mb-6 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">
+                        {{ $localVideo['title'] }}
+                    </h2>
+                    
+                    {{-- Description --}}
+                    @if($localVideo['description'])
+                    <div class="relative pl-6">
+                        <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-lime-400 to-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+                        <p class="text-lg md:text-xl text-gray-200 leading-relaxed font-medium drop-shadow-lg max-w-2xl">
+                            {{ $localVideo['description'] }}
+                        </p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </section>
+        @endif
+
+        <livewire:components.landing.stat-section />
     <div class="space-y-16 lg:space-y-18 lg:mx-auto lg:max-w-7xl px-8 lg:px-0 py-16">
         <livewire:components.landing.news-section />
     </div>
@@ -121,46 +179,6 @@
         </section>
 
     </div>
+    </div>
 
-    {{-- Video Intro Popup --}}
-    @if($introVideo)
-        <div 
-            x-data="{ show: false }" 
-            x-init="
-                if (!sessionStorage.getItem('intro_video_seen')) {
-                    setTimeout(() => show = true, 500);
-                }
-            "
-            x-show="show"
-            style="display: none;"
-            class="fixed inset-0 z-50 overflow-y-auto"
-            aria-labelledby="modal-title" role="dialog" aria-modal="true"
-        >
-            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div x-show="show" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                <div x-show="show" @click.away="show = false; sessionStorage.setItem('intro_video_seen', 'true')" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-title">
-                                    {{ $introVideo->title }}
-                                </h3>
-                                <div class="mt-2 w-full aspect-video">
-                                    <iframe class="w-full h-full rounded" src="{{ $introVideo->embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button @click="show = false; sessionStorage.setItem('intro_video_seen', 'true')" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-600 text-base font-medium text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Masuk
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
