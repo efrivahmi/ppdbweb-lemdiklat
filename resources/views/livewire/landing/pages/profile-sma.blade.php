@@ -135,15 +135,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-start gap-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-indigo-500 rounded-r-xl p-4">
-                        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <x-heroicon-o-users class="w-6 h-6 text-indigo-600" />
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-900 text-sm">Siswa & Pendidik</p>
-                            <p class="text-sm text-gray-600">{{ $identityData['students_teachers'] ?? '500+ Siswa Aktif | 50+ Tenaga Pendidik' }}</p>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Description -->

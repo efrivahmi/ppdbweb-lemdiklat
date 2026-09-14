@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full w-full overflow-hidden">
 
 <head>
   <meta charset="UTF-8">
@@ -12,7 +12,7 @@
   @livewireStyles
 </head>
 
-<body class="h-screen flex flex-col bg-gray-50 relative overflow-hidden">
+<body class="h-full w-full flex flex-col bg-gray-50 relative overflow-hidden m-0 p-0 fixed inset-0">
   @php
       $runningTexts = \App\Models\Settings\RunningText::where('is_active', true)->orderBy('order', 'asc')->get();
       $authSetting = \App\Models\Settings\AuthSetting::first();
@@ -86,8 +86,8 @@
       </div>
 
       <!-- Right Side: Form Area -->
-      <div class="flex-1 flex flex-col justify-center items-center py-10 px-6 lg:px-12 bg-white/60 backdrop-blur-3xl relative z-10 border-l border-white/50 shadow-[-20px_0_50px_rgba(0,0,0,0.15)] overflow-y-auto">
-        <div class="w-full max-w-lg my-auto pb-16 lg:pb-0">
+      <div class="flex-1 flex flex-col justify-center items-center p-4 lg:px-12 bg-white/60 backdrop-blur-3xl relative z-10 border-l border-white/50 shadow-[-20px_0_50px_rgba(0,0,0,0.15)] overflow-y-auto overflow-x-hidden">
+        <div class="w-full max-w-lg my-auto pb-4 lg:pb-0">
           <x-molecules.alert />
           {{ $slot }}
         </div>
